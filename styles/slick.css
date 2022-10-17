@@ -1,0 +1,19 @@
+.slick-prev:before {
+   content: "<";
+}
+
+.slick-next:before {
+   content: ">";
+}
+
+.slick-prev:before,
+.slick-next:before {
+   line-height: unset;
+   color: #891b1c;
+   font-weight: 900;
+   font-size: 30px;
+}
+.slick-list {
+   margin-left: -4px;
+   margin-right: -4px;
+}
