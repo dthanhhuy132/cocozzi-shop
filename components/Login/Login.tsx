@@ -1,8 +1,9 @@
 import Link from 'next/link';
+import {HomeBackground} from '../HomeBackground';
 
 export default function Login() {
    return (
-      <div className='w-[400px] h-auto bg-red-700 mt-10 border-1 rounded-lg p-10'>
+      <div className='w-[350px] md:w-[400px] lg:w-[450px] h-auto bg-red-700 mt-10 border-1 md:rounded-lg p-10'>
          <div className='flex flex-col'>
             <form className='w-full mb-4' autoComplete='off'>
                <input
@@ -24,13 +25,11 @@ export default function Login() {
                <Link href='/register'>register</Link>
             </button>
          </div>
-
          <p className='mt-5'>
             Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed
             mollitia recusandae iste ad assumenda culpa incidunt iusto maxime
             voluptate neque?
          </p>
-
          {/* login with social network */}
          <div className='flex flex-col gap-2 mt-10'>
             <p className='uppercase text-center font-bold text-white '>
