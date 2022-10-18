@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import {useRouter} from 'next/router';
 import {useEffect, useState} from 'react';
 import styled, {keyframes, css} from 'styled-components';
 
@@ -11,6 +12,7 @@ const ImageArr = [img1, img2, img3, img4];
 
 export default function Home() {
    const [isActiveAnimation, setIsActiveAnimation] = useState(0);
+   const router = useRouter();
 
    const changeImageActiveAnimate = () => {
       if (isActiveAnimation < ImageArr.length - 1) {
@@ -19,6 +21,15 @@ export default function Home() {
          setIsActiveAnimation(0);
       }
    };
+
+   const handleClickImage = () => {
+      if (router.pathname === '/') {
+         router.push('/product/124');
+      } else {
+         return;
+      }
+   };
+
    useEffect(() => {
       const intervalId = setInterval(changeImageActiveAnimate, 4000);
       return () => clearInterval(intervalId);
@@ -27,13 +38,15 @@ export default function Home() {
    return (
       <div className='grid grid-cols-1 md:grid-cols-2 gap-0'>
          {ImageArr.map((imageSrc, index) => (
-            <ImageSC
-               src={imageSrc}
-               active={isActiveAnimation === index ? '1' : ''}
-               key={index}
-               layout='responsive'
-               objectFit='cover'
-            ></ImageSC>
+            <a onClick={() => handleClickImage()}>
+               <ImageSC
+                  src={imageSrc}
+                  active={isActiveAnimation === index ? '1' : ''}
+                  key={index}
+                  layout='responsive'
+                  objectFit='cover'
+               ></ImageSC>
+            </a>
          ))}
       </div>
    );
@@ -56,7 +69,7 @@ const ImageSC = styled(Image)<any>(
       animation: ${props.active && css`1s linear ${lighting}`};
       animation-timing-function: linear;
       transition: all 0.3s linear;
-
+      transform: scale(1.01);
       &:hover {
          transform: scale(1.1);
          z-index: 99999999999;

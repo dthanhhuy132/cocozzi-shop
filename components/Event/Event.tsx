@@ -21,7 +21,7 @@ export default function Event() {
                ></Image>
             </div>
          </div>
-         <div className='flex flex-col items-center justify-center py-10 pl-[40%] md:py-[100px] lg:py-[200px]'>
+         <div className='flex flex-col items-center justify-center py-10 pl-[40%] font md:py-[100px] lg:py-[200px]'>
             <p className='font-bold'>Text title</p>
             <p>Text content</p>
          </div>

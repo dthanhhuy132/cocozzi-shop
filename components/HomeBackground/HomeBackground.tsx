@@ -1,4 +1,6 @@
 import Image from 'next/image';
+import Link from 'next/link';
+import {useRouter} from 'next/router';
 import {useEffect, useState} from 'react';
 import styled, {keyframes, css} from 'styled-components';
 
@@ -14,6 +16,7 @@ interface IHomeBackground {
 }
 
 export default function HomeBackground({isHomePage = true}: IHomeBackground) {
+   const router = useRouter();
    const [isActiveAnimation, setIsActiveAnimation] = useState(0);
 
    const changeImageActiveAnimate = () => {
@@ -21,6 +24,14 @@ export default function HomeBackground({isHomePage = true}: IHomeBackground) {
          setIsActiveAnimation((pre) => pre + 1);
       } else {
          setIsActiveAnimation(0);
+      }
+   };
+
+   const handleClickImage = () => {
+      if (isHomePage) {
+         router.push('/product/124');
+      } else {
+         return;
       }
    };
    useEffect(() => {
@@ -31,14 +42,16 @@ export default function HomeBackground({isHomePage = true}: IHomeBackground) {
    return (
       <div className='grid grid-cols-1 md:grid-cols-2 gap-0'>
          {ImageArr.map((imageSrc, index) => (
-            <ImageSC
-               src={imageSrc}
-               active={isActiveAnimation === index ? '1' : ''}
-               isHomePage={isHomePage}
-               key={index}
-               layout='responsive'
-               objectFit='cover'
-            ></ImageSC>
+            <a onClick={() => handleClickImage()}>
+               <ImageSC
+                  src={imageSrc}
+                  active={isActiveAnimation === index ? '1' : ''}
+                  isHomePage={isHomePage}
+                  key={index}
+                  layout='responsive'
+                  objectFit='cover'
+               ></ImageSC>
+            </a>
          ))}
       </div>
    );
@@ -64,6 +77,7 @@ const ImageSC = styled(Image)<any>(
 
       animation-timing-function: linear;
       transition: all 0.3s linear;
+      transform: 'scale(1.01)';
 
       &:hover {
          transform: ${props.isHomepage && 'scale(1.1)'};

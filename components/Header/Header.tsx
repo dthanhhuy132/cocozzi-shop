@@ -16,6 +16,10 @@ export default function Header() {
       return excludePath.indexOf(currentPath) === -1;
    }, [router.pathname]);
 
+   function handleShowBag() {
+      console.log('chay cai nay thu coi ra gi');
+   }
+
    return (
       <>
          <div className='md:px-10 pt-5 pb-7 md:flex md:justify-between md:items-end'>
@@ -39,7 +43,7 @@ export default function Header() {
                {/* search */}
                <HeaderSearch></HeaderSearch>
 
-               <p className='flex'>
+               <p className='flex' onMouseEnter={handleShowBag}>
                   <span className='font-[500] hover:cursor-pointer hover:text-[#891b1c] '>
                      bag
                   </span>
