@@ -70,6 +70,8 @@ const ImageSC = styled(Image)<any>(
       animation-timing-function: linear;
       transition: all 0.3s linear;
       transform: scale(1.01);
+
+      cursor: pointer;
       &:hover {
          transform: scale(1.1);
          z-index: 99999999999;

@@ -8,6 +8,7 @@ import img6 from '../../public/images/shop/6.webp';
 import img7 from '../../public/images/shop/7.webp';
 import img8 from '../../public/images/shop/8.webp';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const imgArr = [img1, img2, img3, img4, img5, img6, img7, img8];
 
@@ -27,13 +28,15 @@ export default function Shop() {
                   key={index}
                   className='uppercase hover:cursor-pointer mb-10'
                >
-                  <div>
+                  <Link href='/product/123'>
                      <Image src={img} alt='' />
-                  </div>
+                  </Link>
                   <div className='px-3'>
                      <div className='flex justify-between'>
                         <h3>Product name</h3>
-                        <div>Them vao gio hang</div>
+                        <div>
+                           <i className='fa-solid fa-cart-plus text-[1.2rem] text-[#891b1c]'></i>
+                        </div>
                      </div>
                      <p>$50</p>
                   </div>
