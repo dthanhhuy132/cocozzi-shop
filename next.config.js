@@ -7,6 +7,8 @@ const nextConfig = {
       // ssr and displayName are configured by default
       styledComponents: true,
    },
+
+   crossOrigin: 'anonymous',
 };
 
 module.exports = nextConfig;
