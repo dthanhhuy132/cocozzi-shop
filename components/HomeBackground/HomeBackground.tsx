@@ -42,12 +42,11 @@ export default function HomeBackground({isHomePage = true}: IHomeBackground) {
    return (
       <div className='grid grid-cols-1 md:grid-cols-2 gap-0'>
          {ImageArr.map((imageSrc, index) => (
-            <a onClick={() => handleClickImage()}>
+            <a key={index} onClick={() => handleClickImage()}>
                <ImageSC
                   src={imageSrc}
                   active={isActiveAnimation === index ? '1' : ''}
                   isHomePage={isHomePage}
-                  key={index}
                   layout='responsive'
                   objectFit='cover'
                ></ImageSC>

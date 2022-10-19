@@ -38,11 +38,10 @@ export default function Home() {
    return (
       <div className='grid grid-cols-1 md:grid-cols-2 gap-0'>
          {ImageArr.map((imageSrc, index) => (
-            <a onClick={() => handleClickImage()}>
+            <a key={index} onClick={() => handleClickImage()}>
                <ImageSC
                   src={imageSrc}
                   active={isActiveAnimation === index ? '1' : ''}
-                  key={index}
                   layout='responsive'
                   objectFit='cover'
                ></ImageSC>

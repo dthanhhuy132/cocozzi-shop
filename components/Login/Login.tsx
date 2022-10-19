@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
 import {useEffect, useState} from 'react';
@@ -86,7 +87,7 @@ export default function Login() {
 
             {/* login with google */}
             <div className='relative p-2 text-center bg-white'>
-               <img
+               <Image
                   src='https://i.stack.imgur.com/22WR2m.png'
                   className='absolute top-[50%] left-2 translate-y-[-50%] w-[18px] h-[18px]'
                   alt=''
@@ -96,7 +97,7 @@ export default function Login() {
 
             {/* login with facebook */}
             <div className='relative p-2 text-center bg-white'>
-               <img
+               <Image
                   src='https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Facebook_icon_2013.svg/640px-Facebook_icon_2013.svg.png'
                   className='absolute top-[50%] left-2 translate-y-[-50%] w-[18px] h-[18px]'
                   alt=''
@@ -105,7 +106,7 @@ export default function Login() {
             </div>
             {/* login with apple */}
             <div className='relative p-2 text-center bg-white'>
-               <img
+               <Image
                   src='https://cdn3.iconfinder.com/data/icons/picons-social/57/56-apple-512.png'
                   className='absolute top-[50%] left-2 translate-y-[-50%] w-[18px] h-[18px]'
                   alt=''
