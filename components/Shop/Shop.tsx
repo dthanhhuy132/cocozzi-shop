@@ -35,7 +35,7 @@ export default function Shop() {
                      <div className='flex justify-between'>
                         <h3>Product name</h3>
                         <div>
-                           <i className='fa-solid fa-cart-plus text-[1.2rem] text-[#891b1c]'></i>
+                           <i className='fa-solid fa-cart-plus text-[#891b1c]'></i>
                         </div>
                      </div>
                      <p>$50</p>
