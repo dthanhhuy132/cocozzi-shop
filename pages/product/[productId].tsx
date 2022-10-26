@@ -54,14 +54,8 @@ export default function ProductDetail() {
             </video>
             {/* image slider */}
             {imageArr.map((img, index) => (
-               <div className='relative'>
-                  <Image
-                     key={index}
-                     src={img}
-                     layout='fill'
-                     objectFit='cover'
-                     alt={img}
-                  />
+               <div className='relative' key={index}>
+                  <Image src={img} layout='fill' objectFit='cover' alt={img} />
                </div>
             ))}
          </div>
