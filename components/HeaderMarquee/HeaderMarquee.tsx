@@ -6,7 +6,7 @@ export default function HeaderMarquee() {
    const exampleText = ['Cocozzi Khuyến mãi 1', 'khuyến mãi 2', ,];
 
    return (
-      <MarqueeSC className='bg-[#891b1c]' speed={50} direction={'right'}>
+      <MarqueeSC className='bg-[#891b1c]' speed={50} direction={'left'}>
          <h2 className={`mx-[50px] md:mx-[200px] font-bold text-white italic`}>
             Cách điệu khuyến mãi
          </h2>

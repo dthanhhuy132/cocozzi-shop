@@ -3,6 +3,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import 'react-image-gallery/styles/css/image-gallery.css';
 import '../styles/image-gallery.css';
 import '../styles/slick.css';
+import 'animate.css';
 import '../styles/globals.css';
 
 import Head from 'next/head';

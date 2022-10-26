@@ -24,8 +24,13 @@ export default function Slider({imgArr = []}) {
                      <Image src={img} alt='' />
                   </a>
                </div>
-               <h3>Product name</h3>
-               <p>$50</p>
+               <div className='flex justify-between'>
+                  <div>
+                     <h3>Product name</h3>
+                     <p>$50</p>
+                  </div>
+                  <i className='fa-solid fa-cart-plus text-[#891b1c] mt-1'></i>
+               </div>
             </div>
          ))}
       </SliderSlick>

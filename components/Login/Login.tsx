@@ -16,7 +16,7 @@ export default function Login() {
       }
    }, [router.pathname]);
    return (
-      <div className='relattive w-[350px] md:w-[400px] lg:w-[450px] h-auto bg-red-700 mt-10 border-1 md:rounded-lg p-10'>
+      <div className='relattive w-[350px] mt-10 p-10 border-1 bg-red-700 rounded-md md:w-[400px] md:rounded-lg  md:p-5 lg:w-[450px] lg:p-10 '>
          <div className='flex flex-col '>
             <form className='w-full mb-4' autoComplete='off'>
                <input
@@ -40,7 +40,7 @@ export default function Login() {
                               value='Male'
                               name='gender'
                               className='cursor-pointer'
-                           />{' '}
+                           />
                            Male
                         </div>
                         <div>
@@ -63,14 +63,12 @@ export default function Login() {
                   showRegisterForm
                      ? router.push('/membership')
                      : console.log('handleLogin run hear')
-               }
-            >
+               }>
                Login
             </button>
             <button
                className='border-[1px] border-black round-sm uppercase text-[0.9rem] font-[400] text-white py-1 hover:bg-[#b91c1c] hover:brightness-125'
-               onClick={() => router.push('/register')}
-            >
+               onClick={() => router.push('/register')}>
                register
             </button>
          </div>
