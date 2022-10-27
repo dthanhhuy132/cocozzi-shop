@@ -6,7 +6,8 @@ import {useMemo, useState} from 'react';
 import HeaderSearch from './HeaderSearch';
 import {HeaderMarquee} from '../HeaderMarquee';
 import HeaderNavResponsive from './HeaderNavResponsive';
-
+import {FiShoppingCart} from 'react-icons/fi';
+import {BiUser} from 'react-icons/bi';
 const navbarHeader = ['shop', 'promo', 'event', 'info', 'membership'];
 
 export default function Header() {
@@ -23,14 +24,9 @@ export default function Header() {
 
    return (
       <>
-         <div className='md:px-10 pt-5 pb-5 lg:flex lg:justify-between lg:items-end'>
+         <div className='flex pt-5 pb-5  md:px-10 lg:flex justify-between lg:items-end'>
             <div className='flex items-center justify-between px-2 lg:w-1/3'>
                <Logo />
-               <div className='lg:hidden'>
-                  <i
-                     className='fa-solid fa-bars text-[1.5rem] cursor-pointer hover:text-[#891b1c]'
-                     onClick={() => setShowMenuRps(true)}></i>
-               </div>
             </div>
             {/* menu bar */}
             <ul className='hidden lg:flex justify-center gap-x-4 gap-y-3 uppercase lg:w-1/3 flex-wrap md:gap-5 md:flex-nowrap'>
@@ -47,22 +43,26 @@ export default function Header() {
             </ul>
 
             <div
-               className='hidden lg:flex justify-end gap-x-4 uppercase lg:w-1/3 '
+               className='px-3 flex justify-end gap-x-4 uppercase lg:w-1/3 '
                onMouseEnter={handleShowBag}>
-               <HeaderSearch></HeaderSearch>
-               <span className='font-[500]  hover:cursor-pointer hover:text-[#891b1c] '>
-                  bag
-                  <span className='font-bold text-[#891b1c] pl-1'>[2]</span>
+               <div className='hidden lg:block'>
+                  <HeaderSearch></HeaderSearch>
+               </div>
+
+               <BiUser fontSize='1.5rem' className='text-[1.6rem]' />
+               <span className='relative font-[500]  hover:cursor-pointer hover:text-[#891b1c]  '>
+                  <FiShoppingCart fontSize='1.4rem' />
+                  <span className='absolute top-[-7px] left-[22px] font-bold text-[#891b1c] text-[0.8rem]'>
+                     68
+                  </span>
                </span>
+               <div className='lg:hidden ml-3'>
+                  <i
+                     className='fa-solid fa-bars text-[1.5rem] cursor-pointer hover:text-[#891b1c]'
+                     onClick={() => setShowMenuRps(true)}></i>
+               </div>
             </div>
          </div>
-         {/* {isShowMenuRps && (
-            <HeaderNavResponsive
-               handleCloseMenu={() => setShowMenuRps(false)}
-               isShowMenuRps={isShowMenuRps}
-            />
-         )} */}
-
          <HeaderNavResponsive
             handleCloseMenu={() => setShowMenuRps(false)}
             isShowMenuRps={isShowMenuRps}

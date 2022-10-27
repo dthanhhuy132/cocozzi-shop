@@ -28,9 +28,12 @@ export default function HeaderNavResponsive({
          <i
             className='absolute top-5 left-5 fa-sharp fa-solid fa-xmark text-[1.8rem]'
             onClick={() => handleCloseMenu()}></i>
+
          <div className='flex justify-center'>
             <HeaderSearch whiteLine={true} />
          </div>
+
+         {/* nav bar */}
          <ul className='flex justify-center gap-x-4 gap-y-3 uppercase flex-col mt-5'>
             {navbarHeader.map((item) => (
                <a

@@ -20,7 +20,7 @@ export default function ProductDetail() {
    const [isFixedInfoPosition, setFixedInfoPosition] = useState(false);
    const [productInfoLeft, setProductToLeft] = useState<any>('');
 
-   const [sizeSelect, setSizeSelect] = useState('s');
+   const [sizeSelect, setSizeSelect] = useState('');
 
    const productImgRef = useRef(null);
    const productInfoRef = useRef(null);
@@ -44,9 +44,9 @@ export default function ProductDetail() {
    }, []);
 
    return (
-      <div className='w-[1200px] flex mx-[auto] flex-col md:flex-row md:mt-5 px-20'>
+      <div className='flex flex-col-reverse mt-2 mx-[auto]  md:flex-row md:mt-5 md:px-20 lg:w-[1200px]'>
          <div
-            className='w-2/3 grid grid-cols-2 gap-2 auto-rows-fr'
+            className='grid grid-cols-1 gap-2 auto-rows-fr md:w-2/3 md:grid-cols-2 '
             ref={productImgRef}>
             {/* video clip */}
             <video autoPlay muted loop className='w-full'>
@@ -62,17 +62,17 @@ export default function ProductDetail() {
          {/* product info */}
          <div
             className={`${
-               isFixedInfoPosition ? `fixed` : 'block w-1/3 '
-            } top-2 w-[350px]`}
+               isFixedInfoPosition ? `md:fixed` : 'md:block md:w-1/3 '
+            } top-0 right-0 left-0 w-full px-2 md:px-5 md:top-2 md:w-[350px]`}
             style={{left: `${productInfoLeft}px`}}
             ref={productInfoRef}>
             {/* name */}
-            <div className='ml-5 pb-5 font-semibold uppercase text-[1.2rem]'>
+            <div className='pb-0 md:pb-5 font-semibold uppercase text-[1.2rem] '>
                <p>Product name</p>
                <p>Product short description</p>
             </div>
             {/* price */}
-            <div className='mt-2 ml-5 pb-5 flex justify-between border-b-[1px]'>
+            <div className='mt-2 pb-2 md:pb-5 flex justify-between border-b-[1px]'>
                <div>
                   <span className='font-semibold text-[1.2rem] mr-2'>
                      {(456000).toLocaleString()} VNĐ
@@ -87,42 +87,45 @@ export default function ProductDetail() {
                </div>
                <i className='fa-solid fa-share-nodes text-[1.5rem]'></i>
             </div>
-            {/* size select */}
-            <div className='flex flex-col gap-1 mt-5 ml-5 pb-5 border-b-[1px]'>
-               <p>Size</p>
-               <div className='flex gap-1'>
-                  {SIZE.map((item, index) => (
-                     <span
-                        key={index}
-                        className={`uppercase flex justify-center cursor-pointer w-[40px] border-[1px] text-[0.9rem] p-1 ${
-                           item === sizeSelect && 'bg-[#891b1c] text-white'
-                        }  `}
-                        onClick={() => setSizeSelect(item)}>
-                        {item}
-                     </span>
-                  ))}
-               </div>
-            </div>
 
             {/* payment */}
-            <div className='flex flex-row gap-4 mt-7 pl-5'>
-               {paymentLogo.map((item, index) => (
-                  <img
-                     src={item}
-                     key={index}
-                     className='w-[16px] h-[16px]'></img>
-               ))}
-            </div>
+            <div className='fixed bottom-0 right-0 left-0 md:relative px-2 pb-1 md:mx-0 bg-black opacity-80 rounded-tr-[80px] rounded-tl-[80px] md:bg-transparent text-white md:text-black'>
+               {/* size select */}
+               <div className='flex flex-col gap-1 mt-2 md:mt-5 pb-2 border-b-[1px] md:pb-5'>
+                  <p className='text-center md:text-left'>Size</p>
+                  <div className='flex justify-between mx-9 md:mx-0'>
+                     {SIZE.map((item, index) => (
+                        <span
+                           key={index}
+                           className={`uppercase flex justify-center cursor-pointer w-[40px] border-[1px] text-[0.9rem] p-1 ${
+                              item === sizeSelect && 'bg-[#891b1c] text-white'
+                           }  `}
+                           onClick={() => setSizeSelect(item)}>
+                           {item}
+                        </span>
+                     ))}
+                  </div>
+               </div>
 
-            {/* buy button */}
-            <div className='md:flex md:mt-3 md:ml-5 md:gap-2'>
-               <button className='w-[50%] py-1 bg-blue-900 text-white uppercase rounded-sm hover:bg-blue-700'>
-                  Buy now
-               </button>
+               <div className='flex flex-row justify-center gap-4 mt-2 mb-2 md:justify-start md:mt-7'>
+                  {paymentLogo.map((item, index) => (
+                     <img
+                        src={item}
+                        key={index}
+                        className='w-[16px] h-[16px]'></img>
+                  ))}
+               </div>
 
-               <button className='w-[50%] py-1 bg-blue-900 text-white uppercase rounded-sm hover:bg-blue-700'>
-                  Add to cart
-               </button>
+               {/* buy button */}
+               <div className='flex md:mt-3 gap-2'>
+                  <button className='w-[50%] py-2 uppercase rounded-sm border-[1px] border-gray-400 hover:text-white hover:bg-black'>
+                     Buy now
+                  </button>
+
+                  <button className='w-[50%] py-2 uppercase rounded-sm border-[1px] border-gray-400 hover:text-white hover:bg-black'>
+                     Add to cart
+                  </button>
+               </div>
             </div>
          </div>
       </div>
