@@ -97,7 +97,7 @@ export default function ProductDetail() {
                      {SIZE.map((item, index) => (
                         <span
                            key={index}
-                           className={`uppercase flex justify-center cursor-pointer w-[40px] border-[1px] text-[0.9rem] p-1 ${
+                           className={`uppercase flex justify-center items-center cursor-pointer w-[40px] border-[1px] text-[0.9rem] p-0 md:px-1 ${
                               item === sizeSelect && 'bg-[#891b1c] text-white'
                            }  `}
                            onClick={() => setSizeSelect(item)}>
@@ -118,11 +118,11 @@ export default function ProductDetail() {
 
                {/* buy button */}
                <div className='flex md:mt-3 gap-2'>
-                  <button className='w-[50%] py-2 uppercase rounded-sm border-[1px] border-gray-400 hover:text-white hover:bg-black'>
+                  <button className='w-[50%] py-1 md:py-2 uppercase rounded-sm border-[1px] border-gray-400 hover:text-white hover:bg-black'>
                      Buy now
                   </button>
 
-                  <button className='w-[50%] py-2 uppercase rounded-sm border-[1px] border-gray-400 hover:text-white hover:bg-black'>
+                  <button className='w-[50%] py-1 md:py-2 uppercase rounded-sm border-[1px] border-gray-400 hover:text-white hover:bg-black'>
                      Add to cart
                   </button>
                </div>
