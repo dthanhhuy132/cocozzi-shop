@@ -1,13 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import logo from '../../public/images/logo.webp';
+import logo from '../../public/images/logo.png';
 
 interface LogoSize {
    width?: string;
    height?: string;
 }
 
-export default function Logo({width = '130', height = '20'}: LogoSize) {
+export default function Logo({width = '150', height = '30'}: LogoSize) {
    return (
       <Link href='/' className='block center'>
          <a>

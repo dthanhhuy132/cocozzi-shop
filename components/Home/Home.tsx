@@ -43,8 +43,7 @@ export default function Home() {
                   src={imageSrc}
                   active={isActiveAnimation === index ? '1' : ''}
                   layout='responsive'
-                  objectFit='cover'
-               ></ImageSC>
+                  objectFit='cover'></ImageSC>
             </a>
          ))}
       </div>
@@ -73,7 +72,7 @@ const ImageSC = styled(Image)<any>(
       cursor: pointer;
       &:hover {
          transform: scale(1.1);
-         z-index: 99999999999;
+         z-index: 10;
          border: 10px solid red;
          box-sizing: content-box;
       }

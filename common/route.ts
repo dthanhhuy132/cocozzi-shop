@@ -1,6 +1,7 @@
 const route = {
    shop: '/shop',
-   membership: '/membership'
+   membership: '/membership',
+   
 }
 
 export default route

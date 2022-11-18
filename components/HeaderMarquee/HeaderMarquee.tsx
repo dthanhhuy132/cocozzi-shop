@@ -6,12 +6,20 @@ export default function HeaderMarquee() {
    const exampleText = ['Cocozzi Khuyến mãi 1', 'khuyến mãi 2', ,];
 
    return (
-      <MarqueeSC className='bg-[#891b1c]' speed={50} direction={'left'}>
-         <h2 className={`mx-[50px] md:mx-[200px] font-bold text-white italic`}>
+      <MarqueeSC
+         className='relative z-10 bg-[#891b1c] '
+         speed={50}
+         direction={'left'}
+         pauseOnHover={'true'}>
+         <h2
+            className={`mx-[50px] md:mx-[200px] font-bold text-white italic `}
+            onClick={() => console.log('slffasdf')}>
             Cách điệu khuyến mãi
          </h2>
          {exampleText.map((text, index) => (
-            <h3 className={`mx-[50px] md:mx-[200px] text-white`} key={index}>
+            <h3
+               className={`mx-[50px] md:px-[200px] text-white hover:cursor-pointer hover:bg-red-500`}
+               key={index}>
                {text}
             </h3>
          ))}

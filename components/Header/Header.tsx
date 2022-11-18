@@ -1,18 +1,34 @@
+import {useEffect, useMemo, useState} from 'react';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
-import {Logo} from '../Logo';
-import {useMemo, useState} from 'react';
+import Cookies from 'js-cookie';
+import cookie from 'cookie';
 
 import HeaderSearch from './HeaderSearch';
 import {HeaderMarquee} from '../HeaderMarquee';
 import HeaderNavResponsive from './HeaderNavResponsive';
-import {FiShoppingCart} from 'react-icons/fi';
+import {BsBag} from 'react-icons/bs';
 import {BiUser} from 'react-icons/bi';
-const navbarHeader = ['shop', 'promo', 'event', 'info', 'membership'];
+import {AiOutlineMenu} from 'react-icons/ai';
+import {BagHover} from '../Bag';
+import {Logo} from '../Logo';
 
+import useWindowDimensions from '../../hooks/UseWindowDimensions';
+import {useSelector} from 'react-redux';
+
+const navbarHeader = ['shop', 'promo', 'event', 'info', 'membership'];
 export default function Header() {
    const router = useRouter();
+
+   const {isMobile} = useWindowDimensions();
    const [isShowMenuRps, setShowMenuRps] = useState(false);
+   const [isShowBag, setIsShowBag] = useState(false);
+   const [hasToken, setHasToken] = useState(false);
+
+   const {token} = useSelector((state: any) => state.auth);
+   useEffect(() => {
+      setHasToken(token ? true : false);
+   }, [token]);
 
    const hideHeaderMarquee = useMemo(() => {
       const excludePath = ['/event'];
@@ -20,11 +36,9 @@ export default function Header() {
       return excludePath.indexOf(currentPath) === -1;
    }, [router.pathname]);
 
-   function handleShowBag() {}
-
    return (
       <>
-         <div className='flex pt-5 pb-5  md:px-10 lg:flex justify-between lg:items-end'>
+         <div className='sticky top-0 flex py-3 md:px-10 lg:flex justify-between lg:items-center z-20 bg-white border-b-[1px]'>
             <div className='flex items-center justify-between px-2 lg:w-1/3'>
                <Logo />
             </div>
@@ -33,8 +47,9 @@ export default function Header() {
                {navbarHeader.map((item) => (
                   <Link href={`/${item}`} key={item}>
                      <a
-                        className={`hover:text-[#891b1c] font-[500] ${
-                           router.pathname === `/${item}` && 'text-[#891b1c]'
+                        className={`hover:text-[#891b1c] font-[400] text-[1.15rem] ${
+                           router.pathname === `/${item}` &&
+                           'text-[#891b1c] font-[600]'
                         }`}>
                         {item}
                      </a>
@@ -42,32 +57,39 @@ export default function Header() {
                ))}
             </ul>
 
-            <div
-               className='px-3 flex justify-end gap-x-4 uppercase lg:w-1/3 '
-               onMouseEnter={handleShowBag}>
+            <div className='px-3 flex justify-end items-center gap-x-4 uppercase lg:w-1/3 '>
                <div className='hidden lg:block'>
                   <HeaderSearch></HeaderSearch>
                </div>
+               <BiUser fontSize='1.6rem' />
+               {hasToken && (
+                  <div
+                     className='relative font-[500] hover:cursor-pointer hover:text-[#891b1c]'
+                     onMouseEnter={() => !isMobile && setIsShowBag(true)}
+                     onMouseLeave={() => !isMobile && setIsShowBag(false)}
+                     onClick={() => router.push('/bag')}>
+                     <BsBag fontSize='1.5rem' />
+                     <span className='absolute left-[50%] translate-x-[-50%] bottom-[2px] md:bottom-[0px]  font-bold text-[#891b1c] text-[0.7rem]'>
+                        68
+                     </span>
 
-               <BiUser fontSize='1.5rem' className='text-[1.6rem]' />
-               <span className='relative font-[500]  hover:cursor-pointer hover:text-[#891b1c]  '>
-                  <FiShoppingCart fontSize='1.4rem' />
-                  <span className='absolute top-[-7px] left-[22px] font-bold text-[#891b1c] text-[0.8rem]'>
-                     68
-                  </span>
-               </span>
-               <div className='lg:hidden ml-3'>
-                  <i
-                     className='fa-solid fa-bars text-[1.5rem] cursor-pointer hover:text-[#891b1c]'
-                     onClick={() => setShowMenuRps(true)}></i>
+                     {isShowBag && <BagHover />}
+                  </div>
+               )}
+               <div className='lg:hidden'>
+                  <AiOutlineMenu
+                     className=' text-[1.6rem] cursor-pointer hover:text-[#891b1c]'
+                     onClick={() => setShowMenuRps(true)}
+                  />
                </div>
             </div>
          </div>
+
+         {hideHeaderMarquee && <HeaderMarquee></HeaderMarquee>}
          <HeaderNavResponsive
             handleCloseMenu={() => setShowMenuRps(false)}
             isShowMenuRps={isShowMenuRps}
          />
-         {hideHeaderMarquee && <HeaderMarquee></HeaderMarquee>}
       </>
    );
 }

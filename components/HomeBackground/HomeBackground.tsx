@@ -12,10 +12,10 @@ import img4 from '../../public/images/home/4.jpg';
 const ImageArr = [img1, img2, img3, img4];
 
 interface IHomeBackground {
-   isHomePage?: boolean;
+   ishomepage?: boolean;
 }
 
-export default function HomeBackground({isHomePage = true}: IHomeBackground) {
+export default function HomeBackground({ishomepage = true}: IHomeBackground) {
    const router = useRouter();
    const [isActiveAnimation, setIsActiveAnimation] = useState(0);
 
@@ -28,7 +28,7 @@ export default function HomeBackground({isHomePage = true}: IHomeBackground) {
    };
 
    const handleClickImage = () => {
-      if (isHomePage) {
+      if (ishomepage) {
          router.push('/product/124');
       } else {
          return;
@@ -46,10 +46,9 @@ export default function HomeBackground({isHomePage = true}: IHomeBackground) {
                <ImageSC
                   src={imageSrc}
                   active={isActiveAnimation === index ? '1' : ''}
-                  isHomePage={isHomePage}
+                  ishomepage={ishomepage ? '1' : ''}
                   layout='responsive'
-                  objectFit='cover'
-               ></ImageSC>
+                  objectFit='cover'></ImageSC>
             </a>
          ))}
       </div>
@@ -71,7 +70,7 @@ const lighting = keyframes`
 const ImageSC = styled(Image)<any>(
    (props) => css`
       animation: ${props.active &&
-      props.isHomePage &&
+      props.ishomepage &&
       css`1s linear ${lighting}`};
 
       animation-timing-function: linear;
@@ -79,7 +78,7 @@ const ImageSC = styled(Image)<any>(
       transform: 'scale(1.01)';
 
       &:hover {
-         transform: ${props.isHomepage && 'scale(1.1)'};
+         transform: ${props.ishomepage && 'scale(1.1)'};
          z-index: 9;
          border: 10px solid red;
          box-sizing: content-box;

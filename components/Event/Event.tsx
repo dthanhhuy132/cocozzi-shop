@@ -10,15 +10,13 @@ export default function Event() {
             <Image
                src={bannerImg}
                layout='responsive'
-               objectFit='contain'
-            ></Image>
+               objectFit='contain'></Image>
             <div className='absolute left-[20px] bottom-[-150px] h-[200px] w-[150px] rounded-lg overflow-hidden md:left-[40px] md:bottom-[-500px] md:w-[30%] md:h-[600px] lg:left-[60px] lg:bottom-[-400px] lg:w-[33%] lg:h-[600px]'>
                <Image
                   src={infoImg}
                   // layout='fill'
                   objectFit='contain'
-                  className='rounded-lg'
-               ></Image>
+                  className='rounded-lg'></Image>
             </div>
          </div>
          <div className='flex flex-col items-center justify-center py-10 pl-[40%] font md:py-[100px] lg:py-[200px]'>

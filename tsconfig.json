@@ -20,7 +20,8 @@
       "**/*.ts",
       "**/*.tsx",
       "pages/index.js",
-      "components/Home/Home.js"
+      "components/Home/Home.js",
+      "pages/api/auth/[...nextauth].js"
    ],
    "exclude": ["node_modules"]
 }

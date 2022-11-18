@@ -2,14 +2,20 @@ import {useState, useEffect} from 'react';
 
 export default function useWindowDimensions() {
    const hasWindow = typeof window !== 'undefined';
-   const [isMobile, setIsMobile] = useState(false)
    function getWindowDimensions() {
       const width = hasWindow ? window.innerWidth : null;
       const height = hasWindow ? window.innerHeight : null;
-      
+      let isMobile: Boolean;
+      if(width && width < 600) {
+         isMobile = true
+      } else {
+         isMobile = false
+      }
+
       return {
          width,
          height,
+         isMobile
       };
    }
 

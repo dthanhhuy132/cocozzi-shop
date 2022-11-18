@@ -1,19 +1,38 @@
-.slick-prev:before {
-   content: "<";
+.slick-prev::before {
+   content: url("https://spao.com/morenvyimg/main_arrow_left2.png");
+}
+.slick-prev {
+   left: -50px;
+   width: 20px;
+   height: 20px;
+}
+
+.slick-next {
+   right: -40px;
+   top: 50%;
 }
 
 .slick-next:before {
-   content: ">";
+   content: url("https://spao.com/morenvyimg/main_arrow_right2.png");
 }
 
-.slick-prev:before,
-.slick-next:before {
-   line-height: unset;
-   color: #891b1c;
-   font-weight: 900;
-   font-size: 30px;
+.slick-next:before,
+.slick-prev::before {
+   top: -100%;
 }
-.slick-list {
+
+@media (max-width: 640px) {
+   .slick-prev::before,
+   .slick-next:before {
+      content: "";
+   }
+
+   .slick-next {
+      right: 0px;
+   }
+}
+
+/* .slick-list {
    margin-left: -4px;
    margin-right: -4px;
-}
+} */
