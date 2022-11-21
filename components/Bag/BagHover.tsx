@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import styled from 'styled-components';
 import img1 from '../../public/images/shop/1.webp';
 import img2 from '../../public/images/shop/2.webp';
@@ -15,7 +16,7 @@ export default function BagHover() {
                shopping bag
             </p>
             {/* cart */}
-            <div className='flex flex-col gap-2 my-2 max-h-[170px] overflow-auto'>
+            <div className='flex flex-col gap-4 my-2 max-h-[170px] overflow-auto'>
                {imgArr.map((img, index) => (
                   // add img here
                   <BagItemHover key={index} />
@@ -27,9 +28,11 @@ export default function BagHover() {
                   <p>Total</p>
                   <p>3 000 000</p>
                </div>
-               <p className='w-[50%] font-bold bg-[white] text-black rounded-[30px] pb-1 mx-[auto] mt-2'>
-                  pay
-               </p>
+               <Link href={'/payment'}>
+                  <p className='w-[50%] font-bold bg-[white] text-black rounded-[30px] pb-1 mx-[auto] mt-2 cursor-pointer'>
+                     pay
+                  </p>
+               </Link>
             </div>
          </div>
          <DivSCBackground></DivSCBackground>
@@ -75,9 +78,10 @@ const DivSC = styled('div')`
 `;
 
 const DivSCBackground = styled(DivSC)`
-   background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqCFRTme51rLB8j3KW3MdM7CUn9LSMQOrmcg&usqp=CAU');
-   object-fit: cover;
-   /* background-repeat: no-repeat; */
+   background-image: url('https://images.pond5.com/shopping-cart-background-presentation-footage-075835137_prevstill.jpeg');
+
+   background-size: cover;
+   background-repeat: no-repeat;
    z-index: 1;
    top: 0;
    right: 0;

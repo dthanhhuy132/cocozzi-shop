@@ -1,50 +1,31 @@
 import React, {useState} from 'react';
 
 export type CounterProps = {
-   /**
-    */
    min?: number;
-   /**
-    */
    max?: number;
-   /**
-    */
-   increment?: number;
-   /**
-    * decrement value
-    */
-   decrement?: number;
-   /**
-    * a function that registers the count when changed
-    */
    onCountChange?: (count: number) => void;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export default function InputQuantity({
-   min = 1,
-   max = 20,
-   increment = 1,
-   decrement = 1,
-   onCountChange,
-}: CounterProps) {
+export default function InputQuantity({min = 1, max = 20}: CounterProps) {
    const [count, setCount] = useState(min);
 
    function handleClickAdd() {
       if (count < max) {
-         setCount(count + increment);
-         onCountChange(count + increment);
+         setCount(count + 1);
+         // onCountChange(count + 1);
       }
    }
+
    function handleClickSubtract() {
       if (count > min) {
-         setCount(count - decrement);
-         onCountChange(count - decrement);
+         setCount(count - 1);
+         // onCountChange(count - 1);
       }
    }
 
    function handleClick(e) {
       setCount(e.target.valueAsNumber);
-      onCountChange(e.target.valueAsNumber);
+      // onCountChange(e.target.valueAsNumber);
    }
 
    return (
@@ -60,7 +41,7 @@ export default function InputQuantity({
             min={min}
             max={max}
             value={count}
-            onChange={handleClick}
+            onChange={(e: any) => setCount(e.target.value)}
          />
          <button
             onClick={handleClickAdd}

@@ -1,7 +1,8 @@
-import {useState} from 'react';
+import {useState, useRef, useEffect} from 'react';
 
 export default function PaymentMethod() {
    const [paymentMethod, setPaymentMethod] = useState('cod');
+
    return (
       <div>
          <p className='font-bold mt-6 mb-2'>PHƯƠNG THỨC THANH TOÁN</p>
@@ -23,7 +24,7 @@ export default function PaymentMethod() {
 
             <div
                className={`overflow-hidden mt-2 transition-all ${
-                  paymentMethod === 'momo' ? 'h-[200px]' : 'h-0'
+                  paymentMethod === 'momo' ? `h-full` : 'h-0'
                } `}>
                Thanh thanh toán bằng momo thì phải chuyển khoản trước nhé Thanh
                thanh toán bằng momo thì phải chuyển khoản trước nhé Thanh thanh
@@ -31,8 +32,7 @@ export default function PaymentMethod() {
                bằng momo thì phải chuyển khoản trước nhé Thanh thanh toán bằng
                momo thì phải chuyển khoản trước nhé Thanh thanh toán bằng momo
                thì phải chuyển khoản trước nhé Thanh thanh toán bằng momo thì
-               phải chuyển khoản trước nhé Thanh thanh toán bằng momo thì phải
-               chuyển khoản trước nhé
+               phải chuyển khoản trước nhé T
             </div>
          </div>
          <div className='mt-2'>

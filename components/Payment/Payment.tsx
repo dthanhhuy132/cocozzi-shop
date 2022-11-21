@@ -6,7 +6,7 @@ export default function Payment() {
    return (
       <div className='flex flex-col md:flex-row w-full md:w-2/3 my-4 md:my-10 mx-[auto] gap-5 '>
          {/* Cart */}
-         <div className='md:w-2/3 p-2 md:p-4 bg-gray-100 rounded-lg'>
+         <div className='md:w-2/3 p-2 md:p-4 bg-gray-100 rounded-lg shadow-[0_3px_8px_rgba(0,0,0,0.3)]'>
             <p className='font-bold mb-3'>
                VUI LÒNG HOÀN THÀNH THÔNG TIN ĐẶT HÀNG{' '}
             </p>

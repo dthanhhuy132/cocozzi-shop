@@ -17,12 +17,15 @@ import useWindowDimensions from '../../hooks/UseWindowDimensions';
 import {useSelector} from 'react-redux';
 
 const navbarHeader = ['shop', 'promo', 'event', 'info', 'membership'];
-export default function Header() {
+export default function Header({carts}) {
+   const {user} = useSelector((state: any) => state.auth);
+
    const router = useRouter();
 
    const {isMobile} = useWindowDimensions();
    const [isShowMenuRps, setShowMenuRps] = useState(false);
    const [isShowBag, setIsShowBag] = useState(false);
+   const [isShowUserControl, setIsShowUserControl] = useState(false);
    const [hasToken, setHasToken] = useState(false);
 
    const {token} = useSelector((state: any) => state.auth);
@@ -61,15 +64,55 @@ export default function Header() {
                <div className='hidden lg:block'>
                   <HeaderSearch></HeaderSearch>
                </div>
-               <BiUser fontSize='1.6rem' />
+               <div
+                  className='relative before:absolute before:top-0 before:right-0
+                  before:w-[50px] before:h-[40px] group cursor-pointer'
+                  onMouseEnter={() => !isMobile && setIsShowUserControl(true)}
+                  onMouseLeave={() => !isMobile && setIsShowUserControl(false)}>
+                  <BiUser
+                     fontSize='1.6rem'
+                     className='relative hover:text-[#891b1c] group-hover:text-[#891b1c] cursor-pointer '
+                     onClick={() => {}}
+                  />
+
+                  {isShowUserControl && (
+                     <div className='absolute top-7 right-[-10px] min-w-[150px] bg-white rounded-md border shadow-[0_3px_8px_rgba(0,0,0,0.3)]'>
+                        <ul className='capitalize py-1'>
+                           <li className='py-1 px-2 hover:bg-[#891b1c] hover:text-white cursor-pointer'>
+                              Thông tin
+                           </li>
+                           <li className='py-1 px-2 hover:bg-[#891b1c] hover:text-white cursor-pointer'>
+                              Đơn hàng của tôi
+                           </li>
+
+                           <li className='py-1 px-2 hover:bg-[#891b1c] hover:text-white cursor-pointer'>
+                              Trang Admin
+                           </li>
+                           <li className='py-1 px-2 hover:bg-[#891b1c] hover:text-white cursor-pointer'>
+                              Đăng xuất
+                           </li>
+
+                           {isMobile && (
+                              <li className='py-1 px-2 hover:bg-[#891b1c] hover:text-white cursor-pointer'>
+                                 Đăng nhập
+                              </li>
+                           )}
+                        </ul>
+                     </div>
+                  )}
+               </div>
                {hasToken && (
                   <div
                      className='relative font-[500] hover:cursor-pointer hover:text-[#891b1c]'
                      onMouseEnter={() => !isMobile && setIsShowBag(true)}
-                     onMouseLeave={() => !isMobile && setIsShowBag(false)}
-                     onClick={() => router.push('/bag')}>
-                     <BsBag fontSize='1.5rem' />
-                     <span className='absolute left-[50%] translate-x-[-50%] bottom-[2px] md:bottom-[0px]  font-bold text-[#891b1c] text-[0.7rem]'>
+                     onMouseLeave={() => !isMobile && setIsShowBag(false)}>
+                     <BsBag
+                        fontSize='1.5rem'
+                        onClick={() => router.push('/bag')}
+                     />
+                     <span
+                        className='absolute left-[50%] translate-x-[-50%] bottom-[2px] md:bottom-[0px]  font-bold text-[#891b1c] text-[0.7rem]'
+                        onClick={() => router.push('/bag')}>
                         68
                      </span>
 

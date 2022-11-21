@@ -1,6 +1,8 @@
+import {useDispatch} from 'react-redux';
 import {Bag} from '../components/Bag';
-import {AiOutlineCloseCircle} from 'react-icons/ai';
 
-export default function BagPage() {
-   return <Bag></Bag>;
+export default function BagPage({carts}) {
+   const dispatch = useDispatch();
+
+   return <Bag carts={carts} />;
 }

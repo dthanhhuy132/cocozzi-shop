@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-const baseURL = 'http://localhost:5000/api/';
+import {getTokenSSRAndCSS} from '../helper';
+const baseURL = 'http://localhost:5000/api';
 
 const api = {
    call() {
@@ -13,12 +14,12 @@ const api = {
       });
    },
 
-   callWithToken() {
+   callWithToken(token) {
       return axios.create({
          baseURL,
          headers: {
             // 'Content-type': 'application/json',
-            Authorization: 'Bearer ' + Cookies.get('token'),
+            Authorization: 'Bearer ' + token,
          },
       });
    },

@@ -2,9 +2,11 @@ import {configureStore} from '@reduxjs/toolkit';
 import {useDispatch} from 'react-redux';
 
 import authReducer from './auth/authSlice';
+import cartSlice from './cart/cartSlice';
+import categorySlice from './category/categorySlice';
 
 const store = configureStore({
-   reducer: {auth: authReducer},
+   reducer: {auth: authReducer, cart: cartSlice, categories: categorySlice},
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

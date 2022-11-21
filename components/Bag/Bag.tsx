@@ -1,12 +1,21 @@
+import {useEffect} from 'react';
 import {useRouter} from 'next/router';
+import {useDispatch} from 'react-redux';
 import {BagHeader, BagItem} from './index';
+import {updateCart} from '../../store/cart/cartSlice';
 
-export default function BagPage() {
+export default function Bag({carts}) {
    const router = useRouter();
+   const dispatch = useDispatch();
+
+   useEffect(() => {
+      dispatch(updateCart(carts));
+   }, []);
+
    return (
       <div className='flex flex-col md:flex-row w-full md:w-2/3 my-4 md:my-10 mx-[auto] gap-5 '>
          {/* Cart */}
-         <div className='md:w-2/3 p-2 md:p-4 bg-gray-100 rounded-lg'>
+         <div className='md:w-2/3 p-2 md:p-4 bg-gray-100 rounded-lg shadow-[0_3px_8px_rgba(0,0,0,0.3)]'>
             <table className='w-full border-separate border-spacing-y-[10px]'>
                <thead className='font-thin text-[0.95rem]'>
                   <BagHeader />

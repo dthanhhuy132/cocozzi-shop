@@ -10,6 +10,7 @@ import {loginAsyncAction} from '../store/auth/authAsyncAction';
 import {useRouter} from 'next/router';
 
 import Cookies from 'js-cookie';
+import {getTokenExpireTime, parseJwt} from '../helper';
 
 export default function MembershipPage() {
    const loginData = {email: '', password: ''};
@@ -25,7 +26,11 @@ export default function MembershipPage() {
       dispatch(loginAsyncAction(data)).then((res) => {
          if (res.payload.ok) {
             const token = res.payload.user.accessToken;
-            Cookies.set('token', token, {expires: 1});
+
+            const expireTokenDay = getTokenExpireTime(token);
+
+            Cookies.set('token', token, {expires: expireTokenDay});
+            router.push('/');
          } else {
             setErrorLogin(res.payload.message);
          }

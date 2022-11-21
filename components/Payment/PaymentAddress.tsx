@@ -25,8 +25,8 @@ export default function PaymentAddress() {
    }, [initProvince]);
    return (
       <div className='flex gap-3 flex-col mb-5'>
-         <div className='flex justify-between gap-5'>
-            <div className='w-[50%]'>
+         <div className='flex flex-col md:flex-row justify-between gap-5'>
+            <div className='md:w-[50%]'>
                <label className='font-semibold'>Tỉnh/Thành phố *</label>
                <Select
                   placeholder='Vui lòng chọn Tỉnh/Thành phố'
@@ -37,7 +37,7 @@ export default function PaymentAddress() {
                />
             </div>
 
-            <div className='w-[50%]'>
+            <div className='md:w-[50%]'>
                <label className='font-semibold'>Quận/Huyện *</label>
                <Select
                   placeholder='Vui lòng chọn Quận/Huyện'

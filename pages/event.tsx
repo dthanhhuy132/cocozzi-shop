@@ -4,7 +4,6 @@ import {Logo} from '../components/Logo';
 import eventApi from '../service/eventApi';
 
 export default function EventPage({allEvents}) {
-   console.log('allEvent la gi', allEvents);
    return (
       <>
          <p className='hidden md:block uppercase text-center my-10'>Event</p>

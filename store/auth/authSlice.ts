@@ -3,7 +3,7 @@ import type {PayloadAction} from '@reduxjs/toolkit';
 import {loginAsyncAction} from './authAsyncAction';
 
 import Cookies from 'js-cookie';
-import {parseJwt} from '../../helper/parseJWT';
+import {parseJwt} from '../../helper';
 
 interface IAuthSlice {
    user: any;

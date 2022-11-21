@@ -12,7 +12,6 @@ export default function Document() {
                crossOrigin='anonymous'
                // referrerpolicy='no-referrer'
             />
-
             <link rel='preconnect' href='https://fonts.googleapis.com' />
             <link
                rel='preconnect'

@@ -2,21 +2,53 @@ import 'react-image-gallery/styles/css/image-gallery.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import 'animate.css';
+import 'nprogress/nprogress.css';
+import '../styles/nprogress-custom.css';
+
 import '../styles/image-gallery.css';
 import '../styles/slick.css';
 import '../styles/globals.css';
 
-import {SessionProvider, useSession} from 'next-auth/react';
+import {SessionProvider} from 'next-auth/react';
 import Head from 'next/head';
 import {Header} from '../components/Header';
 import {Footer} from '../components/Footer';
+
+import App, {AppContext} from 'next/app';
 
 import Script from 'next/script';
 
 import {Provider} from 'react-redux';
 import store from '../store';
+import categoryApi from '../service/categoryApi';
+import {GetServerSideProps} from 'next';
+import {useEffect} from 'react';
+import {useRouter} from 'next/router';
 
+import NProgress from 'nprogress';
+import {getTokenSSRAndCSS} from '../helper';
+import bagApi from '../service/bagApi';
 function MyApp({Component, pageProps, session}) {
+   const router = useRouter();
+   const {carts, categories} = pageProps;
+
+   useEffect(() => {}, []);
+
+   // nprogress configure
+   useEffect(() => {
+      NProgress.configure({showSpinner: false});
+      router.events.on('routeChangeStart', () => {
+         NProgress.set(0.5);
+         NProgress.start();
+      });
+      router.events.on('routeChangeComplete', () => {
+         NProgress.done();
+      });
+      router.events.on('routeChangeError', () => {
+         NProgress.done();
+      });
+   }, []);
+
    return (
       <SessionProvider session={session}>
          <Provider store={store}>
@@ -28,8 +60,9 @@ function MyApp({Component, pageProps, session}) {
                />
                <link rel='icon' href='/favicon.ico' />
             </Head>
-            <Header></Header>
             <Script src='https://sp.zalo.me/plugins/sdk.js'></Script>
+
+            <Header carts={carts}></Header>
 
             <Component {...pageProps} />
 
@@ -39,17 +72,27 @@ function MyApp({Component, pageProps, session}) {
    );
 }
 
-// get bag item
-const getServerSideProps = async ({query}) => {
-   try {
-      return {};
-   } catch (error) {
-      return {
-         props: {
-            error: error.error,
-         },
-      };
-   }
+MyApp.getInitialProps = async (appContext: AppContext) => {
+   const [token, userToken] = getTokenSSRAndCSS(appContext);
+   const userId = userToken?.data._id;
+   const appProps = await App.getInitialProps(appContext);
+   const allCategory = await categoryApi.getAllCategory();
+
+   const cartRes = await bagApi.getUserCart(userId, token);
+
+   console.log('cartRes cho nay la gi', cartRes);
+   const cartResData = cartRes?.data?.data;
+
+   console.log('cartResData la gi', cartRes);
+
+   const categories = allCategory?.data?.data;
+   return {
+      pageProps: {
+         ...appProps.pageProps,
+         categories: categories || [],
+         carts: cartResData || [],
+      },
+   };
 };
 
 export default MyApp;
