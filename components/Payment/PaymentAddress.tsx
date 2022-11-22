@@ -1,9 +1,9 @@
 import Select from 'react-select';
 import React, {useEffect, useState} from 'react';
 
-import province from './address/province.json';
-import address from './address/address.json';
 import PaymetnInputForm from './PaymentInputForm';
+import {address} from './address/address';
+import {province} from './address/province';
 
 export default function PaymentAddress() {
    const formatProvince = province.map((item) => ({value: item, label: item}));
