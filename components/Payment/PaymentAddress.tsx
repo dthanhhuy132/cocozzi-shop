@@ -3,7 +3,6 @@ import React, {useEffect, useState} from 'react';
 
 import province from './address/province.json';
 import address from './address/address.json';
-import PaymentUserInfo from './PaymentUserInfo';
 import PaymetnInputForm from './PaymentInputForm';
 
 export default function PaymentAddress() {
