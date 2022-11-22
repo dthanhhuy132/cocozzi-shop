@@ -11,7 +11,7 @@ const imgArr = [img1, img2, img3, img4, img5, img6, img7, img8];
 
 export default function ShopProduct() {
    return (
-      <div className='grid grid-cols-1 md:grid-cols-4 gap-7 md:gap-0'>
+      <div className='grid grid-cols-1 md:grid-cols-4 gap-y-6 gap-x-6'>
          {imgArr.map((img, index) => (
             <ProductItem
                key={index}

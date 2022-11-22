@@ -15,11 +15,12 @@ import {Logo} from '../Logo';
 
 import useWindowDimensions from '../../hooks/UseWindowDimensions';
 import {useSelector} from 'react-redux';
+import HeaderUserControl from './HeaderUserControl';
 
 const navbarHeader = ['shop', 'promo', 'event', 'info', 'membership'];
 export default function Header({carts}) {
    const {user} = useSelector((state: any) => state.auth);
-
+   console.log('usercho nay la gi', user);
    const router = useRouter();
 
    const {isMobile} = useWindowDimensions();
@@ -72,33 +73,17 @@ export default function Header({carts}) {
                   <BiUser
                      fontSize='1.6rem'
                      className='relative hover:text-[#891b1c] group-hover:text-[#891b1c] cursor-pointer '
-                     onClick={() => {}}
+                     onClick={() => {
+                        !hasToken && router.push('/membership');
+                        // isMobile && router.push('/my-order');
+                     }}
                   />
 
                   {isShowUserControl && (
-                     <div className='absolute top-7 right-[-10px] min-w-[150px] bg-white rounded-md border shadow-[0_3px_8px_rgba(0,0,0,0.3)]'>
-                        <ul className='capitalize py-1'>
-                           <li className='py-1 px-2 hover:bg-[#891b1c] hover:text-white cursor-pointer'>
-                              Thông tin
-                           </li>
-                           <li className='py-1 px-2 hover:bg-[#891b1c] hover:text-white cursor-pointer'>
-                              Đơn hàng của tôi
-                           </li>
-
-                           <li className='py-1 px-2 hover:bg-[#891b1c] hover:text-white cursor-pointer'>
-                              Trang Admin
-                           </li>
-                           <li className='py-1 px-2 hover:bg-[#891b1c] hover:text-white cursor-pointer'>
-                              Đăng xuất
-                           </li>
-
-                           {isMobile && (
-                              <li className='py-1 px-2 hover:bg-[#891b1c] hover:text-white cursor-pointer'>
-                                 Đăng nhập
-                              </li>
-                           )}
-                        </ul>
-                     </div>
+                     <HeaderUserControl
+                        hasToken={hasToken}
+                        isMobile={isMobile}
+                     />
                   )}
                </div>
                {hasToken && (
@@ -111,7 +96,7 @@ export default function Header({carts}) {
                         onClick={() => router.push('/bag')}
                      />
                      <span
-                        className='absolute left-[50%] translate-x-[-50%] bottom-[2px] md:bottom-[0px]  font-bold text-[#891b1c] text-[0.7rem]'
+                        className='absolute left-[50%] translate-x-[-50%] bottom-[0px]  font-bold text-[#891b1c] text-[0.7rem]'
                         onClick={() => router.push('/bag')}>
                         68
                      </span>

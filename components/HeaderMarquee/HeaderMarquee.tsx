@@ -10,7 +10,7 @@ export default function HeaderMarquee() {
          className='relative z-10 bg-[#891b1c] '
          speed={50}
          direction={'left'}
-         pauseOnHover={'true'}>
+         pauseOnHover={'false'}>
          <h2
             className={`mx-[50px] md:mx-[200px] font-bold text-white italic `}
             onClick={() => console.log('slffasdf')}>
