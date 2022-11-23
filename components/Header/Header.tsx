@@ -19,7 +19,7 @@ import HeaderUserControl from './HeaderUserControl';
 
 const navbarHeader = ['shop', 'promo', 'event', 'info', 'membership'];
 export default function Header({carts}) {
-   const {user} = useSelector((state: any) => state.auth);
+   const {token} = useSelector((state: any) => state.auth);
    const router = useRouter();
 
    const {isMobile} = useWindowDimensions();
@@ -28,7 +28,6 @@ export default function Header({carts}) {
    const [isShowUserControl, setIsShowUserControl] = useState(false);
    const [hasToken, setHasToken] = useState(false);
 
-   const {token} = useSelector((state: any) => state.auth);
    useEffect(() => {
       setHasToken(token ? true : false);
    }, [token]);

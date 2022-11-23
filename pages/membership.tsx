@@ -10,7 +10,8 @@ import {loginAsyncAction} from '../store/auth/authAsyncAction';
 import {useRouter} from 'next/router';
 
 import Cookies from 'js-cookie';
-import {getTokenExpireTime, parseJwt} from '../helper';
+import {getTokenExpireTime, getTokenSSRAndCSS, parseJwt} from '../helper';
+import {login} from '../store/auth/authSlice';
 
 export default function MembershipPage() {
    const loginData = {email: '', password: ''};
@@ -22,20 +23,31 @@ export default function MembershipPage() {
    const [isShowLoading, setIsShowLoading] = useState<boolean>(false);
 
    function handleLogin(data: any) {
+      let fakeToken =
+         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7Il9pZCI6IjYzNjkwNzU2ZGJjNmMzZjM2ZDVlZTYzMiIsImVtYWlsIjoidGVzdGFkbWluQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEyJE1zYmJVMElpWWJLcVQ2ZEJjUEZHZWVUOEQvL3lycXg2ZFFhUjZRRkUvYkp1MkMxOFdiZmMuIiwiZnVsbE5hbWUiOm51bGwsInVzZXJJbWFnZSI6bnVsbCwicm9sZSI6ImFkbWluIiwicmVmcmVzaFRva2VuIjoiZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmtZWFJoSWpwN0lsOXBaQ0k2SWpZek5qa3dOelUyWkdKak5tTXpaak0yWkRWbFpUWXpNaUlzSW1WdFlXbHNJam9pZEdWemRHRmtiV2x1UUdkdFlXbHNMbU52YlNJc0luQmhjM04zYjNKa0lqb2lKREpoSkRFeUpFMXpZbUpWTUVscFdXSkxjVlEyWkVKalVFWkhaV1ZVT0VRdkwzbHljWGcyWkZGaFVqWlJSa1V2WWtwMU1rTXhPRmRpWm1NdUlpd2lablZzYkU1aGJXVWlPbTUxYkd3c0luVnpaWEpKYldGblpTSTZiblZzYkN3aWNtOXNaU0k2SW1Ga2JXbHVJaXdpY21WbWNtVnphRlJ2YTJWdUlqcHVkV3hzTENKaFpHUnlaWE56TVNJNmJuVnNiQ3dpWVdSa2NtVnpjeklpT201MWJHd3NJbUZrWkhKbGMzTXpJanB1ZFd4c0xDSmpjbVZoZEdWa1FYUWlPaUl5TURJeUxURXhMVEEzVkRFek9qSTFPalF5TGpnek0xb2lMQ0pmWDNZaU9qQjlMQ0pwWVhRaU9qRTJOamd3TURJM09EY3NJbVY0Y0NJNk1UWTJPREE0T1RFNE4zMC5WaTZNbXdqWWVTTERSQVdyWFE3N3ZwUkVNMi1QWmgtZm5jd0t2bkdnbHFnIiwiYWRkcmVzczEiOm51bGwsImFkZHJlc3MyIjpudWxsLCJhZGRyZXNzMyI6bnVsbCwiY3JlYXRlZEF0IjoiMjAyMi0xMS0wN1QxMzoyNTo0Mi44MzNaIiwiX192IjowfSwiaWF0IjoxNjY5MjE5ODAyLCJleHAiOjE2NjkyMjM0MDJ9.qWAfWrZaTMTv5FUWXEeK-NizbeDtIq5NSxFE4c4Nbmk';
+
       setIsShowLoading(true);
-      dispatch(loginAsyncAction(data)).then((res) => {
-         if (res.payload.ok) {
-            const token = res.payload.user.accessToken;
+      // dispatch(loginAsyncAction(data)).then((res) => {
+      //    if (res.payload.ok) {
+      //       const token = res.payload.user.accessToken;
 
-            const expireTokenDay = getTokenExpireTime(token);
+      //       const expireTokenDay = getTokenExpireTime(token);
 
-            Cookies.set('token', token, {expires: expireTokenDay});
-            router.push('/');
-         } else {
-            setErrorLogin(res.payload.message);
-         }
-         setIsShowLoading(false);
-      });
+      //       Cookies.set('token', token, {expires: expireTokenDay});
+      //       router.push('/');
+      //    } else {
+      //       setErrorLogin(res.payload.message);
+      //    }
+      //    setIsShowLoading(false);
+      // });
+
+      // fakelogintoken:
+      // const token = res.payload.user.accessToken;
+
+      const expireTokenDay = getTokenExpireTime(fakeToken);
+      dispatch(login(fakeToken));
+      Cookies.set('token', fakeToken, {expires: expireTokenDay});
+      router.push('/');
    }
 
    return (

@@ -10,15 +10,20 @@ interface IAuthSlice {
    token: undefined | string;
 }
 
-const token = Cookies.get('token');
-const user = parseJwt(token);
-
-const initialState: IAuthSlice = {user, token};
+const initialState: IAuthSlice = {
+   user: null,
+   token: Cookies.get('token') || '',
+};
 
 const authSlice = createSlice({
    name: 'auth',
    initialState,
    reducers: {
+      login: (state, action) => {
+         const userToken = parseJwt(action.payload);
+         state.user = userToken;
+         state.token = action.payload;
+      },
       logout: (state) => {
          Cookies.remove('token');
          state.user = {};
@@ -33,5 +38,5 @@ const authSlice = createSlice({
    },
 });
 
-export const {logout} = authSlice.actions;
+export const {logout, login} = authSlice.actions;
 export default authSlice.reducer;

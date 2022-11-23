@@ -17,11 +17,11 @@ export default function EventPage({allEvents = []}) {
 
 export const getServerSideProps: GetServerSideProps<any> = async (context) => {
    try {
-      const responseAllEvent = await eventApi.getAllEvent();
-
+      // const responseAllEvent = await eventApi.getAllEvent();
+      let responseAllEvent;
       return {
          props: {
-            allEvents: responseAllEvent.data.data || [],
+            allEvents: responseAllEvent?.data?.data || [],
             error: false,
          },
       };

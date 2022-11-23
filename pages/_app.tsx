@@ -76,13 +76,14 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
    const [token, userToken] = getTokenSSRAndCSS(appContext);
    const userId = userToken?.data._id;
    const appProps = await App.getInitialProps(appContext);
-   const allCategory = await categoryApi.getAllCategory();
+   // const allCategory = await categoryApi.getAllCategory();
 
-   const cartRes = await bagApi.getUserCart(userId, token);
+   // const cartRes = await bagApi.getUserCart(userId, token);
 
-   const cartResData = cartRes?.data?.data;
+   // const cartResData = cartRes?.data?.data;
 
-   const categories = allCategory?.data?.data;
+   // const categories = allCategory?.data?.data;
+   let categories, cartResData;
    return {
       pageProps: {
          ...appProps.pageProps,

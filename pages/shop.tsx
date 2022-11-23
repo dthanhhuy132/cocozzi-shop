@@ -32,12 +32,12 @@ export default function ShopPage({products = []}) {
 
 export const getServerSideProps: GetServerSideProps<any> = async () => {
    try {
-      const response = await productApi.getAllProduct();
-
+      // const response = await productApi.getAllProduct();
+      let response;
       return {
          props: {
             ok: true,
-            products: response.data.data,
+            products: response.data.data || [],
          },
       };
    } catch (error) {
