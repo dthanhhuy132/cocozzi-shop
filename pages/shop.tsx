@@ -9,7 +9,7 @@ import {
 
 import productApi from '../service/productApi';
 
-export default function ShopPage({products}) {
+export default function ShopPage({products = []}) {
    console.log('products cho nay la gi', products);
    return (
       <div className='justify-center'>

@@ -42,22 +42,22 @@ export default function SearchPage() {
    );
 }
 
-export const getServerSideProps: GetServerSideProps<any> = async (context) => {
-   const query = context.query.q || '';
+// export const getServerSideProps: GetServerSideProps<any> = async (context) => {
+//    const query = context.query.q || '';
 
-   try {
-      let listProductSearch = [];
-      return {
-         props: {
-            listProductSearch,
-            error: false,
-         },
-      };
-   } catch (error) {
-      return {
-         props: {
-            error: true,
-         },
-      };
-   }
-};
+//    try {
+//       let listProductSearch = [];
+//       return {
+//          props: {
+//             listProductSearch,
+//             error: false,
+//          },
+//       };
+//    } catch (error) {
+//       return {
+//          props: {
+//             error: true,
+//          },
+//       };
+//    }
+// };

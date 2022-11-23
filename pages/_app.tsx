@@ -80,10 +80,7 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
 
    const cartRes = await bagApi.getUserCart(userId, token);
 
-   console.log('cartRes cho nay la gi', cartRes);
    const cartResData = cartRes?.data?.data;
-
-   console.log('cartResData la gi', cartRes);
 
    const categories = allCategory?.data?.data;
    return {

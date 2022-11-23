@@ -3,7 +3,7 @@ import {Event} from '../components/Event';
 import {Logo} from '../components/Logo';
 import eventApi from '../service/eventApi';
 
-export default function EventPage({allEvents}) {
+export default function EventPage({allEvents = []}) {
    return (
       <>
          <p className='hidden md:block uppercase text-center my-10'>Event</p>

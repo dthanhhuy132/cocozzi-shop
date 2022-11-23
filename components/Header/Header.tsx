@@ -20,7 +20,6 @@ import HeaderUserControl from './HeaderUserControl';
 const navbarHeader = ['shop', 'promo', 'event', 'info', 'membership'];
 export default function Header({carts}) {
    const {user} = useSelector((state: any) => state.auth);
-   console.log('usercho nay la gi', user);
    const router = useRouter();
 
    const {isMobile} = useWindowDimensions();
