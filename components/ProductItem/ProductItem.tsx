@@ -9,12 +9,16 @@ interface IProductItem {
 export default function ProductItem({img, displayPrice = false}: IProductItem) {
    const router = useRouter();
    return (
-      <div className='p-2 md:px-2 transition hover:border-2 hover:border-[#891b1c] rounded-lg'>
-         <div className='cursor-pointer rounded-md overflow-hidden'>
+      <div className='p-1 md:px-2 transition'>
+         <div className='relative cursor-pointer rounded-[12px] md:rounded-[16px] overflow-hidden'>
             <Image
-               className='transition  hover:scale-[1.1] '
+               className='absolute top-0 left-0 w-full transition hover:scale-[1.1]'
                src={img}
                alt=''
+               // width='100%'
+               // height='100%'
+               layout='responsive'
+               objectFit='cover'
                onClick={() => router.push('/product/123')}
             />
          </div>

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import {getTokenSSRAndCSS} from '../helper';
-const baseURL = process.env.DEVELOPMENT_ENV;
+const baseURL = 'http://localhost:5000/api';
 
 const api = {
    call() {

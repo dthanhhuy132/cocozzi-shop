@@ -14,15 +14,15 @@ import img8 from '../../public/images/shop/8.webp';
 import useWindowDimensions from '../../hooks/UseWindowDimensions';
 const imgArr = [img1, img2, img3, img4, img5, img6, img7, img8];
 
-export default function ShopSliderProduct() {
+export default function ShopSliderProductStory() {
    const {isMobile} = useWindowDimensions();
    const settings = {
       className: 'center w-full',
       infinite: true,
       centerPadding: '60px',
-      slidesToShow: isMobile ? 3 : 4,
+      slidesToShow: isMobile ? 2.5 : 3,
       swipeToSlide: true,
-      autoplay: true,
+      autoplay: false,
       lazyLoad: 'progressive',
    };
 

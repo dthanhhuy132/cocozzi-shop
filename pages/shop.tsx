@@ -4,7 +4,7 @@ import {
    Shop,
    ShopProduct,
    ShopSliderBanner,
-   ShopSliderProduct,
+   ShopSliderProductStory,
 } from '../components/Shop';
 
 import productApi from '../service/productApi';
@@ -14,11 +14,13 @@ export default function ShopPage({products = []}) {
    return (
       <div className='justify-center'>
          <ShopSliderBanner />
+
          <div className='mt-5 mx-0 md:mx-20'>
-            <p className='text-[1.2rem] font-bold pl-4 md:pl-2'>
+            {/* story product */}
+            <p className='text-[1.5rem] font-bold pl-4 md:pl-2 text-center'>
                Lorem, ipsum.
             </p>
-            <ShopSliderProduct />
+            <ShopSliderProductStory />
 
             <div className='flex gap-3 mt-5 text-[1.2rem] font-bold pl-4 md:pl-2'>
                <p>MEN</p>
