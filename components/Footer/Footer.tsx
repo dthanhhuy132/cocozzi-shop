@@ -6,10 +6,11 @@ import {ImFacebook} from 'react-icons/im';
 import {IoLogoYoutube} from 'react-icons/io';
 import {SiTiktok} from 'react-icons/si';
 import {useRouter} from 'next/router';
-ImFacebook;
+import useGlobalState from '../../react-gobal-state';
+
 export default function Footer() {
    const router = useRouter();
-
+   const [isShowChat] = useGlobalState('isShowChat');
    const hideHeaderMarquee = useMemo(() => {
       const excludePath = ['/event'];
       const currentPath = router.pathname;
@@ -20,12 +21,6 @@ export default function Footer() {
       const includePath = ['/shop', '/promo', '/info', '/bag'];
       return includePath.indexOf(router.pathname) >= 0;
    }, [router.pathname]);
-
-   useEffect(() => {
-      // const script = document.createElement('script');
-      // script.src = 'https://sp.zalo.me/plugins/sdk.js';
-      // document.body.append(script);
-   }, []);
 
    return (
       <div

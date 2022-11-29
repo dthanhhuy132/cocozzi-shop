@@ -36,3 +36,24 @@
    margin-left: -4px;
    margin-right: -4px;
 } */
+
+.slick-dots.slick-thumb {
+   display: flex;
+   flex-direction: row;
+   justify-content: center;
+}
+
+.slick-dots.slick-thumb li {
+   width: 6px;
+   height: 6px;
+   margin: 0 3px;
+   border-radius: 999px;
+   transition: all 0.5s ease-in-out;
+   will-change: width;
+   background-color: black;
+}
+
+.slick-dots.slick-thumb li.slick-active {
+   background-color: #891a1c;
+   width: 24px;
+}

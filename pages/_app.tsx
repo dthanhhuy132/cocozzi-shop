@@ -2,11 +2,13 @@ import 'react-image-gallery/styles/css/image-gallery.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import 'animate.css';
+
 import 'nprogress/nprogress.css';
 import '../styles/nprogress-custom.css';
 
 import '../styles/image-gallery.css';
 import '../styles/slick.css';
+import '../styles/masonry.css';
 import '../styles/globals.css';
 
 import {SessionProvider} from 'next-auth/react';
@@ -22,15 +24,17 @@ import {Provider} from 'react-redux';
 import store from '../store';
 import categoryApi from '../service/categoryApi';
 import {GetServerSideProps} from 'next';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useRouter} from 'next/router';
 
 import NProgress from 'nprogress';
 import {getTokenSSRAndCSS} from '../helper';
 import bagApi from '../service/bagApi';
+import useGlobalState from '../react-gobal-state';
 function MyApp({Component, pageProps, session}) {
    const router = useRouter();
    const {carts, categories} = pageProps;
+   const [isShowChat, setIsShowChat] = useGlobalState('isShowChat');
 
    useEffect(() => {}, []);
 
@@ -60,7 +64,9 @@ function MyApp({Component, pageProps, session}) {
                />
                <link rel='icon' href='/favicon.ico' />
             </Head>
-            <Script src='https://sp.zalo.me/plugins/sdk.js'></Script>
+            {isShowChat && (
+               <Script src='https://sp.zalo.me/plugins/sdk.js'></Script>
+            )}
 
             <Header carts={carts}></Header>
 

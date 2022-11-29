@@ -35,8 +35,9 @@ export default function HeaderNavResponsive({
             isShowMenuRps ? 'animate__fadeInRight' : 'animate__fadeOutRight'
          } fixed top-0 right-0 bottom-0 left-0 bg-black bg-opacity-90 z-50 pt-[100px] text-center text-white`}>
          <i
-            className='absolute top-5 left-5 fa-sharp fa-solid fa-xmark text-[1.8rem]'
-            onClick={() => handleCloseMenu()}></i>
+            className='absolute top-3 left-3 fa-sharp fa-solid fa-xmark text-[1.8rem]'
+            onClick={() => handleCloseMenu()}
+         />
 
          <div className='flex justify-center'>
             <HeaderSearch whiteLine={true} />
@@ -47,7 +48,7 @@ export default function HeaderNavResponsive({
             {navbarHeader.map((item) => (
                <a
                   key={item}
-                  className={`hover:text-[#891b1c] font-[500] text-[1.1rem] `}
+                  className={`hover:text-[#891a1c] font-[500] text-[1.1rem] `}
                   onClick={(e) => handleClickNavItem(e, item)}>
                   {item}
                </a>
@@ -56,7 +57,7 @@ export default function HeaderNavResponsive({
             {navbarHasToken.map((item) => (
                <a
                   key={item}
-                  className={`hover:text-[#891b1c] font-[500] text-[1.1rem] `}
+                  className={`hover:text-[#891a1c] font-[500] text-[1.1rem] `}
                   onClick={(e) => handleClickNavItem(e, item)}>
                   {item}
                </a>

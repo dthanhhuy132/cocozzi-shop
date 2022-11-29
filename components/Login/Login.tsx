@@ -15,6 +15,7 @@ import {SocialLogin} from './index';
 interface ILogin {
    formValue: {
       email: string;
+      phone?: string;
       password: string;
       repassword?: string;
    };
@@ -30,7 +31,6 @@ export default function Login({
    isShowLoading = false,
    errorText = '',
 }: ILogin) {
-   console.log('form value trong register la gi', formValue);
    const router = useRouter();
 
    const yupFormValidateSchema =
@@ -57,7 +57,7 @@ export default function Login({
             <form
                autoComplete='off'
                onSubmit={formik.handleSubmit}
-               className='w-full mb-4 flex flex-col gap-2'>
+               className='w-full flex flex-col gap-2'>
                <div>
                   <input
                      type='text'
@@ -71,6 +71,22 @@ export default function Login({
                      <LoginValidateText warningText={formik.errors.email} />
                   )}
                </div>
+
+               {isRegisterPage && (
+                  <div>
+                     <input
+                        type='text'
+                        name='phone'
+                        placeholder='số điện thoại'
+                        className='w-full text-white bg-[none] outline-none bg-transparent border-b-[2px] border-black pb-[4px] mb-2 placeholder-gray-900 placeholder:uppercase'
+                        value={formik.values.phone}
+                        onChange={formik.handleChange}
+                     />
+                     {formik.errors.phone && formik.touched.phone && (
+                        <LoginValidateText warningText={formik.errors.phone} />
+                     )}
+                  </div>
+               )}
                <div>
                   <input
                      type='password'
@@ -104,9 +120,7 @@ export default function Login({
                <button
                   type='submit'
                   disabled={isShowLoading}
-                  className={`disabled:hover:bg-[#b91c1c] flex justify-center border-[1px] border-black rounded-lg uppercase text-[0.9rem] font-[400] text-white py-2 mt-3 mb-2 hover:bg-[#b91c1c] ${
-                     !isShowLoading && 'hover:brightness-125'
-                  }`}>
+                  className={` flex justify-center border-[1px] border-black rounded-lg uppercase text-[0.9rem] font-[400] text-white py-2 mt-3 mb-2 hover:bg-[#b91c1c]`}>
                   {isShowLoading && (
                      <span className='mr-2'>
                         <Loading />
@@ -114,6 +128,7 @@ export default function Login({
                   )}
                   <span>{isRegisterPage ? 'Register' : 'Login'}</span>
                </button>
+
                <div className='text-center'>
                   {errorText && (
                      <LoginValidateText
@@ -124,23 +139,15 @@ export default function Login({
                </div>
             </form>
 
-            <p className='text-center'>
-               {isRegisterPage ? (
-                  <span className='font-semibold'>
-                     Đã có tài khoản
-                     <span className='text-blue-900 pl-1 hover:text-blue-600'>
-                        <Link href={'/membership'}>Đăng nhập</Link>
-                     </span>
-                  </span>
-               ) : (
-                  <span className='font-semibold'>
-                     <span className='text-blue-900 pr-1 hover:text-blue-600'>
-                        <Link href={'/register'}>Đăng kí</Link>
-                     </span>
-                     một tài khoản
-                  </span>
-               )}
-            </p>
+            {/* login or register navigation */}
+            <button
+               type='submit'
+               disabled={isShowLoading}
+               className={`flex justify-center border-[1px] border-gray-900 rounded-lg uppercase text-[0.9rem] font-[400] text-gray-900 py-2 mt-3 mb-2 hover:text-white`}>
+               <Link href={`${isRegisterPage ? '/membership' : '/register'}`}>
+                  {isRegisterPage ? 'Login' : 'Register'}
+               </Link>
+            </button>
          </div>
          <p className='mt-5 text-white text-[0.9rem]'>
             Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed

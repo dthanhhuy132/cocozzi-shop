@@ -13,9 +13,9 @@ export default function Bag({carts}) {
    }, []);
 
    return (
-      <div className='flex flex-col md:flex-row w-full md:w-2/3 my-4 md:my-10 mx-[auto] gap-5 '>
+      <div className='flex flex-col mx-[auto] lg:flex-row w-full px-2 md:px-0 md:w-5/6 lg:w-2/3 my-4 md:my-10 gap-5 '>
          {/* Cart */}
-         <div className='md:w-2/3 p-2 md:p-4 bg-gray-100 rounded-lg shadow-[0_3px_8px_rgba(0,0,0,0.3)]'>
+         <div className='w-full lg:w-3/4 p-2 md:p-4 bg-gray-100 rounded-lg shadow-[0_3px_8px_rgba(0,0,0,0.3)]'>
             <table className='w-full border-separate border-spacing-y-[10px]'>
                <thead className='font-thin text-[0.95rem]'>
                   <BagHeader />
@@ -29,7 +29,7 @@ export default function Bag({carts}) {
             </table>
          </div>
 
-         <div className='md:w-1/3'>
+         <div className='w-full lg:w-1/3'>
             <div className='sticky top-[80px] bg-gray-100 rounded-lg min-h-[80px] p-4 shadow-[0_3px_8px_rgba(0,0,0,0.3)]'>
                <div className='flex justify-between border-b-2 border-slate-400 font-bold text-[1.3rem]'>
                   <p>Tổng</p>
@@ -38,6 +38,18 @@ export default function Bag({carts}) {
                      {(901231234).toLocaleString('en-US')}
                   </p>
                </div>
+
+               <div className='relative w-full my-2'>
+                  <input
+                     type='text'
+                     className='p-2 w-full rounded-lg outline-none'
+                     placeholder='Mã giảm giá'
+                  />
+                  <button className='absolute right-0 top-0 h-full px-4 border-[1px] rounded-lg bg-gray-300'>
+                     Áp dụng
+                  </button>
+               </div>
+
                <div className='bg-gray-700 mt-3 text-white text-center py-2 rounded-[30px] hover:bg-gray-900 hover:cursor-pointer'>
                   <p
                      className='font-bold'

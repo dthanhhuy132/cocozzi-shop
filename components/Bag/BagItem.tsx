@@ -21,10 +21,10 @@ export default function BagItem() {
                <img
                   src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQLG2aQbb_A6E3JwO29d76XyJRbxWIo6nUqhe-93DDIr7g4u96ZMVBLybnsxzOd3pJCQ0&usqp=CAU'
                   alt=''
-                  className='w-[100px] md:w-[120px] rounded-md'
+                  className='w-[80px] rounded-md'
                />
                <div className={`${isMobile && 'flex flex-col flex-1 gap-1'}`}>
-                  <p className='md:min-w-[200px] md:max-w-[200px] text-[0.9rem]'>
+                  <p className='text-[0.9rem]'>
                      day la ten san pha fasdf asdfm
                   </p>
                   <div
@@ -35,7 +35,7 @@ export default function BagItem() {
                         <span className='mr-1'>2 x </span>
                         <span>₫</span>
                         <span className='font-bold'>
-                           {(5000000).toLocaleString('en-US')}
+                           {(50000).toLocaleString('en-US')}
                         </span>
                      </p>
                      <div className='w-[35%]'>
@@ -51,7 +51,7 @@ export default function BagItem() {
             } px-5 font-bold border-b pb-3 border-slate-300`}>
             <p className='flex items-start'>
                <span>₫</span>
-               {(5000000).toLocaleString('en-US')}
+               {(50000).toLocaleString('en-US')}
             </p>
          </td>
          <td

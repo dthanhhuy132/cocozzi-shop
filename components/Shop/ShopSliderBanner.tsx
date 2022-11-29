@@ -3,7 +3,6 @@ import ImageGallery from 'react-image-gallery';
 import Link from 'next/link';
 import useWindowDimensions from '../../hooks/UseWindowDimensions';
 
-// const imgArr = [img1, img2, img3, img4, img5, img6, img7, img8];
 const imgArr = [
    '/images/shop/1.webp',
    '/images/shop/2.webp',
@@ -28,13 +27,12 @@ export default function ShopSliderBanner() {
          showIndex={isMobile ? true : false}
          showBullets={isMobile ? false : true}
          infinite={true}
-         // autoPlay={true}
+         autoPlay={true}
          fullscreen={true}
          showNav={true}
          showFullscreenButton={false}
          showThumbnails={false}
          showPlayButton={false}
-         // onClick={(e: any) => console.log('click len cai gi', e.target)}
          additionalClass='shop-slider'
       />
    );

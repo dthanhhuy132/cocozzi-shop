@@ -17,7 +17,7 @@ export default function Payment() {
 
          <div className='md:w-1/3'>
             <div className='sticky top-[80px] bg-gray-100 rounded-lg min-h-[80px] p-4 shadow-[0_3px_8px_rgba(0,0,0,0.3)]'>
-               <p className='font-[700] text-[#891b1c] text-[1.3rem]'>
+               <p className='font-[700] text-[#891a1c] text-[1.3rem]'>
                   ĐƠN HÀNG CỦA BẠN
                </p>
 

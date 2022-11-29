@@ -41,18 +41,20 @@ export default function Header({carts}) {
 
    return (
       <>
-         <div className='sticky top-0 flex py-3 md:px-10 lg:flex justify-between lg:items-center z-20 bg-white border-b-[1px]'>
-            <div className='flex items-center justify-between px-2 lg:w-1/3'>
-               <Logo />
+         <div className='sticky top-0 left-0 right-0 flex py-3 md:px-10 lg:flex justify-between lg:items-center z-20 bg-white border-b-[1px]'>
+            <div className='flex absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] md:relative md:top-[unset] md:left-[unset] md:translate-x-0 md:translate-y-0 md:order-0 items-center justify-between lg:w-1/3'>
+               <div className='w-[100px] h-[20px] md:w-[150px] md:h-[30px]'>
+                  <Logo />
+               </div>
             </div>
             {/* menu bar */}
-            <ul className='hidden lg:flex justify-center gap-x-4 gap-y-3 uppercase lg:w-1/3 flex-wrap md:gap-5 md:flex-nowrap'>
+            <ul className='order-2 hidden lg:flex justify-center gap-x-4 gap-y-3 uppercase lg:w-1/3 flex-wrap md:gap-5 md:flex-nowrap'>
                {navbarHeader.map((item) => (
                   <Link href={`/${item}`} key={item}>
                      <a
-                        className={`hover:text-[#891b1c] font-[400] text-[1.15rem] ${
+                        className={`hover:text-[#891a1c] font-[700] text-[1.15rem] ${
                            router.pathname === `/${item}` &&
-                           'text-[#891b1c] font-[600]'
+                           'text-[#891a1c] font-[600]'
                         }`}>
                         {item}
                      </a>
@@ -60,7 +62,7 @@ export default function Header({carts}) {
                ))}
             </ul>
 
-            <div className='px-3 flex justify-end items-center gap-x-4 uppercase lg:w-1/3 '>
+            <div className='order-3 px-3 flex justify-end items-center gap-x-4 uppercase lg:w-1/3 '>
                <div className='hidden lg:block'>
                   <HeaderSearch></HeaderSearch>
                </div>
@@ -70,8 +72,8 @@ export default function Header({carts}) {
                   onMouseEnter={() => !isMobile && setIsShowUserControl(true)}
                   onMouseLeave={() => !isMobile && setIsShowUserControl(false)}>
                   <BiUser
-                     fontSize='1.6rem'
-                     className='relative hover:text-[#891b1c] group-hover:text-[#891b1c] cursor-pointer '
+                     fontSize={isMobile ? '1.3rem' : '1.6rem'}
+                     className='relative hover:text-[#891a1c] group-hover:text-[#891a1c] cursor-pointer '
                      onClick={() => {
                         !hasToken && router.push('/membership');
                         // isMobile && router.push('/my-order');
@@ -87,15 +89,15 @@ export default function Header({carts}) {
                </div>
                {hasToken && (
                   <div
-                     className='relative font-[500] hover:cursor-pointer hover:text-[#891b1c]'
+                     className='order-3 relative font-[500] hover:cursor-pointer hover:text-[#891a1c]'
                      onMouseEnter={() => !isMobile && setIsShowBag(true)}
                      onMouseLeave={() => !isMobile && setIsShowBag(false)}>
                      <BsBag
-                        fontSize='1.5rem'
+                        fontSize={isMobile ? '1.2rem' : '1.4rem'}
                         onClick={() => router.push('/bag')}
                      />
                      <span
-                        className='absolute left-[50%] translate-x-[-50%] bottom-[0px]  font-bold text-[#891b1c] text-[0.7rem]'
+                        className='absolute left-[50%] translate-x-[-50%] bottom-0 md:bottom-[1px] font-bold text-[#891a1c] text-[0.6rem] md:text-[0.7rem]'
                         onClick={() => router.push('/bag')}>
                         68
                      </span>
@@ -103,12 +105,12 @@ export default function Header({carts}) {
                      {isShowBag && <BagHover />}
                   </div>
                )}
-               <div className='lg:hidden'>
-                  <AiOutlineMenu
-                     className=' text-[1.6rem] cursor-pointer hover:text-[#891b1c]'
-                     onClick={() => setShowMenuRps(true)}
-                  />
-               </div>
+            </div>
+            <div className='order-1 lg:hidden'>
+               <AiOutlineMenu
+                  className='text-[1.3rem] mx-2 md:mx-0 md:text-[1.6rem] cursor-pointer hover:text-[#891a1c]'
+                  onClick={() => setShowMenuRps(true)}
+               />
             </div>
          </div>
 

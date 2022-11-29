@@ -8,26 +8,26 @@ export default function HeaderUserControl({hasToken, isMobile}) {
          <ul className='capitalize py-1'>
             {hasToken && (
                <>
-                  <li className='py-1 px-2 hover:bg-[#891b1c] hover:text-white cursor-pointer'>
+                  <li className='py-1 px-2 hover:bg-[#891a1c] hover:text-white cursor-pointer'>
                      Thông tin
                   </li>
-                  <li className='py-1 px-2 hover:bg-[#891b1c] hover:text-white cursor-pointer'>
+                  <li className='py-1 px-2 hover:bg-[#891a1c] hover:text-white cursor-pointer'>
                      Đơn hàng của tôi
                   </li>
 
-                  {user.data.role === 'admin' && (
-                     <li className='py-1 px-2 hover:bg-[#891b1c] hover:text-white cursor-pointer'>
+                  {user.data?.role === 'admin' && (
+                     <li className='py-1 px-2 hover:bg-[#891a1c] hover:text-white cursor-pointer'>
                         Trang Admin
                      </li>
                   )}
-                  <li className='py-1 px-2 hover:bg-[#891b1c] hover:text-white cursor-pointer'>
+                  <li className='py-1 px-2 hover:bg-[#891a1c] hover:text-white cursor-pointer'>
                      Đăng xuất
                   </li>
                </>
             )}
 
             {!hasToken && (
-               <li className='py-1 px-2 hover:bg-[#891b1c] hover:text-white cursor-pointer'>
+               <li className='py-1 px-2 hover:bg-[#891a1c] hover:text-white cursor-pointer'>
                   Đăng nhập
                </li>
             )}

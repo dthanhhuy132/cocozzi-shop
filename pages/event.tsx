@@ -1,11 +1,13 @@
 import {GetServerSideProps} from 'next';
 import {Event} from '../components/Event';
+import {LoadingPage} from '../components/LoadingPage';
 import {Logo} from '../components/Logo';
 import eventApi from '../service/eventApi';
 
 export default function EventPage({allEvents = []}) {
    return (
       <>
+         <LoadingPage />
          <p className='hidden md:block uppercase text-center my-10'>Event</p>
          <div className='mt-10 md:mt-[unset] text-center mb-7'>
             <Logo width='190' height='40' />
