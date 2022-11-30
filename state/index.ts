@@ -1,6 +1,7 @@
 import {createGlobalState} from 'react-hooks-global-state';
 const initialState = {
-   isShowChat: true,
+   token: '',
+   currentUser: '',
 };
 
 const {useGlobalState} = createGlobalState(initialState);

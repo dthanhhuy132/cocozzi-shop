@@ -12,26 +12,43 @@ import img6 from '../../public/images/shop/6.webp';
 import img7 from '../../public/images/shop/7.webp';
 import img8 from '../../public/images/shop/8.webp';
 import useWindowDimensions from '../../hooks/UseWindowDimensions';
-import {useState} from 'react';
-import {useEffect} from 'react';
-const imgArr = [img1, img2, img3, img4, img5, img6, img7, img8];
+import {useCallback, useEffect, useState} from 'react';
 
+const imgArr = [img1, img2, img3, img4, img5, img6, img7, img8];
 export default function ShopSliderProductStory() {
    const {isMobile} = useWindowDimensions();
 
-   const [isDisplayArrow, setIsDisplayArrow] = useState(true);
+   const [dragging, setDragging] = useState(false);
+
+   const handleBeforeChange = useCallback(() => {
+      setDragging(true);
+   }, [setDragging]);
+
+   const handleAfterChange = useCallback(() => {
+      setDragging(false);
+   }, [setDragging]);
+
+   const handleOnItemClick = useCallback(
+      (e) => {
+         if (dragging) e.stopPropagation();
+      },
+      [dragging]
+   );
+
+   const [sliderQuantity, setSliderQuantity] = useState(3);
+
    useEffect(() => {
       if (isMobile) {
-         setIsDisplayArrow(false);
+         setSliderQuantity(2.5);
       } else {
-         setIsDisplayArrow(true);
+         setSliderQuantity(3);
       }
    }, [isMobile]);
 
    const settings = {
       className: 'center w-full',
       infinite: true,
-      slidesToShow: isMobile ? 2.5 : 3,
+      slidesToShow: sliderQuantity,
       swipeToSlide: true,
       autoplay: true,
 
@@ -40,9 +57,11 @@ export default function ShopSliderProductStory() {
    };
 
    return (
-      <SliderSlick {...settings}>
+      <SliderSlick {...settings} beforeChange={handleBeforeChange} afterChange={handleAfterChange}>
          {imgArr.map((img, index) => (
-            <ProductItem img={img} key={index}></ProductItem>
+            <div key={index} onClickCapture={handleOnItemClick}>
+               <ProductItem img={img}></ProductItem>
+            </div>
          ))}
       </SliderSlick>
    );

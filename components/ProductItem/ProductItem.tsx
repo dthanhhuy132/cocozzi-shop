@@ -4,9 +4,10 @@ import {useRouter} from 'next/router';
 interface IProductItem {
    img: StaticImageData | string;
    displayPrice?: boolean;
+   smallName?: boolean;
 }
 
-export default function ProductItem({img, displayPrice = false}: IProductItem) {
+export default function ProductItem({img, displayPrice = false, smallName = false}: IProductItem) {
    const router = useRouter();
    return (
       <div className='p-[2px] md:px-2 transition'>
@@ -21,7 +22,7 @@ export default function ProductItem({img, displayPrice = false}: IProductItem) {
             />
          </div>
          {displayPrice && (
-            <div className='flex justify-between mt-2 px-2 text-[0.9rem] md:text-[1rem]'>
+            <div className={`flex justify-between mt-2 px-2 text-[0.9rem] md:text-[1rem]`}>
                <div>
                   <h3>Product name</h3>
                   <p>$50</p>

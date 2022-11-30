@@ -39,19 +39,22 @@ const imgArr = [
    img8,
 ];
 import Masonry from 'react-masonry-css';
+import {useEffect, useState} from 'react';
 
 export default function ShopProduct() {
    const {isMobile} = useWindowDimensions();
-
+   const [isMobileDevice, setIsMobileDevice] = useState(false);
+   useEffect(() => {
+      if (isMobile) {
+         setIsMobileDevice(true);
+      } else setIsMobileDevice(false);
+   }, [isMobile]);
    return (
       <>
-         {!isMobile ? (
+         {!isMobileDevice ? (
             <div className='grid grid-cols-1 md:grid-cols-5 gap-y-6 gap-x-6'>
                {imgArr.map((img, index) => (
-                  <ProductItem
-                     key={index}
-                     img={img}
-                     displayPrice={true}></ProductItem>
+                  <ProductItem key={index} img={img} displayPrice={true}></ProductItem>
                ))}
             </div>
          ) : (
@@ -60,10 +63,7 @@ export default function ShopProduct() {
                className='my-masonry-grid'
                columnClassName='my-masonry-grid_column'>
                {imgArr.map((img, index) => (
-                  <ProductItem
-                     key={index}
-                     img={img}
-                     displayPrice={true}></ProductItem>
+                  <ProductItem key={index} img={img} displayPrice={true}></ProductItem>
                ))}
             </Masonry>
          )}

@@ -16,15 +16,21 @@ import {Logo} from '../Logo';
 import useWindowDimensions from '../../hooks/UseWindowDimensions';
 import {useSelector} from 'react-redux';
 import HeaderUserControl from './HeaderUserControl';
+import SubMenu from './SubMenu';
 
 const navbarHeader = ['shop', 'promo', 'event', 'info', 'membership'];
+const submenuArr = ['shop', 'event'];
 export default function Header({carts}) {
-   const {user} = useSelector((state: any) => state.auth);
    const router = useRouter();
 
    const {isMobile} = useWindowDimensions();
-   const [isShowMenuRps, setShowMenuRps] = useState(false);
+   const [isShowMenuRps, setShowMenuRps] = useState(true);
    const [isShowBag, setIsShowBag] = useState(false);
+
+   // submenu
+   const [isShowSubMenu, setIsShowSubMenu] = useState(false);
+   const [submenuName, setSubmenuName] = useState('');
+
    const [isShowUserControl, setIsShowUserControl] = useState(false);
    const [hasToken, setHasToken] = useState(false);
 
@@ -33,36 +39,52 @@ export default function Header({carts}) {
       setHasToken(token ? true : false);
    }, [token]);
 
+   // header marquee
    const hideHeaderMarquee = useMemo(() => {
       const excludePath = ['/event'];
       const currentPath = router.pathname;
       return excludePath.indexOf(currentPath) === -1;
    }, [router.pathname]);
 
+   function showSubMenu(hoverItem: string) {
+      if (submenuArr.indexOf(hoverItem) >= 0 && !isMobile) {
+         setIsShowSubMenu(true);
+         setSubmenuName(hoverItem);
+      } else {
+         setIsShowSubMenu(false);
+      }
+   }
+
    return (
       <>
-         <div className='sticky top-0 left-0 right-0 flex py-3 md:px-10 lg:flex justify-between lg:items-center z-20 bg-white border-b-[1px]'>
-            <div className='flex absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] md:relative md:top-[unset] md:left-[unset] md:translate-x-0 md:translate-y-0 md:order-0 items-center justify-between lg:w-1/3'>
+         <div className='sticky top-0 left-0 right-0 flex py-3 md:px-10 lg:flex justify-between lg:items-center bg-white border-b-[1px] z-50'>
+            <div className='order-2 lg:order-[unset] flex absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] md:relative md:top-[unset] md:left-[unset] md:translate-x-0 md:translate-y-0 md:order-0 items-center justify-between lg:w-1/3 z-20'>
                <div className='w-[100px] h-[20px] md:w-[150px] md:h-[30px]'>
                   <Logo />
                </div>
             </div>
             {/* menu bar */}
-            <ul className='order-2 hidden lg:flex justify-center gap-x-4 gap-y-3 uppercase lg:w-1/3 flex-wrap md:gap-5 md:flex-nowrap'>
+            <ul
+               className='order-1 relative hidden lg:flex justify-center gap-x-4 gap-y-3 uppercase lg:w-1/3 flex-wrap md:gap-5 md:flex-nowrap z-50 before:content-(" ") before:absolute before:bottom-[-100%] before:left-[-10%] before:w-[120%] before:h-[30px] before:z-[51]'
+               onMouseLeave={() => !isMobile && setIsShowSubMenu(false)}>
                {navbarHeader.map((item) => (
-                  <Link href={`/${item}`} key={item}>
-                     <a
-                        className={`hover:text-[#891a1c] font-[700] text-[1.15rem] ${
-                           router.pathname === `/${item}` &&
-                           'text-[#891a1c] font-[600]'
-                        }`}>
-                        {item}
-                     </a>
-                  </Link>
+                  <div key={item}>
+                     <div className='relative' onMouseEnter={() => showSubMenu(item)}>
+                        <Link href={`/${item}`}>
+                           <a
+                              className={`hover:text-[#891a1c] font-[900] text-[1rem] ${
+                                 router.pathname === `/${item}` && 'text-[#891a1c] font-[600]'
+                              }`}>
+                              {item}
+                           </a>
+                        </Link>
+                     </div>
+                     <SubMenu isShowSubMenu={isShowSubMenu} name={submenuName} />
+                  </div>
                ))}
             </ul>
 
-            <div className='order-3 px-3 flex justify-end items-center gap-x-4 uppercase lg:w-1/3 '>
+            <div className='order-3 px-3 flex justify-end items-center gap-x-4 uppercase lg:w-1/3'>
                <div className='hidden lg:block'>
                   <HeaderSearch></HeaderSearch>
                </div>
@@ -72,8 +94,7 @@ export default function Header({carts}) {
                   onMouseEnter={() => !isMobile && setIsShowUserControl(true)}
                   onMouseLeave={() => !isMobile && setIsShowUserControl(false)}>
                   <BiUser
-                     fontSize={isMobile ? '1.3rem' : '1.6rem'}
-                     className='relative hover:text-[#891a1c] group-hover:text-[#891a1c] cursor-pointer '
+                     className='relative hover:text-[#891a1c] group-hover:text-[#891a1c] cursor-pointer text-[1.3rem] md:text-[1.6rem]'
                      onClick={() => {
                         !hasToken && router.push('/membership');
                         // isMobile && router.push('/my-order');
@@ -81,10 +102,7 @@ export default function Header({carts}) {
                   />
 
                   {isShowUserControl && (
-                     <HeaderUserControl
-                        hasToken={hasToken}
-                        isMobile={isMobile}
-                     />
+                     <HeaderUserControl hasToken={hasToken} isMobile={isMobile} />
                   )}
                </div>
                {hasToken && (

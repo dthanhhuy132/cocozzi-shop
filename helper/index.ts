@@ -21,7 +21,7 @@ export const parseJwt = (token: string) => {
       return null;
    }
 };
-export const getTokenSSRAndCSS = (ctx?: any): any => {
+export const getTokenSSRAndCSS = (ctx?: NextPageContext): any => {
    let token = '';
    let userToken = null;
 
@@ -32,7 +32,9 @@ export const getTokenSSRAndCSS = (ctx?: any): any => {
       userToken = parseJwt(token);
    } else {
       // CSR
+
       token = Cookies.get('token') || '';
+      userToken = parseJwt(token);
    }
 
    return [token, userToken];

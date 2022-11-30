@@ -10,7 +10,8 @@ import {
 } from '../../components/ProductDetailItem';
 
 import SliderSlick from 'react-slick';
-import useGlobalState from '../../react-gobal-state';
+import useGlobalState from '../../state';
+import useWindowDimensions from '../../hooks/UseWindowDimensions';
 
 const imageArr = [
    '/images/shop/16.webp',
@@ -23,10 +24,9 @@ const imageArr = [
 ];
 
 export default function ProductDetailPage() {
+   const {isMobile} = useWindowDimensions();
    const [sizeSelect, setSizeSelect] = useState('');
    const [colorSelect, setColorSelect] = useState(0);
-
-   const [isShowChat, setIsShowChat] = useGlobalState('isShowChat');
 
    const [isShowSizeAndColor, setIsShowSizeAndColor] = useState(false);
 
@@ -47,7 +47,7 @@ export default function ProductDetailPage() {
    };
 
    return (
-      <div className='md:px-20 lg:w-[1200px] mx-[auto]'>
+      <div className='md:px-20 md:w-[780px] lg:w-[1200px] mx-[auto]'>
          {/* product introduction */}
          <div className='flex flex-col-reverse mt-2 md:flex-row md:mt-5 '>
             <div className='hidden md:grid grid-cols-2 gap-1 md:w-2/3 '>
@@ -78,8 +78,8 @@ export default function ProductDetailPage() {
                {/* name */}
                <div className='px-2 md:px-0 md:sticky top-20'>
                   <p className='pb-0 md:pb-5 font-semibold text-[1.2rem] '>
-                     Product name Lorem ipsum dolor sit, amet consectetur
-                     adipisicing elit. Voluptas, officia.
+                     Product name Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                     Voluptas, officia.
                   </p>
 
                   {/* price */}
@@ -92,32 +92,25 @@ export default function ProductDetailPage() {
                            {(567000).toLocaleString()} VNĐ
                         </span>
 
-                        <span className='text-[#891a1c] font-semibold text-[0.9rem] ml-2'>
-                           8%
-                        </span>
+                        <span className='text-[#891a1c] font-semibold text-[0.9rem] ml-2'>8%</span>
                      </div>
-                     <BsShare
-                        fontSize='1.3rem'
-                        cursor='pointer'
-                        className='hover:text-[#891a1c]'
-                     />
+                     <BsShare fontSize='1.3rem' cursor='pointer' className='hover:text-[#891a1c]' />
                   </div>
 
                   {/* product description */}
-                  <p className='my-2  md:mt-7'>
-                     Product description Lorem ipsum dolor, sit amet consectetur
-                     adipisicing elit. Accusantium ex doloribus reiciendis.
-                     Officiis possimus tempore molestias iure quaerat, doloribus
-                     quas!
+                  <p
+                     className='my-2
+                   md:mt-7'>
+                     Product description Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                     Accusantium ex doloribus reiciendis. Officiis possimus tempore molestias iure
+                     quaerat, doloribus quas!
                   </p>
                   {/* payment */}
 
                   <div className='fixed bottom-0 right-0 left-0 md:relative md:mx-0 md:bg-transparent text-white md:text-black z-[101]'>
                      <div
                         className={`absolute bg-black md:bg-transparent w-full md:relative md:bottom-[unset] md:opacity-100 transition-all ${
-                           isShowSizeAndColor
-                              ? 'bottom-[100%]'
-                              : 'bottom-[-500%] '
+                           isShowSizeAndColor ? 'bottom-[100%]' : 'bottom-[-500%] '
                         }`}>
                         {/* size select */}
                         <ProductDetailSizeSelect
@@ -141,8 +134,7 @@ export default function ProductDetailPage() {
                         <button
                            className='w-[50%] py-2 uppercase bg-[#891a1c] md:bg-[transparent] md:border-[1px] border-gray-400 hover:text-white md:hover:bg-black'
                            onClick={() => {
-                              setIsShowSizeAndColor(!isShowSizeAndColor);
-                              setIsShowChat(!isShowChat);
+                              isMobile && setIsShowSizeAndColor(!isShowSizeAndColor);
                            }}>
                            Buy now
                         </button>
@@ -150,8 +142,7 @@ export default function ProductDetailPage() {
                         <button
                            className='w-[50%] py-2 uppercase bg-[black] md:bg-[transparent] md:border-[1px] border-gray-400 md:hover:text-white md:hover:bg-black'
                            onClick={() => {
-                              setIsShowSizeAndColor(!isShowSizeAndColor);
-                              setIsShowChat(!isShowChat);
+                              isMobile && setIsShowSizeAndColor(!isShowSizeAndColor);
                            }}>
                            Add to cart
                         </button>

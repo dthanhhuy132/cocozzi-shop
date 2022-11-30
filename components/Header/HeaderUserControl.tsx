@@ -1,10 +1,11 @@
+import Link from 'next/link';
 import {useSelector} from 'react-redux';
 
 export default function HeaderUserControl({hasToken, isMobile}) {
    const {user} = useSelector((state: any) => state.auth);
-   console.log('user la gi', user);
+
    return (
-      <div className='absolute top-7 right-[-10px] min-w-[150px] bg-white border rounded-lg shadow-[0_3px_8px_rgba(0,0,0,0.3)]'>
+      <div className='absolute top-7 right-[-10px] min-w-[190px] bg-white border rounded-lg shadow-[0_3px_8px_rgba(0,0,0,0.3)]'>
          <ul className='capitalize py-1'>
             {hasToken && (
                <>
@@ -17,7 +18,9 @@ export default function HeaderUserControl({hasToken, isMobile}) {
 
                   {user.data?.role === 'admin' && (
                      <li className='py-1 px-2 hover:bg-[#891a1c] hover:text-white cursor-pointer'>
-                        Trang Admin
+                        <Link href='/admin'>
+                           <a>Trang Admin</a>
+                        </Link>
                      </li>
                   )}
                   <li className='py-1 px-2 hover:bg-[#891a1c] hover:text-white cursor-pointer'>

@@ -39,16 +39,14 @@ export default function PaymentMethod() {
             </div>
 
             <div
-               className={`overflow-hidden mt-2 transition-all ${
-                  paymentMethod === 'momo' ? `h-full` : 'h-0'
+               className={`h-0 overflow-hidden mt-2 transition  ${
+                  paymentMethod === 'momo' && `h-[300px]`
                }`}>
-               Thanh thanh toán bằng momo thì phải chuyển khoản trước nhé Thanh
-               thanh toán bằng momo thì phải chuyển khoản trước nhé Thanh thanh
-               toán bằng momo thì phải chuyển khoản trước nhé Thanh thanh toán
-               bằng momo thì phải chuyển khoản trước nhé Thanh thanh toán bằng
-               momo thì phải chuyển khoản trước nhé Thanh thanh toán bằng momo
-               thì phải chuyển khoản trước nhé Thanh thanh toán bằng momo thì
-               phải chuyển khoản trước nhé T
+               Thanh thanh toán bằng momo thì phải chuyển khoản trước nhé Thanh thanh toán bằng momo
+               thì phải chuyển khoản trước nhé Thanh thanh toán bằng momo thì phải chuyển khoản
+               trước nhé Thanh thanh toán bằng momo thì phải chuyển khoản trước nhé Thanh thanh toán
+               bằng momo thì phải chuyển khoản trước nhé Thanh thanh toán bằng momo thì phải chuyển
+               khoản trước nhé Thanh thanh toán bằng momo thì phải chuyển khoản trước nhé T
             </div>
          </div>
          <div className='mt-2 border-b-2 border-t-2 py-2 flex flex-col justify-center'>
@@ -127,9 +125,7 @@ export default function PaymentMethod() {
                      </div>
                   )}
                   <div className='relative'>
-                     {imgBank && (
-                        <img className='' src={imgBank?.preview}></img>
-                     )}
+                     {imgBank && <img className='' src={imgBank?.preview}></img>}
                      {imgBank && (
                         <i
                            className='absolute top-3 left-3 fa-sharp fa-solid fa-xmark text-[1.8rem] hover:scale-125 transition cursor-pointer hover:text-[#891a1c]'

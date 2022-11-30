@@ -2,12 +2,7 @@ import {GetServerSideProps} from 'next';
 import {useEffect, useRef, useState} from 'react';
 
 import animateScrollTo from 'animated-scroll-to';
-import {
-   Shop,
-   ShopProduct,
-   ShopSliderBanner,
-   ShopSliderProductStory,
-} from '../components/Shop';
+import {Shop, ShopProduct, ShopSliderBanner, ShopSliderProductStory} from '../components/Shop';
 
 import productApi from '../service/productApi';
 import useWindowDimensions from '../hooks/UseWindowDimensions';
@@ -17,13 +12,21 @@ export default function ShopPage({products = []}) {
    const [isScrolling, setIsScrolling] = useState(false);
 
    const {isMobile} = useWindowDimensions();
+   const [isMobileDevice, setIsMobileDevice] = useState(false);
+   useEffect(() => {
+      if (isMobile) {
+         setIsMobileDevice(true);
+      } else {
+         setIsMobileDevice(false);
+      }
+   }, [isMobile]);
 
    useEffect(() => {
       window.scrollTo({top: 0});
       let lastScrollTop = 0;
 
       function detectScroll() {
-         if (isMobile) return;
+         if (isMobileDevice) return;
          let st = window.pageYOffset || document.documentElement.scrollTop;
          const windowHeight = window.innerHeight;
          const scrolllDown = st > lastScrollTop ? true : false;
@@ -112,7 +115,6 @@ export const getServerSideProps: GetServerSideProps<any> = async () => {
          },
       };
    } catch (error) {
-      console.log('error trong shop tra ve la gi', error);
       return {
          props: {
             ok: false,

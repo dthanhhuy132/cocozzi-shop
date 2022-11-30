@@ -2,6 +2,7 @@ import ImageGallery from 'react-image-gallery';
 
 import Link from 'next/link';
 import useWindowDimensions from '../../hooks/UseWindowDimensions';
+import {useEffect, useState} from 'react';
 
 const imgArr = [
    '/images/shop/1.webp',
@@ -21,11 +22,21 @@ const images = imgArr.map((item) => ({
 
 export default function ShopSliderBanner() {
    const {isMobile} = useWindowDimensions();
+   const [isShowBulletAndIndex, setIsShowBulletAndIndex] = useState(false);
+
+   useEffect(() => {
+      if (isMobile) {
+         setIsShowBulletAndIndex(false);
+      } else {
+         setIsShowBulletAndIndex(true);
+      }
+   }, [isMobile]);
+
    return (
       <ImageGallery
          items={images}
-         showIndex={isMobile ? true : false}
-         showBullets={isMobile ? false : true}
+         showIndex={isShowBulletAndIndex}
+         showBullets={isShowBulletAndIndex}
          infinite={true}
          autoPlay={true}
          fullscreen={true}

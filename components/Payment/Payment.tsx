@@ -7,9 +7,7 @@ export default function Payment() {
       <div className='flex flex-col md:flex-row w-full md:w-2/3 my-4 md:my-10 mx-[auto] gap-5 '>
          {/* Cart */}
          <div className='md:w-2/3 p-2 md:p-4 bg-gray-100 rounded-lg shadow-[0_3px_8px_rgba(0,0,0,0.3)]'>
-            <p className='font-bold mb-3'>
-               VUI LÒNG HOÀN THÀNH THÔNG TIN ĐẶT HÀNG{' '}
-            </p>
+            <p className='font-bold mb-3'>VUI LÒNG HOÀN THÀNH THÔNG TIN ĐẶT HÀNG </p>
 
             <PaymentUserInfo />
             <PaymentMethod />
@@ -17,16 +15,18 @@ export default function Payment() {
 
          <div className='md:w-1/3'>
             <div className='sticky top-[80px] bg-gray-100 rounded-lg min-h-[80px] p-4 shadow-[0_3px_8px_rgba(0,0,0,0.3)]'>
-               <p className='font-[700] text-[#891a1c] text-[1.3rem]'>
-                  ĐƠN HÀNG CỦA BẠN
-               </p>
+               <p className='font-[700] text-[#891a1c] text-[1.3rem]'>ĐƠN HÀNG CỦA BẠN</p>
 
                {/* payment bag item */}
                <table className='w-full mt-5'>
                   <thead>
                      <tr className='uppercase text-left border-b-2 border-slate-400'>
-                        <th colSpan={2}>Sản phẩm</th>
-                        <th className='text-right'>Tạm tính</th>
+                        <th colSpan={2}>
+                           <span className='font-[900]'>Sản phẩm</span>
+                        </th>
+                        <th className='text-right'>
+                           <span className='font-[900]'>Tạm tính</span>
+                        </th>
                      </tr>
                   </thead>
 
@@ -75,6 +75,26 @@ export default function Payment() {
                      <span className='text-[0.8rem] font-bold'>₫</span>
                      {(10000).toLocaleString('en-US')}
                   </p>
+               </div>
+
+               <div className='flex flex-col justify-between mt-4 border-b-[1px] border-slate-400 pb-1'>
+                  <div className='flex justify-between'>
+                     <p className='font-bold'>Voucher</p>
+                     <p className='font-extrabold text-[#891a1c]'>
+                        <span className='text-[0.8rem]'>-₫</span>
+                        {(10000).toLocaleString('en-US')}
+                     </p>
+                  </div>
+                  <div className='relative w-full my-2'>
+                     <input
+                        type='text'
+                        className='p-2 w-full rounded-lg outline-none'
+                        placeholder='Mã giảm giá'
+                     />
+                     <button className='absolute right-0 top-0 h-full px-4 border-[1px] rounded-lg bg-gray-300'>
+                        Áp dụng
+                     </button>
+                  </div>
                </div>
 
                <div className='flex justify-between border-b-2 border-slate-400 font-bold text-[1.3rem] mt-5'>

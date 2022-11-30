@@ -34,9 +34,7 @@ export default function Login({
    const router = useRouter();
 
    const yupFormValidateSchema =
-      router.pathname === '/register'
-         ? validateRegisterSchema
-         : validateLoginSchema;
+      router.pathname === '/register' ? validateRegisterSchema : validateLoginSchema;
 
    const formik = useFormik({
       initialValues: formValue,
@@ -46,13 +44,10 @@ export default function Login({
       },
    });
 
-   const isRegisterPage = useMemo(
-      () => router.pathname === '/register',
-      [router.pathname]
-   );
+   const isRegisterPage = useMemo(() => router.pathname === '/register', [router.pathname]);
 
    return (
-      <div className='relattive w-[350px] mt-10 p-10 border-1 bg-red-700 rounded-md md:w-[400px] md:rounded-lg  md:p-5 lg:w-[450px] lg:p-10 '>
+      <div className='relattive w-[350px] mt-10 p-10 border-1 bg-[#891a1c] rounded-md md:w-[400px] md:rounded-lg  md:p-5 lg:w-[450px] lg:p-10 '>
          <div className='flex flex-col '>
             <form
                autoComplete='off'
@@ -111,9 +106,7 @@ export default function Login({
                         onChange={formik.handleChange}
                      />
                      {formik.errors.repassword && formik.touched.repassword && (
-                        <LoginValidateText
-                           warningText={formik.errors.repassword}
-                        />
+                        <LoginValidateText warningText={formik.errors.repassword} />
                      )}
                   </div>
                )}
@@ -150,9 +143,8 @@ export default function Login({
             </button>
          </div>
          <p className='mt-5 text-white text-[0.9rem]'>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed
-            mollitia recusandae iste ad assumenda culpa incidunt iusto maxime
-            voluptate neque?
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sed mollitia recusandae iste
+            ad assumenda culpa incidunt iusto maxime voluptate neque?
          </p>
          {/* login with social network */}
          <SocialLogin />

@@ -6,11 +6,10 @@ import {ImFacebook} from 'react-icons/im';
 import {IoLogoYoutube} from 'react-icons/io';
 import {SiTiktok} from 'react-icons/si';
 import {useRouter} from 'next/router';
-import useGlobalState from '../../react-gobal-state';
+import useGlobalState from '../../state';
 
 export default function Footer() {
    const router = useRouter();
-   const [isShowChat] = useGlobalState('isShowChat');
    const hideHeaderMarquee = useMemo(() => {
       const excludePath = ['/event'];
       const currentPath = router.pathname;
@@ -23,10 +22,7 @@ export default function Footer() {
    }, [router.pathname]);
 
    return (
-      <div
-         className={`py-3 px-2 md:px-10 border-t-[1px] pt-5 ${
-            adjustFooter ? 'mt-10' : ''
-         }`}>
+      <div className={`py-3 px-2 md:px-10 border-t-[1px] pt-5 ${adjustFooter ? 'mt-10' : ''}`}>
          <div className='flex items-center gap-3 md:gap-5'>
             <Logo width='120px' height='24px'></Logo>
             <FiInstagram />
@@ -39,13 +35,8 @@ export default function Footer() {
             <div>
                <p>business registration number. 0314200458</p>
                <p>Address:</p>
-               <p>
-                  327/6A Nguyen dinh chieu, ward 5, district 3, ho chi minh city
-               </p>
-               <p>
-                  122 phan thanh, ward thac gian, thanh khe district, da nang
-                  city
-               </p>
+               <p>327/6A Nguyen dinh chieu, ward 5, district 3, ho chi minh city</p>
+               <p>122 phan thanh, ward thac gian, thanh khe district, da nang city</p>
                <p>hot line: (+84) 933 322199</p>
                <p>email: info@cocozzi.vn</p>
             </div>
@@ -53,9 +44,7 @@ export default function Footer() {
             <div>
                <p>the all company limited</p>
                <p>business registration no. 0317155482</p>
-               <p>
-                  address: 116 nguyen van thu, da cao ward, district 1, HCMC.
-               </p>
+               <p>address: 116 nguyen van thu, da cao ward, district 1, HCMC.</p>
                <p>hot line: (+84) 933 322199</p>
                <p>email: info@theall.vn</p>
             </div>
