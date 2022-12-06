@@ -33,12 +33,13 @@ import bagApi from '../service/bagApi';
 import useGlobalState from '../state';
 
 import Cookies from 'js-cookie';
+import AdminSideBar from '../components/Admin/AdminSidebar';
 
 function MyApp({Component, pageProps, session}) {
    const router = useRouter();
    const {carts, categories, token, userToken} = pageProps;
 
-   const [, setToken] = useGlobalState('token');
+   const [, setToken] = useGlobalState('accessToken');
    const [, setCurrentUser] = useGlobalState('currentUser');
 
    // set global state
@@ -63,6 +64,10 @@ function MyApp({Component, pageProps, session}) {
       });
    }, []);
 
+   const isAdminPage = useMemo(() => {
+      return router.pathname.indexOf('admin') >= 0;
+   }, [router.pathname]);
+
    return (
       <SessionProvider session={session}>
          <Provider store={store}>
@@ -74,9 +79,10 @@ function MyApp({Component, pageProps, session}) {
             <Script src='https://sp.zalo.me/plugins/sdk.js'></Script>
 
             <Header carts={carts}></Header>
-
-            <Component {...pageProps} />
-
+            <div className=''>
+               {isAdminPage && <AdminSideBar />}
+               <Component {...pageProps} />
+            </div>
             <Footer></Footer>
          </Provider>
       </SessionProvider>
@@ -85,6 +91,7 @@ function MyApp({Component, pageProps, session}) {
 
 MyApp.getInitialProps = async (appContext: AppContext) => {
    const [token, userToken] = getTokenSSRAndCSS(appContext.ctx);
+
    const userId = userToken?.data._id;
    const appProps = await App.getInitialProps(appContext);
    const allCategory = await categoryApi.getAllCategory();

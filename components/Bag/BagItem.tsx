@@ -13,7 +13,7 @@ export default function BagItem() {
 
    return (
       <tr>
-         <td className='border-b pb-3 border-slate-300 '>
+         <td className='border-b pb-3 border-black '>
             <div className='flex gap-2 items-center'>
                <span>
                   <AiOutlineCloseCircle className='text-[1.3rem] text-gray-400 hover:cursor-pointer hover:text-gray-900' />
@@ -35,16 +35,16 @@ export default function BagItem() {
                </div>
             </div>
          </td>
-         <td className={`${isMobile && 'hidden'} px-5 font-bold border-b pb-3 border-slate-300`}>
+         <td className={`${isMobile && 'hidden'} px-5 font-bold border-b pb-3 border-black`}>
             <p className='flex items-start'>
                <span>₫</span>
                {(50000).toLocaleString('en-US')}
             </p>
          </td>
-         <td className={`${isMobile && 'hidden'} px-5 border-b pb-3 border-slate-300`}>
+         <td className={`${isMobile && 'hidden'} px-5 border-b pb-3 border-black`}>
             <InputQuantity></InputQuantity>
          </td>
-         <td className={`${isMobile && 'hidden'} px-5 font-bold border-b pb-3 border-slate-300`}>
+         <td className={`${isMobile && 'hidden'} px-5 font-bold border-b pb-3 border-black`}>
             <p className='flex items-start'>
                <span>₫</span>
                {(5000).toLocaleString('en-US')}

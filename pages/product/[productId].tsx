@@ -3,6 +3,7 @@ import {useEffect, useRef, useState} from 'react';
 import {BsShare} from 'react-icons/bs';
 
 import {
+   ProductDescription,
    ProductDetailColorSelect,
    ProductDetailPaymentMethod,
    ProductDetailReview,
@@ -12,6 +13,7 @@ import {
 import SliderSlick from 'react-slick';
 import useGlobalState from '../../state';
 import useWindowDimensions from '../../hooks/UseWindowDimensions';
+import slickSliderMobile from '../../helper/slickSliderMobile';
 
 const imageArr = [
    '/images/shop/16.webp',
@@ -25,6 +27,7 @@ const imageArr = [
 
 export default function ProductDetailPage() {
    const {isMobile} = useWindowDimensions();
+   const [isMobileScreen, setIsMobileScreen] = useState(false);
    const [sizeSelect, setSizeSelect] = useState('');
    const [colorSelect, setColorSelect] = useState(0);
 
@@ -41,14 +44,26 @@ export default function ProductDetailPage() {
       customPaging: function (i) {
          return <div className='dot'></div>;
       },
-      dotsClass: 'slick-dots slick-thumb',
+      dotsClass: 'slick-dots slick-thumb-custom',
       prevArrow: false,
       nextArrow: false,
+      scrollBar: true,
+      beforeChange: () => slickSliderMobile(),
    };
+
+   // create first width for active slider
+   useEffect(() => {
+      if (isMobile) {
+         setIsMobileScreen(true);
+      } else {
+         setIsMobileScreen(false);
+      }
+   }, [isMobile]);
+   useEffect(() => slickSliderMobile(), []);
 
    return (
       <div className='md:px-20 md:w-[780px] lg:w-[1200px] mx-[auto]'>
-         {/* product introduction */}
+         {/* product image */}
          <div className='flex flex-col-reverse mt-2 md:flex-row md:mt-5 '>
             <div className='hidden md:grid grid-cols-2 gap-1 md:w-2/3 '>
                {/* video clip */}
@@ -71,6 +86,7 @@ export default function ProductDetailPage() {
                      </div>
                   ))}
                </SliderSlick>
+               <ProductDescription></ProductDescription>
             </div>
 
             {/* product info */}
@@ -98,18 +114,13 @@ export default function ProductDetailPage() {
                   </div>
 
                   {/* product description */}
-                  <p
-                     className='my-2
-                   md:mt-7'>
-                     Product description Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                     Accusantium ex doloribus reiciendis. Officiis possimus tempore molestias iure
-                     quaerat, doloribus quas!
-                  </p>
+                  {!isMobileScreen && <ProductDescription></ProductDescription>}
+
                   {/* payment */}
 
-                  <div className='fixed bottom-0 right-0 left-0 md:relative md:mx-0 md:bg-transparent text-white md:text-black z-[101]'>
+                  <div className='fixed bottom-0 right-0 left-0 md:relative md:mx-0 md:bg-transparent text-black md:text-black z-[101] '>
                      <div
-                        className={`absolute bg-black md:bg-transparent w-full md:relative md:bottom-[unset] md:opacity-100 transition-all ${
+                        className={`absolute bg-white md:bg-transparent w-full md:relative md:bottom-[unset] md:opacity-100 transition-all ${
                            isShowSizeAndColor ? 'bottom-[100%]' : 'bottom-[-500%] '
                         }`}>
                         {/* size select */}
@@ -123,16 +134,15 @@ export default function ProductDetailPage() {
                            colorSelect={colorSelect}
                         />
 
-                        <ProductDetailPaymentMethod />
+                        <div className='hidden md:block'>
+                           <ProductDetailPaymentMethod />
+                        </div>
                      </div>
 
                      {/* buy button */}
-                     <div
-                        className={`flex md:mt-3 md:gap-1 relative z-[120] ${
-                           isShowSizeAndColor && 'border-t-2 border-gray-400'
-                        }`}>
+                     <div className='flex md:mt-3 md:gap-1 relative z-[120] font-[900] text-white md:text-black'>
                         <button
-                           className='w-[50%] py-2 uppercase bg-[#891a1c] md:bg-[transparent] md:border-[1px] border-gray-400 hover:text-white md:hover:bg-black'
+                           className='w-[50%] py-2 uppercase bg-black md:bg-[transparent] md:border-[1px] hover:text-white md:hover:bg-black border-r-[1px] border-[#fff] md:border-black'
                            onClick={() => {
                               isMobile && setIsShowSizeAndColor(!isShowSizeAndColor);
                            }}>
@@ -140,7 +150,7 @@ export default function ProductDetailPage() {
                         </button>
 
                         <button
-                           className='w-[50%] py-2 uppercase bg-[black] md:bg-[transparent] md:border-[1px] border-gray-400 md:hover:text-white md:hover:bg-black'
+                           className='w-[50%] py-2 uppercase bg-black md:bg-[transparent] md:border-[1px] border-black md:hover:text-white md:hover:bg-black'
                            onClick={() => {
                               isMobile && setIsShowSizeAndColor(!isShowSizeAndColor);
                            }}>
@@ -152,7 +162,7 @@ export default function ProductDetailPage() {
             </div>
          </div>
          {/* Product review */}
-         <ProductDetailReview />
+         {/* <ProductDetailReview /> */}
       </div>
    );
 }

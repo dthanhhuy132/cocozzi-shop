@@ -1,24 +1,24 @@
 .slick-prev::before {
    content: url("https://spao.com/morenvyimg/main_arrow_left2.png");
 }
+.slick-next:before {
+   content: url("https://spao.com/morenvyimg/main_arrow_right2.png");
+}
 .slick-prev {
    left: -50px;
-   width: 20px;
-   height: 20px;
+   /* top: 50%; */
+   /* transform: translateY(-50%); */
 }
 
 .slick-next {
-   right: -40px;
-   top: 50%;
-}
-
-.slick-next:before {
-   content: url("https://spao.com/morenvyimg/main_arrow_right2.png");
+   right: -32px;
+   /* top: 50%; */
+   /* transform: translateY(-50%); */
 }
 
 .slick-next:before,
 .slick-prev::before {
-   top: -100%;
+   /* top: -100%; */
 }
 
 @media (max-width: 640px) {
@@ -37,23 +37,60 @@
    margin-right: -4px;
 } */
 
-.slick-dots.slick-thumb {
-   display: flex;
-   flex-direction: row;
-   justify-content: center;
-}
-
-.slick-dots.slick-thumb li {
-   width: 6px;
+.slick-thumb-custom {
+   border: 1px solid rgb(231, 231, 231);
+   background: transparent;
    height: 6px;
-   margin: 0 3px;
-   border-radius: 999px;
-   transition: all 0.5s ease-in-out;
-   will-change: width;
-   background-color: black;
+   position: relative;
+   border-radius: 20px;
+   width: 100%;
+   margin: -40px auto 0;
+   margin-top: -30px;
+   transition: all;
 }
 
-.slick-dots.slick-thumb li.slick-active {
-   background-color: #891a1c;
-   width: 24px;
+.slick-thumb-custom li:nth-child(1) {
+   position: absolute;
+   top: 0;
+   left: 0;
+   border-radius: 20px;
+   margin: 0;
+
+   background: black;
+   width: 0%;
+   height: 100%;
+   transition: width 0.2s ease;
+}
+
+.slick-slide.slick-center {
+   /* transform: scale(1.3); */
+   border-radius: 20px;
+   object-fit: fill;
+}
+/*  */
+
+/* custom slick for center mode */
+.slick-custom-center-dth .slick-slide.slick-center {
+   transform: scale(1.3);
+   border-radius: 20px;
+   object-fit: fill;
+}
+.slick-custom-center-dth .slick-slide img {
+   border-radius: 20px;
+   filter: brightness(0.3);
+}
+.slick-custom-center-dth .slick-slide.slick-center img {
+   border-radius: 20px;
+   filter: brightness(1);
+}
+
+.slick-custom-center-dth .slick-list {
+   overflow: unset;
+}
+
+.slick-custom-center-dth .slick-prev {
+   left: -50px;
+   z-index: 1000;
+   /* top: 50%; */
+   /* transform: translateY(-50%); */
 }

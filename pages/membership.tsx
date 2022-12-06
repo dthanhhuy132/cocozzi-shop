@@ -25,11 +25,11 @@ export default function MembershipPage() {
       setIsShowLoading(true);
       dispatch(loginAsyncAction(data)).then((res) => {
          if (res.payload.ok) {
-            const token = res.payload.user.accessToken;
+            const accessToken = res.payload.user.accessToken;
 
-            const expireTokenDay = getTokenExpireTime(token);
+            const expireAccessTokenDay = getTokenExpireTime(accessToken);
 
-            Cookies.set('token', token, {expires: expireTokenDay});
+            Cookies.set('accessToken', accessToken, {expires: 10});
             router.push('/');
          } else {
             setErrorLogin(res.payload.message);
@@ -43,9 +43,6 @@ export default function MembershipPage() {
          <HomeBackground ishomepage={false}></HomeBackground>
          <div className='fixed top-0 right-0 left-0 bottom-0 bg-black opacity-80 z-0'></div>
          <div className='absolute flex flex-col items-center z-1 top-[50px] left-[50%] translate-x-[-50%] md:top-0 lg:top-[100px]'>
-            <div className='hidden lg:block'>
-               <Logo width='250px' height='60px'></Logo>
-            </div>
             <Login
                formValue={loginData}
                handleSubmitForm={(data) => handleLogin(data)}

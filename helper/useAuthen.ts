@@ -2,42 +2,52 @@ import {useEffect} from 'react';
 import {parseJwt} from '.';
 import useGlobalState from '../state';
 import {useRouter} from 'next/router';
+import isAdmin from './isAdmin';
 
 // Bat buoc dang nhap moi vao chua
 // Create Post
 function useAuthen() {
    const router = useRouter();
-   const [token] = useGlobalState('token');
+   const [accessToken] = useGlobalState('accessToken');
+   const [currentUser] = useGlobalState('currentUser');
 
    useEffect(() => {
-      const userToken = parseJwt(token);
+      const userToken = parseJwt(accessToken);
       if (!(userToken && userToken.id && userToken.email)) {
          router.push('/login');
       }
-   }, [token]);
+   }, [accessToken]);
 }
 
 function useAdminAuthen() {
-   const {currentUser} = useGlobalState('currentUser');
-   const {token} = useGlobalState('token');
+   const router = useRouter();
+   const [accessToken] = useGlobalState('accessToken');
 
-   useEffect(() => {}, [token, currentUser]);
+   const userToken = parseJwt(accessToken);
+
+   useEffect(() => {
+      if (!isAdmin(userToken)) {
+         router.push('/');
+      }
+   }, [accessToken]);
 }
 
 // Chua dang nhap moi cho phep vao
 // Da dang nhap roi -> Day qua homepage
 function useNotAuthen() {
    const router = useRouter();
-   const [token] = useGlobalState('token');
+   const [accessToken] = useGlobalState('accessToken');
 
    useEffect(() => {
-      const userToken = parseJwt(token);
-      if (userToken && userToken.id && userToken.email) {
+      const userToken = parseJwt(accessToken);
+      console.log('userToken la gi', userToken);
+
+      if (!isAdmin(userToken)) {
          router.push('/');
       }
-   }, [token]);
+   }, [accessToken]);
 }
 
-export {useAuthen, useNotAuthen};
+export {useAuthen, useNotAuthen, useAdminAuthen};
 
 export {};

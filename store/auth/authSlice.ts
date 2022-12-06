@@ -7,28 +7,28 @@ import {parseJwt} from '../../helper';
 
 interface IAuthSlice {
    user: any;
-   token: undefined | string;
+   accessToken: undefined | string | null;
 }
 
-const token = Cookies.get('token');
-const user = parseJwt(token);
+const accessToken = Cookies.get('accessToken');
+const user = parseJwt(accessToken);
 
-const initialState: IAuthSlice = {user, token};
+const initialState: IAuthSlice = {user: user, accessToken: accessToken};
 
 const authSlice = createSlice({
    name: 'auth',
    initialState,
    reducers: {
       logout: (state) => {
-         Cookies.remove('token');
+         Cookies.remove('accessToken');
          state.user = {};
-         state.token = '';
+         state.accessToken = undefined;
       },
    },
    extraReducers: {
       [loginAsyncAction.fulfilled]: (state, action) => {
          state.user = action.payload?.user?.user;
-         state.token = action.payload?.user?.accessToken;
+         state.accessToken = action.payload?.user?.accessToken;
       },
    },
 });

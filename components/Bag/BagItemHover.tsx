@@ -8,7 +8,7 @@ export default function BagItemHover() {
                alt='hinh anh'
                className='w-[50px] md:w-[70px] object-contain rounded-md'
             />
-            <div className='capitalize text-[0.85rem] font-thin'>
+            <div className='capitalize text-[0.85rem]'>
                <p>Tên sản phẩm Tên sản phẩmTên sản phẩmTên sản phẩm</p>
                <p className='lowercase'>x 2</p>
             </div>

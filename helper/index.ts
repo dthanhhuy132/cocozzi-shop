@@ -22,26 +22,26 @@ export const parseJwt = (token: string) => {
    }
 };
 export const getTokenSSRAndCSS = (ctx?: NextPageContext): any => {
-   let token = '';
+   let accessToken = '';
    let userToken = null;
 
    if (typeof window === 'undefined') {
       // SSR
       const cookieStr = ctx?.req?.headers?.cookie || '';
-      token = cookie.parse(cookieStr).token;
-      userToken = parseJwt(token);
+      accessToken = cookie.parse(cookieStr).accessToken;
+      userToken = parseJwt(accessToken);
    } else {
       // CSR
 
-      token = Cookies.get('token') || '';
-      userToken = parseJwt(token);
+      accessToken = Cookies.get('accessToken') || '';
+      userToken = parseJwt(accessToken);
    }
 
-   return [token, userToken];
+   return [accessToken, userToken];
 };
 
-export const getTokenExpireTime = (token: string) => {
-   const expireTokenTime = parseJwt(token).exp;
+export const getTokenExpireTime = (accessToken: string) => {
+   const expireTokenTime = parseJwt(accessToken).exp;
 
    const currentTime = new Date().getTime() / 1000;
 

@@ -6,10 +6,7 @@ export default function HeaderMarquee() {
    const exampleText = ['Cocozzi Khuyến mãi 1', 'khuyến mãi 2', ,];
 
    return (
-      <MarqueeSC
-         className='relative z-10 bg-[#891a1c] '
-         speed={50}
-         direction={'left'}>
+      <MarqueeSC className='relative z-10 bg-[#891a1c] ' speed={50} direction={'left'}>
          <h2
             className={`mx-[50px] md:mx-[200px] font-bold text-white italic `}
             onClick={() => console.log('slffasdf')}>

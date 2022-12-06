@@ -23,10 +23,7 @@ export default function RegisterPage() {
       <div className='relative'>
          <HomeBackground ishomepage={false}></HomeBackground>
          <div className='fixed top-0 right-0 left-0 bottom-0 bg-black opacity-80'></div>
-         <div className='absolute top-[30%] md:top-[45%] lg:top-[35%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col items-center z-1'>
-            <div className='hidden lg:block'>
-               <Logo width='250px' height='60px'></Logo>
-            </div>
+         <div className='absolute flex flex-col items-center z-1 top-[40px] left-[50%] translate-x-[-50%] md:top-0 lg:top-[100px]'>
             <Login
                formValue={registerData}
                handleSubmitForm={handleRegister}

@@ -3,9 +3,10 @@
 @tailwind utilities;
 
 /* font face */
+
 @font-face {
-  font-family: "Gilroy";
-  src: local("Gilroy"), url(../public/font/SVN-Gilroy\ Black.otf) format("truetype");
+  font-family: "GilroySemibold";
+  src: local("Gilroy"), url(../public/font/SVN-Gilroy\ SemiBold.otf) format("truetype");
 }
 
 @font-face {

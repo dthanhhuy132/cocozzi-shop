@@ -57,8 +57,8 @@ export default function Login({
                   <input
                      type='text'
                      name='email'
-                     placeholder='email'
-                     className='w-full text-white outline-none bg-transparent  border-b-[2px] border-black pb-[4px] mb-2 placeholder-gray-900 placeholder:uppercase'
+                     placeholder='Email/Phone number'
+                     className='w-full text-white outline-none bg-transparent border-b-[1px] border-black pb-[4px] mb-2 placeholder-gray-400'
                      value={formik.values.email}
                      onChange={formik.handleChange}
                   />
@@ -72,8 +72,8 @@ export default function Login({
                      <input
                         type='text'
                         name='phone'
-                        placeholder='số điện thoại'
-                        className='w-full text-white bg-[none] outline-none bg-transparent border-b-[2px] border-black pb-[4px] mb-2 placeholder-gray-900 placeholder:uppercase'
+                        placeholder='Số điện thoại'
+                        className='w-full text-white bg-[none] outline-none bg-transparent border-b-[1px] border-black pb-[4px] mb-2 placeholder-gray-400'
                         value={formik.values.phone}
                         onChange={formik.handleChange}
                      />
@@ -86,8 +86,8 @@ export default function Login({
                   <input
                      type='password'
                      name='password'
-                     placeholder='password'
-                     className='w-full text-white bg-[none] outline-none bg-transparent border-b-[2px] border-black pb-[4px] mb-2 placeholder-gray-900 placeholder:uppercase'
+                     placeholder='Password'
+                     className='w-full text-white bg-[none] outline-none bg-transparent border-b-[1px] border-black pb-[4px] mb-2 placeholder-gray-400'
                      value={formik.values.password}
                      onChange={formik.handleChange}
                   />
@@ -100,8 +100,8 @@ export default function Login({
                      <input
                         type='password'
                         name='repassword'
-                        placeholder='re-password'
-                        className='w-full text-white bg-[none] outline-none bg-transparent border-b-[2px] border-black pb-[4px] mb-2 placeholder-gray-900 placeholder:uppercase'
+                        placeholder='Re-password'
+                        className='w-full text-white bg-[none] outline-none bg-transparent border-b-[1px] border-black pb-[4px] mb-2 placeholder-gray-400'
                         value={formik.values.repassword}
                         onChange={formik.handleChange}
                      />
@@ -113,7 +113,8 @@ export default function Login({
                <button
                   type='submit'
                   disabled={isShowLoading}
-                  className={` flex justify-center border-[1px] border-black rounded-lg uppercase text-[0.9rem] font-[400] text-white py-2 mt-3 mb-2 hover:bg-[#b91c1c]`}>
+                  className={` flex justify-center border-[1px] border-black rounded-lg uppercase text-[0.9rem] font-[400] text-gray-900 hover:text-white py-2 mt-3 mb-2`}>
+                  {/* hover:bg-[#b91c1c] */}
                   {isShowLoading && (
                      <span className='mr-2'>
                         <Loading />
@@ -136,10 +137,9 @@ export default function Login({
             <button
                type='submit'
                disabled={isShowLoading}
-               className={`flex justify-center border-[1px] border-gray-900 rounded-lg uppercase text-[0.9rem] font-[400] text-gray-900 py-2 mt-3 mb-2 hover:text-white`}>
-               <Link href={`${isRegisterPage ? '/membership' : '/register'}`}>
-                  {isRegisterPage ? 'Login' : 'Register'}
-               </Link>
+               className={`flex justify-center border-[1px] border-gray-900 rounded-lg uppercase text-[0.9rem] font-[400] text-gray-900 py-2 mt-3 mb-2 hover:text-white`}
+               onClick={() => router.push(`${isRegisterPage ? '/membership' : '/register'}`)}>
+               {isRegisterPage ? 'Login' : 'Register'}
             </button>
          </div>
          <p className='mt-5 text-white text-[0.9rem]'>

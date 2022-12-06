@@ -12,9 +12,7 @@ export default function BagHover() {
    return (
       <DivSC>
          <div className='relative flex flex-col justify-end z-10 p-4'>
-            <p className='border-b-2 lowercase mb-2 font-thin pb-2'>
-               shopping bag
-            </p>
+            <p className='border-b-2 lowercase mb-2 font-thin pb-2'>shopping bag</p>
             {/* cart */}
             <div className='flex flex-col gap-4 my-2 max-h-[170px] overflow-auto'>
                {imgArr.map((img, index) => (
@@ -78,10 +76,10 @@ const DivSC = styled('div')`
 `;
 
 const DivSCBackground = styled(DivSC)`
-   background-image: url('https://images.pond5.com/shopping-cart-background-presentation-footage-075835137_prevstill.jpeg');
+   /* background-image: url('https://images.pond5.com/shopping-cart-background-presentation-footage-075835137_prevstill.jpeg'); */
 
-   background-size: cover;
-   background-repeat: no-repeat;
+   /* background-size: cover; */
+   /* background-repeat: no-repeat; */
    z-index: 1;
    top: 0;
    right: 0;
@@ -91,5 +89,8 @@ const DivSCBackground = styled(DivSC)`
    width: 100%;
    height: 100%;
 
-   filter: brightness(0.25);
+   background-color: #3b3333;
+   opacity: 0.6;
+
+   /* filter: brightness(0.25); */
 `;

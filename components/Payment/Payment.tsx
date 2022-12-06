@@ -6,7 +6,7 @@ export default function Payment() {
    return (
       <div className='flex flex-col md:flex-row w-full md:w-2/3 my-4 md:my-10 mx-[auto] gap-5 '>
          {/* Cart */}
-         <div className='md:w-2/3 p-2 md:p-4 bg-gray-100 rounded-lg shadow-[0_3px_8px_rgba(0,0,0,0.3)]'>
+         <div className='md:w-2/3 p-2 md:p-4 bg-gray-100 rounded-lg  '>
             <p className='font-bold mb-3'>VUI LÒNG HOÀN THÀNH THÔNG TIN ĐẶT HÀNG </p>
 
             <PaymentUserInfo />
@@ -14,7 +14,7 @@ export default function Payment() {
          </div>
 
          <div className='md:w-1/3'>
-            <div className='sticky top-[80px] bg-gray-100 rounded-lg min-h-[80px] p-4 shadow-[0_3px_8px_rgba(0,0,0,0.3)]'>
+            <div className='sticky top-[80px] bg-gray-100 rounded-lg min-h-[80px] p-4  '>
                <p className='font-[700] text-[#891a1c] text-[1.3rem]'>ĐƠN HÀNG CỦA BẠN</p>
 
                {/* payment bag item */}
@@ -104,7 +104,7 @@ export default function Payment() {
                      {(901231234).toLocaleString('en-US')}
                   </p>
                </div>
-               <div className='bg-gray-700 mt-3 text-white text-center py-2 rounded-[30px] hover:bg-gray-900 hover:cursor-pointer'>
+               <div className='bg-black mt-3 text-white text-center py-2 rounded-[30px] hover:bg-gray-900 hover:cursor-pointer'>
                   <p className='font-bold' onClick={() => {}}>
                      Đặt hàng
                   </p>

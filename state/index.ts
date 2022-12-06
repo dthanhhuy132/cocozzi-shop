@@ -1,7 +1,8 @@
 import {createGlobalState} from 'react-hooks-global-state';
 const initialState = {
-   token: '',
+   accessToken: '',
    currentUser: '',
+   headerHeight: 40,
 };
 
 const {useGlobalState} = createGlobalState(initialState);

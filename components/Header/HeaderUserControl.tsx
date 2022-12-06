@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import {useSelector} from 'react-redux';
+import isAdmin from '../../helper/isAdmin';
 
 export default function HeaderUserControl({hasToken, isMobile}) {
    const {user} = useSelector((state: any) => state.auth);
@@ -16,9 +17,9 @@ export default function HeaderUserControl({hasToken, isMobile}) {
                      Đơn hàng của tôi
                   </li>
 
-                  {user.data?.role === 'admin' && (
+                  {isAdmin(user) && (
                      <li className='py-1 px-2 hover:bg-[#891a1c] hover:text-white cursor-pointer'>
-                        <Link href='/admin'>
+                        <Link href='/admin/home'>
                            <a>Trang Admin</a>
                         </Link>
                      </li>

@@ -1,24 +1,24 @@
 import {useState, useRef, useEffect} from 'react';
-
+import {BiCopyAlt} from 'react-icons/bi';
+import to_string_vn_money from './common/convertMoneyToString';
+import PaymentCopy from './common/PaymentCopy';
 export default function PaymentMethod() {
-   const [paymentMethod, setPaymentMethod] = useState('cod');
-   const [imgBank, setImgBank] = useState<any>('');
-   const inputRef = useRef(null);
+   const [paymentWay, setPaymentWay] = useState('cod');
 
-   useEffect(() => {}, []);
+   // const [imgBank, setImgBank] = useState<any>('');
+   // const inputRef = useRef(null);
+   // useEffect(() => URL.revokeObjectURL(imgBank.preview), []);
+   // function handleClickUploadEvidenceBank() {
+   //    inputRef.current.click();
+   // }
 
-   function handleClickUploadEvidenceBank() {
-      inputRef.current.click();
-   }
+   // function handleUploadImgBank(e) {
+   //    const file = e.target.files[0];
+   //    file.preview = URL.createObjectURL(file);
+   //    setImgBank(file);
+   //    e.target.value = '';
+   // }
 
-   function handleUploadImgBank(e) {
-      const file = e.target.files[0];
-      file.preview = URL.createObjectURL(file);
-      setImgBank(file);
-      e.target.value = '';
-   }
-
-   useEffect(() => URL.revokeObjectURL(imgBank.preview), []);
    return (
       <div className='transition'>
          <p className='font-bold mt-6 mb-2'>PHƯƠNG THỨC THANH TOÁN</p>
@@ -30,8 +30,8 @@ export default function PaymentMethod() {
                   id='momo'
                   name='fav_language'
                   defaultValue='momo'
-                  checked={paymentMethod === 'momo'}
-                  onChange={(e: any) => setPaymentMethod(e.target.value)}
+                  checked={paymentWay === 'momo'}
+                  onChange={(e: any) => setPaymentWay(e.target.value)}
                />
                <label htmlFor='momo' className='cursor-pointer font-semibold'>
                   Thanh toán qua Momo
@@ -40,7 +40,7 @@ export default function PaymentMethod() {
 
             <div
                className={`h-0 overflow-hidden mt-2 transition  ${
-                  paymentMethod === 'momo' && `h-[300px]`
+                  paymentWay === 'momo' && `h-[300px]`
                }`}>
                Thanh thanh toán bằng momo thì phải chuyển khoản trước nhé Thanh thanh toán bằng momo
                thì phải chuyển khoản trước nhé Thanh thanh toán bằng momo thì phải chuyển khoản
@@ -56,8 +56,8 @@ export default function PaymentMethod() {
                   id='cod'
                   name='fav_language'
                   defaultValue='cod'
-                  checked={paymentMethod === 'cod'}
-                  onChange={(e: any) => setPaymentMethod(e.target.value)}
+                  checked={paymentWay === 'cod'}
+                  onChange={(e: any) => setPaymentWay(e.target.value)}
                />
                <label htmlFor='cod' className='cursor-pointer font-semibold'>
                   Thanh toán khi nhận hàng
@@ -66,7 +66,7 @@ export default function PaymentMethod() {
 
             <div
                className={`h-0 overflow-hidden mt-2 transition-all ${
-                  paymentMethod === 'cod' && 'h-[30px]'
+                  paymentWay === 'cod' && 'h-[30px]'
                } `}>
                Trả tiền mặt khi nhận hàng
             </div>
@@ -78,42 +78,68 @@ export default function PaymentMethod() {
                   id='bank'
                   name='fav_language'
                   defaultValue='bank'
-                  checked={paymentMethod === 'bank'}
-                  onChange={(e: any) => setPaymentMethod(e.target.value)}
+                  checked={paymentWay === 'bank'}
+                  onChange={(e: any) => setPaymentWay(e.target.value)}
                />
                <label htmlFor='bank' className='cursor-pointer font-semibold'>
-                  Thanh toán khi nhận hàng
+                  Chuyển khoản qua ngân hàng
                </label>
             </div>
 
             <div
-               className={`overflow-hidden mt-2 transition-all px-4 ${
-                  paymentMethod === 'bank' ? `h-full` : 'h-0'
+               className={`overflow-hidden mt-2 transition-all pl-4 ${
+                  paymentWay === 'bank' ? `h-full` : 'h-0'
                } `}>
-               <p className='underline'>Thông tin thanh toán</p>
-               <p>
-                  - Số tài khoản:
-                  <span className='ml-2 font-semibold'>0123134212</span>
+               <p className='uppercase font-bold py-2 border-b-[1px] border-gray-300 text-[#891a1c]'>
+                  HƯỚng dẫn thanh toán chuyển khoản
                </p>
-               <p>
-                  - Chủ tài khoản:
-                  <span className='ml-2 font-semibold'>Tên chủ tài khoản</span>
-               </p>
-               <p>
-                  - Ngân hàng:
-                  <span className='ml-2 font-semibold'>Vietcombank</span>
-               </p>
+               <div className='mt-2 font-bold flex flex-col gap-2'>
+                  <p className='flex'>
+                     <span className='min-w-[220px] inline-block'>Số tài khoản thanh toán:</span>
+                     <span className='font-semibold flex items-center'>
+                        0331000430764
+                        <PaymentCopy text='0331000430764' />
+                     </span>
+                  </p>
+                  <p className='flex'>
+                     <span className='min-w-[220px] inline-block'>Tên chủ tài khoản:</span>
+                     <span className='font-semibold inline-block'>NGUYEN HOANG DU</span>
+                  </p>
+                  <div className='flex'>
+                     <span className='min-w-[220px] inline-block'>Ngân hàng:</span>
+                     <p className='flex flex-col'>
+                        <span className=' font-semibold'>Vietcombank - </span>
+                        <span>Ngân hàng TMCP Ngoại thương Viet Nam</span>
+                     </p>
+                  </div>
 
-               <div className='mt-5'>
-                  <p>- Quét thẻ QR để thanh toán</p>
-                  <img
-                     src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1200px-QR_code_for_mobile_English_Wikipedia.svg.png'
-                     className='w-[150px] h-[150px] border-2'
-                     alt='qr code'
-                  />
+                  <p className='flex'>
+                     <span className='min-w-[220px] inline-block'>Số tiền thanh toán:</span>
+                     <p className='flex flex-col'>
+                        <span className=' font-semibold text-[#891a1c]'> 482738943 </span>
+                        <span className='font-semibold capitalize'>
+                           ({to_string_vn_money(50000000)})
+                        </span>
+                     </p>
+
+                     <div></div>
+                  </p>
                </div>
 
-               <div className='mt-5'>
+               <div className='flex flex-col md:flex-row justify-between mt-5 py-2 border-t-[1px] border-gray-300'>
+                  <p className='uppercase' style={{fontFamily: 'GilroySemibold'}}>
+                     Thanh toán chuyển khoản nhanh qua qr code:
+                  </p>
+                  <div>
+                     <img
+                        src='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/QR_code_for_mobile_English_Wikipedia.svg/1200px-QR_code_for_mobile_English_Wikipedia.svg.png'
+                        className='w-[150px] h-[150px]'
+                        alt='qr code'
+                     />
+                  </div>
+               </div>
+
+               {/* <div className='mt-5'>
                   <p>Upload hình ảnh chuyển khoản</p>
                   {!imgBank && (
                      <div
@@ -139,7 +165,7 @@ export default function PaymentMethod() {
                      type='file'
                      accept='png/jpg'
                      onChange={handleUploadImgBank}></input>
-               </div>
+               </div> */}
             </div>
          </div>
       </div>
