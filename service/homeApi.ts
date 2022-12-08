@@ -6,10 +6,7 @@ const homeApi = {
    },
 
    createHomeImage(token, formData) {
-      console.log('token trong home Api', token);
-      console.log('formData trong home api', formData);
-
-      return api.callWithToken(token).post('/panel/create');
+      return api.callWithToken(token).post('/panel/create', formData);
    },
    updateHomeImage() {},
 };

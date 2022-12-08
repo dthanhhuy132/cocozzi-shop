@@ -5,7 +5,7 @@ import 'animate.css';
 
 import 'nprogress/nprogress.css';
 import '../styles/nprogress-custom.css';
-
+import 'react-dropdown/style.css';
 import '../styles/image-gallery.css';
 import '../styles/slick.css';
 import '../styles/masonry.css';
@@ -34,10 +34,11 @@ import useGlobalState from '../state';
 
 import Cookies from 'js-cookie';
 import AdminSideBar from '../components/Admin/AdminSidebar';
+import eventApi from '../service/eventApi';
 
-function MyApp({Component, pageProps, session}) {
+const MyApp = ({Component, pageProps, session}) => {
    const router = useRouter();
-   const {carts, categories, token, userToken} = pageProps;
+   const {carts, categoryList, eventList, token, userToken} = pageProps;
 
    const [, setToken] = useGlobalState('accessToken');
    const [, setCurrentUser] = useGlobalState('currentUser');
@@ -78,7 +79,7 @@ function MyApp({Component, pageProps, session}) {
             </Head>
             <Script src='https://sp.zalo.me/plugins/sdk.js'></Script>
 
-            <Header carts={carts}></Header>
+            <Header carts={carts} categoryList={categoryList} eventList={eventList}></Header>
             <div className=''>
                {isAdminPage && <AdminSideBar />}
                <Component {...pageProps} />
@@ -87,25 +88,28 @@ function MyApp({Component, pageProps, session}) {
          </Provider>
       </SessionProvider>
    );
-}
+};
 
 MyApp.getInitialProps = async (appContext: AppContext) => {
    const [token, userToken] = getTokenSSRAndCSS(appContext.ctx);
 
    const userId = userToken?.data._id;
    const appProps = await App.getInitialProps(appContext);
-   const allCategory = await categoryApi.getAllCategory();
 
+   const categoryRes = await categoryApi.getAllCategory();
    const cartRes = await bagApi.getUserCart(userId, token);
+   const eventRes = await eventApi.getAllEvent();
 
-   const cartResData = cartRes?.data?.data;
+   const carts = cartRes?.data?.data;
+   const categoryList = categoryRes?.data?.data;
+   const eventList = eventRes?.data?.data;
 
-   const categories = allCategory?.data?.data;
    return {
       pageProps: {
          ...appProps.pageProps,
-         categories: categories || [],
-         carts: cartResData || [],
+         categoryList: categoryList || [],
+         eventList: eventList || [],
+         carts: carts || [],
          token: token,
          userToken: userToken,
       },

@@ -2,10 +2,10 @@ import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 
 interface IAuthSlice {
-   cart: any;
+   cartState: any;
 }
 const initialState = {
-   cart: [],
+   cartState: undefined,
 };
 
 const cartSlice = createSlice({
@@ -13,7 +13,7 @@ const cartSlice = createSlice({
    initialState,
    reducers: {
       updateCart: (state, action: PayloadAction<any>) => {
-         state.cart = action.payload;
+         state.cartState = action.payload;
       },
    },
 });

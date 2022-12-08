@@ -1,18 +1,41 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
 import {useSelector} from 'react-redux';
 import HeaderSearch from './HeaderSearch';
+import useWindowDimensions from '../../hooks/UseWindowDimensions';
+
+import {BsArrowRightCircle, BsArrowLeftCircle} from 'react-icons/bs';
+
+import Cookies from 'js-cookie';
+import {useAppSelector} from '../../store';
 
 interface IHeaderNavRps {
    handleCloseMenu: () => void;
    isShowMenuRps: Boolean;
 }
 
-const navbarHeader = ['shop', 'promo', 'event', 'info', 'membership'];
-const navbarHasToken = ['Thông tin', 'Trang Admin', 'Đăng xuất'];
+const navbarHeader = ['shop', 'promo', 'event', 'info'];
+const navbarHasToken = ['Thông tin', 'Admin page', 'Đăng xuất'];
 export default function HeaderNavResponsive({handleCloseMenu, isShowMenuRps}: IHeaderNavRps) {
+   const token = Cookies.get('accessToken');
    const router = useRouter();
+
+   // get category and event from redux
+   const {categoryState} = useAppSelector((state) => state.category);
+   const {eventState} = useAppSelector((state) => state.event);
+
+   const submenuContent = {
+      shop: categoryState?.map((item) => item.name) || [],
+      event: eventState?.map((item) => item.title) || [],
+   };
+
+   const [userStatus, setUserStatus] = useState('Đăng nhập');
+   const [subMenu, setIsShowSubMenu] = useState({
+      isShow: false,
+      subMenuName: '',
+      title: '',
+   });
 
    const {user} = useSelector((state: any) => state.auth);
 
@@ -26,8 +49,17 @@ export default function HeaderNavResponsive({handleCloseMenu, isShowMenuRps}: IH
       handleCloseMenu();
    }, [router.asPath]);
 
+   useEffect(() => {
+      if (token) {
+         setUserStatus('Đăng xuất');
+      } else {
+         setUserStatus('Đăng nhập');
+      }
+   }, []);
+
    // animate__animated animate__faster
    // isShowMenuRps ? 'animate__fadeInLeft' : 'animate__fadeOutLeft'
+   const categoryList = ['category 1', 'category 2', 'category 3'];
    return (
       <>
          <div
@@ -44,25 +76,96 @@ export default function HeaderNavResponsive({handleCloseMenu, isShowMenuRps}: IH
             </div>
 
             {/* nav bar */}
-            <ul className='flex justify-center gap-x-4 gap-y-3 uppercase flex-col mt-5'>
-               {navbarHeader.map((item) => (
+            <div className='flex flex-col justify-between h-full'>
+               <div className='flex overflow-hidden'>
+                  <div
+                     className={`relative inline-block min-w-[100vw] 
+                     ${subMenu.isShow ? 'left-[-100%]' : 'left-0'} transition-all`}>
+                     <ul
+                        className={`flex justify-center gap-x-4 gap-y-3 uppercase flex-col mt-5 mx-auto`}>
+                        {navbarHeader.map((item) => (
+                           <div key={item} className='flex justify-start items-center gap-3'>
+                              {/*   */}
+                              {/* */}
+                              <a
+                                 className={`hover:text-[#891a1c] font-[500] ml-[40%] text-[1.1rem] min-w-[70px] text-left`}
+                                 onClick={(e) => handleClickNavItem(e, item)}>
+                                 {item}
+                              </a>
+
+                              {item === 'shop' ? (
+                                 <BsArrowRightCircle
+                                    className='text-[1.2rem] font-bold'
+                                    onClick={() =>
+                                       setIsShowSubMenu({
+                                          isShow: true,
+                                          subMenuName: 'shop',
+                                          title: 'Category',
+                                       })
+                                    }
+                                 />
+                              ) : (
+                                 ''
+                              )}
+
+                              {item === 'event' ? (
+                                 <BsArrowRightCircle
+                                    className='text-[1.2rem] font-bold'
+                                    onClick={() =>
+                                       setIsShowSubMenu({
+                                          isShow: true,
+                                          subMenuName: 'event',
+                                          title: 'Event',
+                                       })
+                                    }
+                                 />
+                              ) : (
+                                 ''
+                              )}
+                           </div>
+                        ))}
+                     </ul>
+                  </div>
+
+                  {/* sub menu */}
+                  <div
+                     className={`relative inline-block min-w-[100vw] 
+                     ${subMenu.isShow ? 'right-[100%]' : 'right-0'} transition-all`}>
+                     <ul
+                        className={`flex justify-center gap-x-4 gap-y-3 uppercase flex-col mt-5 
+                     `}>
+                        <div className='flex items-center justify-center gap-3 border-b-2 pb-2 mx-[30%]'>
+                           <BsArrowLeftCircle
+                              className='text-[1.2rem] font-bold'
+                              onClick={() =>
+                                 setIsShowSubMenu({
+                                    isShow: false,
+                                    subMenuName: '',
+                                    title: '',
+                                 })
+                              }
+                           />
+                           <span>{subMenu.title}</span>
+                        </div>
+                        {submenuContent[subMenu.subMenuName]?.map((item) => (
+                           <a key={item} className='ml-[40%] text-[1.1rem] min-w-[70px] text-left'>
+                              {item}
+                           </a>
+                        ))}
+                     </ul>
+                  </div>
+               </div>
+
+               <div className='flex flex-col uppercase mb-[50px]'>
                   <a
-                     key={item}
                      className={`hover:text-[#891a1c] font-[500] text-[1.1rem] `}
-                     onClick={(e) => handleClickNavItem(e, item)}>
-                     {item}
+                     onClick={(e) => {
+                        token ? () => {} : router.push('/membership');
+                     }}>
+                     {userStatus}
                   </a>
-               ))}
-               <div className='my-2 relative before:absolute before:top-0 before:left-[50%] before:translate-x-[-50%] before:w-[40px] before:h-[2px] before:bg-gray-300'></div>
-               {navbarHasToken.map((item) => (
-                  <a
-                     key={item}
-                     className={`hover:text-[#891a1c] font-[500] text-[1.1rem] `}
-                     onClick={(e) => handleClickNavItem(e, item)}>
-                     {item}
-                  </a>
-               ))}
-            </ul>
+               </div>
+            </div>
          </div>
       </>
    );

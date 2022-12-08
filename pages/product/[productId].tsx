@@ -5,13 +5,10 @@ import {BsShare} from 'react-icons/bs';
 import {
    ProductDescription,
    ProductDetailColorSelect,
-   ProductDetailPaymentMethod,
-   ProductDetailReview,
    ProductDetailSizeSelect,
 } from '../../components/ProductDetailItem';
 
 import SliderSlick from 'react-slick';
-import useGlobalState from '../../state';
 import useWindowDimensions from '../../hooks/UseWindowDimensions';
 import slickSliderMobile from '../../helper/slickSliderMobile';
 
@@ -59,7 +56,6 @@ export default function ProductDetailPage() {
          setIsMobileScreen(false);
       }
    }, [isMobile]);
-   useEffect(() => slickSliderMobile(), []);
 
    return (
       <div className='md:px-20 md:w-[780px] lg:w-[1200px] mx-[auto]'>
@@ -71,6 +67,7 @@ export default function ProductDetailPage() {
                   <source src='/videos/product.mp4' type='video/mp4' />
                </video> */}
                {/* image slider */}
+
                {imageArr.map((img, index) => (
                   <div className='relative' key={index}>
                      <img src={img} className='w-full h-auto' alt={img} />
@@ -133,10 +130,6 @@ export default function ProductDetailPage() {
                            setColorSelect={setColorSelect}
                            colorSelect={colorSelect}
                         />
-
-                        <div className='hidden md:block'>
-                           <ProductDetailPaymentMethod />
-                        </div>
                      </div>
 
                      {/* buy button */}

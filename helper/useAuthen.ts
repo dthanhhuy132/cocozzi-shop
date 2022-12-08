@@ -1,4 +1,6 @@
 import {useEffect} from 'react';
+import Cookies from 'js-cookie';
+
 import {parseJwt} from '.';
 import useGlobalState from '../state';
 import {useRouter} from 'next/router';
@@ -22,8 +24,9 @@ function useAuthen() {
 function useAdminAuthen() {
    const router = useRouter();
    const [accessToken] = useGlobalState('accessToken');
+   const token = Cookies.get('accessToken') || accessToken;
 
-   const userToken = parseJwt(accessToken);
+   const userToken = parseJwt(token);
 
    useEffect(() => {
       if (!isAdmin(userToken)) {

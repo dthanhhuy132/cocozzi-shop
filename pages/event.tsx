@@ -1,10 +1,8 @@
-import {GetServerSideProps} from 'next';
 import {Event} from '../components/Event';
 import {LoadingPage} from '../components/LoadingPage';
 import {Logo} from '../components/Logo';
-import eventApi from '../service/eventApi';
 
-export default function EventPage({allEvents = []}) {
+export default function EventPage() {
    return (
       <>
          <LoadingPage />
@@ -16,22 +14,3 @@ export default function EventPage({allEvents = []}) {
       </>
    );
 }
-
-export const getServerSideProps: GetServerSideProps<any> = async (context) => {
-   try {
-      const responseAllEvent = await eventApi.getAllEvent();
-
-      return {
-         props: {
-            allEvents: responseAllEvent.data.data || [],
-            error: false,
-         },
-      };
-   } catch (error) {
-      return {
-         props: {
-            error: true,
-         },
-      };
-   }
-};

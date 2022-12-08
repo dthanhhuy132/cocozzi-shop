@@ -15,9 +15,7 @@ export default function PaymentCopy({text = ''}) {
       <span
          className={`text-[0.8rem] flex ${
             isCopyEnd === 'copied' ? 'text-[green]' : 'text-[#a5a5a5]'
-         }  ml-2 hover:${
-            isCopyEnd === 'copied' ? 'text-[green]' : 'text-[#a5a5a5]'
-         } cursor-pointer`}
+         } hover:${isCopyEnd === 'copied' ? 'text-[green]' : 'text-[#a5a5a5]'} cursor-pointer`}
          onClick={() => copyToClipBoard()}>
          <BiCopyAlt fontSize={'1.2rem'} />
          {isCopyEnd}

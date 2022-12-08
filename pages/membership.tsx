@@ -29,7 +29,7 @@ export default function MembershipPage() {
 
             const expireAccessTokenDay = getTokenExpireTime(accessToken);
 
-            Cookies.set('accessToken', accessToken, {expires: 10});
+            Cookies.set('accessToken', accessToken, {expires: expireAccessTokenDay});
             router.push('/');
          } else {
             setErrorLogin(res.payload.message);

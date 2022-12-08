@@ -19,18 +19,22 @@ import useWindowDimensions from '../../hooks/UseWindowDimensions';
 import Image from 'next/image';
 import {useRouter} from 'next/router';
 import uppercaseFirstLetter from '../../helper/uppercaseFirstLetter';
+import {useAppSelector} from '../../store';
 
 const imgArr = [img1, img2, img3, img4, img5, img6, img7, img8];
 
 export default function SubMenu({isShowSubMenu = false, name, hoverItem}) {
+   const [headerHeight] = useGlobalState('headerHeight');
+   // get caategory, event in redux
+   const {categoryState} = useAppSelector((state) => state.category);
+   const {eventState} = useAppSelector((state) => state.event);
+
    const content = {
-      shop: ['category 1', 'category 2', 'category 3'],
-      event: ['event 1', 'event 2'],
+      shop: categoryState?.map((item) => item.name) || [],
+      event: eventState?.map((item) => item.title) || [],
    };
 
-   const [headerHeight] = useGlobalState('headerHeight');
-
-   const [subMenuHeigth, setSubMenuHeigth] = useState(0);
+   const [headerAppHeight, setHeaderAppHeight] = useState(0);
    const [submenuContent, setSubmenuContent] = useState(content[name]);
    const subMenuRef = useRef(null);
 
@@ -64,6 +68,10 @@ export default function SubMenu({isShowSubMenu = false, name, hoverItem}) {
       [dragging]
    );
 
+   useEffect(() => {
+      setHeaderAppHeight(headerHeight);
+   }, [headerHeight]);
+
    const settings = {
       className: 'center',
       dots: true,
@@ -79,11 +87,11 @@ export default function SubMenu({isShowSubMenu = false, name, hoverItem}) {
             className={`fixed left-0 right-0 bg-white rounded-b-lg transition-all z-[19] overflow-hidden`}
             style={{
                height: isShowSubMenu && hoverItem === name ? `350px` : '0px',
-               borderBottom: isShowSubMenu && hoverItem === name ? '1px solid gray' : '',
-               top: `${headerHeight}px`,
+               // borderBottom: isShowSubMenu && hoverItem === name ? '1px solid gray' : '',
+               top: `${headerAppHeight}px`,
             }}>
             {/* category slider || event slider */}
-            <div className='absolute left-[60%] w-[500px] top-[15px]'>
+            <div className='absolute right-0 pr-[44px] w-[500px] top-[15px]'>
                <p className='px-2 mb-3 text-[1.2rem] text-[#891a1c]'>
                   SẢN PHẨM ĐƯỢC YÊU THÍCH NHẤT
                </p>
@@ -119,12 +127,12 @@ export default function SubMenu({isShowSubMenu = false, name, hoverItem}) {
             className='absolute left-0 flex flex-col mb-3 overflow-hidden z-[20]'
             style={{
                height: isShowSubMenu && hoverItem === name ? `300px` : '0px',
-               top: `${headerHeight}px`,
+               top: `${headerAppHeight}px`,
                fontFamily: 'Gilroy',
             }}
             ref={subMenuRef}>
             {submenuContent?.map((item, index) => (
-               <div className='relative'>
+               <div className='relative' key={index}>
                   <BsArrowRightSquare className='absolute top-0 left-[-20px]' />
                   <div
                      key={index}

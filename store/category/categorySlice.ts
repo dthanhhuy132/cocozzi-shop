@@ -1,11 +1,12 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
+import {createWrapper, HYDRATE} from 'next-redux-wrapper';
 
 interface IAuthSlice {
-   categories: any;
+   categoryState: any;
 }
 const initialState = {
-   categories: [],
+   categoryState: undefined,
 };
 
 const categorySlice = createSlice({
@@ -13,7 +14,7 @@ const categorySlice = createSlice({
    initialState,
    reducers: {
       updateCategory: (state, action) => {
-         state.categories = action.payload;
+         state.categoryState = action.payload;
       },
    },
 });

@@ -5,9 +5,9 @@ import {GetServerSideProps} from 'next';
 import homeApi from '../../service/homeApi';
 import imageError from '../../public/images/imageError.png';
 import {useSelector} from 'react-redux';
-import {useAdminAuthen} from '../../helper/useAuthen';
+import {AdminLayout} from '../../components/Admin';
+
 export default function AdminHomePage({homeImages}) {
-   useAdminAuthen();
    const [imageFiles, setImageFiles] = useState<any>([]);
    const [imgesURL, setImagesURL] = useState([]);
 
@@ -17,8 +17,11 @@ export default function AdminHomePage({homeImages}) {
 
    function handleCreateNewPanel() {
       const formData = new FormData();
-      formData.append('description', 'panel');
-      formData.append('pictures', imageFiles);
+      formData.append('description', 'panel-test');
+
+      imageFiles.forEach((imageFile) => {
+         formData.append('pictures', imageFile);
+      });
 
       homeApi.createHomeImage(accessToken, formData);
    }
@@ -37,7 +40,7 @@ export default function AdminHomePage({homeImages}) {
    }
 
    return (
-      <div className='ml-64 p-5'>
+      <AdminLayout>
          <div>
             <form>
                <div className='mb-2'>Upload images for home page</div>
@@ -80,18 +83,15 @@ export default function AdminHomePage({homeImages}) {
             )}
          </div>
 
-         {homeImages.map((item) => {
+         {/* {homeImages.map((item) => {
             return (
-               <>
-                  <div key={item._id}>
-                     <img src={item.pictures[0]} alt='' />
-                     <p>hinfh cho nay: {item.pictures[0]}</p>
-                  </div>
-                  {/* create panel */}
-               </>
+               <div key={item._id}>
+                  <img src={item.pictures} alt='' />
+                  <p>hinfh cho nay: {item.pictures[0]}</p>
+               </div>
             );
-         })}
-      </div>
+         })} */}
+      </AdminLayout>
    );
 }
 

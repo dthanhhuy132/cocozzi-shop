@@ -14,6 +14,7 @@ import useWindowDimensions from '../../hooks/UseWindowDimensions';
 
 import {useCallback, useEffect, useState} from 'react';
 import Image from 'next/image';
+import ProgressBar from './Slick/ProgressBar';
 
 const imgArr = [img1, img2, img3, img4, img5, img6, img7, img8];
 export default function ShopSliderProductStory() {
@@ -64,9 +65,6 @@ export default function ShopSliderProductStory() {
       slidesToShow: sliderQuantity,
       swipeToSlide: true,
       autoplay: true,
-
-      prevArrow: false,
-      nextArrow: false,
    };
 
    const openSetting = {
@@ -74,7 +72,9 @@ export default function ShopSliderProductStory() {
       infinite: true,
       slidesToShow: isMobile ? 1 : 3,
       swipeToSlide: true,
-      autoplay: false,
+      autoplay: true,
+      autoplaySpeed: 5000,
+      pauseOnHover: false,
 
       centerMode: true,
       centerPadding: 0,
@@ -120,6 +120,9 @@ export default function ShopSliderProductStory() {
          {isShowCenterMode && (
             <div
                className={`animate__animated animate__fadeIn flex justify-center items-center fixed top-0 bottom-0 right-0 z-[999] left-0 bg-[#000000fa] transition-all`}>
+               <div className='fixed top-0 left-0 right-0 opacity-0'>
+                  {isShowProductButton && <ProgressBar></ProgressBar>}
+               </div>
                <div
                   className='absolute top-2 left-2 z-[100] text-[gray] text-[3rem] cursor-pointer hover:text-[white]'
                   onClick={() => setIsShowCenterMode(false)}>
@@ -147,7 +150,7 @@ export default function ShopSliderProductStory() {
                   </SliderSlick>
                   <button
                      className={`absolute left-[50%] translate-x-[-50%] bg-[white] rounded-full mt-2 px-2 py-1 flex items-center text-[1.1rem] transition-all ${
-                        isShowProductButton ? 'bottom-[10px]' : 'bottom-[-100%]'
+                        isShowProductButton ? 'bottom-[40px]' : 'bottom-[-100%] mb-[4px]'
                      }`}
                      onClick={() => router.push('/product/123')}>
                      Xem sản phẩm

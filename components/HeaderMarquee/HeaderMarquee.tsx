@@ -2,25 +2,16 @@ import {useEffect, useState} from 'react';
 import Marquee from 'react-fast-marquee';
 import styled from 'styled-components';
 
-export default function HeaderMarquee() {
+export default function HeaderMarquee({eventArr}) {
    const exampleText = ['Cocozzi Khuyến mãi 1', 'khuyến mãi 2', ,];
 
    return (
       <MarqueeSC className='relative z-10 bg-[#891a1c] ' speed={50} direction={'left'}>
-         <h2
-            className={`mx-[50px] md:mx-[200px] font-bold text-white italic `}
-            onClick={() => console.log('slffasdf')}>
-            Cách điệu khuyến mãi
-         </h2>
-         {exampleText.map((text, index) => (
+         {eventArr.map((event, index) => (
             <h3 className={`mx-[50px] md:px-[200px] text-white`} key={index}>
-               {text}
+               {event.title}
             </h3>
          ))}
-
-         <h2 className={`mx-[50px] md:mx-[200px] underline text-white italic`}>
-            Khuyến mãi 4 có gạch chân
-         </h2>
       </MarqueeSC>
    );
 }

@@ -96,7 +96,7 @@ export default function PaymentMethod() {
                <div className='mt-2 font-bold flex flex-col gap-2'>
                   <p className='flex'>
                      <span className='min-w-[220px] inline-block'>Số tài khoản thanh toán:</span>
-                     <span className='font-semibold flex items-center'>
+                     <span className='font-semibold md:flex md:items-center md:gap-2'>
                         0331000430764
                         <PaymentCopy text='0331000430764' />
                      </span>
@@ -124,6 +124,19 @@ export default function PaymentMethod() {
 
                      <div></div>
                   </p>
+
+                  <div className='flex'>
+                     <span className='min-w-[220px] inline-block'>Nội dung chuyển khoản:</span>
+                     <p className=''>
+                        <span className='font-semibold'>
+                           Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio, quibusdam
+                           ratione? Veniam et alias culpa sim
+                           <span>
+                              <PaymentCopy text='Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam et alias culpa similique tempore sed fuga iusto.' />
+                           </span>
+                        </span>
+                     </p>
+                  </div>
                </div>
 
                <div className='flex flex-col md:flex-row justify-between mt-5 py-2 border-t-[1px] border-gray-300'>

@@ -18,12 +18,25 @@ import {useSelector} from 'react-redux';
 import HeaderUserControl from './HeaderUserControl';
 import SubMenu from './SubMenu';
 import useGlobalState from '../../state';
+import {useAppDispatch, useAppSelector} from '../../store';
+import {updateCategory} from '../../store/category/categorySlice';
+import {updateCart} from '../../store/cart/cartSlice';
+import {updateEvent} from '../../store/event/eventSlice';
+
+interface IHeader {}
 
 const navbarHeader = ['shop', 'promo', 'event', 'info', 'membership'];
 const submenuArr = ['shop', 'event'];
-export default function Header({carts}) {
+
+export default function Header({carts, categoryList, eventList}) {
    const router = useRouter();
+   const dispatch = useAppDispatch();
    const [, setHeaderHeight] = useGlobalState('headerHeight');
+
+   // get category, get cart item in redux
+   const {categoryState} = useAppSelector((state) => state.category);
+   const {cartState} = useAppSelector((state) => state.cart);
+   const {eventState} = useAppSelector((state) => state.event);
 
    const {isMobile} = useWindowDimensions();
    // menu responsive + bag
@@ -31,7 +44,7 @@ export default function Header({carts}) {
    const [isShowBag, setIsShowBag] = useState(false);
 
    // submenu
-   const [isShowSubMenu, setIsShowSubMenu] = useState(true);
+   const [isShowSubMenu, setIsShowSubMenu] = useState(false);
    const [submenuName, setSubmenuName] = useState('');
 
    const [isShowUserControl, setIsShowUserControl] = useState(false);
@@ -65,6 +78,23 @@ export default function Header({carts}) {
       const headerHeight = headerRef.current.getBoundingClientRect()?.height;
       setHeaderHeight(headerHeight);
    }, []);
+
+   // save event and category in redux
+   useEffect(() => {
+      if (!categoryState) {
+         dispatch(updateCategory(categoryList));
+      }
+      if (!cartState) {
+         dispatch(updateCart(carts));
+      }
+
+      if (!eventState) {
+         dispatch(updateEvent(eventList));
+      }
+   }, []);
+
+   const eventArr = eventState ? eventState : eventList;
+
    return (
       <>
          <div
@@ -146,7 +176,7 @@ export default function Header({carts}) {
             </div>
          </div>
 
-         {hideHeaderMarquee && <HeaderMarquee></HeaderMarquee>}
+         {hideHeaderMarquee && <HeaderMarquee eventArr={eventArr}></HeaderMarquee>}
          <HeaderNavResponsive
             handleCloseMenu={() => setShowMenuRps(false)}
             isShowMenuRps={isShowMenuRps}

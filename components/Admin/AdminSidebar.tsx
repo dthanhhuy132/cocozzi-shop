@@ -2,7 +2,7 @@ import {useMemo} from 'react';
 import {useRouter} from 'next/router';
 import Link from 'next/link';
 
-const adminRouter = ['home', 'promo', 'category', 'event', 'product', 'user', 'info'];
+const adminRouter = ['order', 'home', 'promo', 'category', 'event', 'product', 'user', 'info'];
 
 export default function AdminSideBar() {
    const router = useRouter();
