@@ -2,40 +2,65 @@ import {useState, useEffect} from 'react';
 import AdminModal from '../AdminModal';
 import CategoryTableHeader from './CategoryTableHeader';
 import Dropdown from 'react-dropdown';
+import {AdminButton} from '../common';
+import {AiOutlinePlusCircle} from 'react-icons/ai';
 
 const options = ['active', 'disable'];
 
 export default function CategoryTable({categoryList}: any) {
-   const [isEdit, setIsEdit] = useState(false);
+   const [isShowModalCetegory, setIsShowModalCategory] = useState(false);
    const [editItem, setEditItem] = useState(null);
-   const [categoryEditData, setCategoryEditData] = useState(null);
 
-   function handleOnclickCategoryOption(categoryItem) {
-      console.log('categoryItem', categoryItem);
-
-      setEditItem(categoryItem);
-      setIsEdit(!isEdit);
+   // add new Category
+   function clickCreateNewCategory() {
+      setIsShowModalCategory(true);
    }
 
-   function handleUpdateCategory() {
-      const newCategoryItem = {
-         name: editItem.name,
-         status: editItem.status,
-      };
-      console.log('editItem co gi la hong', newCategoryItem);
-      console.log('_id cho nay la gi', editItem._id);
+   // edit category
+   function handleOnclickCategoryOption(categoryItem) {
+      setEditItem(categoryItem);
+      setIsShowModalCategory(true);
+   }
+
+   // function handler
+   function createAndUpdateNewCategory() {
+      if (editItem?._id) {
+         const updateCategory = {
+            name: editItem.name,
+            status: editItem.status,
+         };
+
+         // console.log('updateCategory', updateCategory);
+      } else {
+         // console.log('cho any la tao moi');
+         // console.log('trong tao moi, cai edit co gi', editItem);
+         const newCategory = {
+            name: editItem?.name || '',
+            status: editItem?.status !== undefined ? editItem.status : true,
+         };
+
+         // console.log('newCategory', newCategory);
+      }
    }
 
    useEffect(() => {
-      if (!isEdit) {
+      if (!isShowModalCetegory) {
          setEditItem(null);
       }
-   }, [isEdit]);
+   }, [isShowModalCetegory]);
 
    return (
       <div className='container w-[50%] px-8'>
          <div className=''>
-            <h2 className='text-2xl font-semibold'>Category list</h2>
+            {/* title */}
+            <div className='flex gap-10 items-center'>
+               <h2 className='text-2xl font-semibold'>Category list</h2>
+               <AdminButton click={clickCreateNewCategory}>
+                  <AiOutlinePlusCircle /> Create new Category
+               </AdminButton>
+            </div>
+
+            {/* category table */}
             <div className='-mx-4 sm:-mx-8 px-4 py-4 overflow-x-auto'>
                <div className='inline-block min-w-full shadow-md rounded-lg overflow-hidden'>
                   <table className='min-w-full leading-normal'>
@@ -79,10 +104,10 @@ export default function CategoryTable({categoryList}: any) {
                </div>
             </div>
          </div>
-         {isEdit && editItem && (
+         {isShowModalCetegory && (
             <AdminModal
-               ok={handleUpdateCategory}
-               cancel={() => setIsEdit(false)}
+               ok={createAndUpdateNewCategory}
+               cancel={() => setIsShowModalCategory(false)}
                title='Edit category'>
                <div>
                   <table className='min-w-full leading-normal'>
@@ -93,7 +118,7 @@ export default function CategoryTable({categoryList}: any) {
                               <input
                                  type='text'
                                  defaultValue={editItem?.name}
-                                 className='w-full border-2 px-5 py-2 rounded-xl'
+                                 className='w-full border-2 px-5 py-2 rounded-md'
                                  onChange={(e) => setEditItem({...editItem, name: e.target.value})}
                               />
                            </td>
@@ -107,7 +132,13 @@ export default function CategoryTable({categoryList}: any) {
                                        status: e.value === options[0] ? true : false,
                                     })
                                  }
-                                 value={editItem.status ? options[0] : options[1]}
+                                 value={
+                                    editItem
+                                       ? editItem.status
+                                          ? options[0]
+                                          : options[1]
+                                       : options[0]
+                                 }
                                  placeholder='Select an option'
                               />
                            </td>

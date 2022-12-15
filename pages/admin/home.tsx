@@ -3,9 +3,10 @@ import Cookies from 'js-cookie';
 
 import {GetServerSideProps} from 'next';
 import homeApi from '../../service/homeApi';
-import imageError from '../../public/images/imageError.png';
-import {useSelector} from 'react-redux';
+
 import {AdminLayout} from '../../components/Admin';
+import {AdminButton} from '../../components/Admin/common';
+import {AiOutlinePlusCircle} from 'react-icons/ai';
 
 export default function AdminHomePage({homeImages}) {
    const [imageFiles, setImageFiles] = useState<any>([]);
@@ -15,7 +16,16 @@ export default function AdminHomePage({homeImages}) {
 
    const inputFilesRef = useRef(null);
 
-   function handleCreateNewPanel() {
+   // function click upload file
+   function handleClickUploadImage(e) {
+      e.preventDefault();
+      inputFilesRef.current.click();
+   }
+
+   // function add new panel
+   function handleCreateNewPanel(e) {
+      e.preventDefault();
+
       const formData = new FormData();
       formData.append('description', 'panel-test');
 
@@ -23,7 +33,7 @@ export default function AdminHomePage({homeImages}) {
          formData.append('pictures', imageFile);
       });
 
-      homeApi.createHomeImage(accessToken, formData);
+      // homeApi.createHomeImage(accessToken, formData);
    }
 
    function handleUploadImages(e: any) {
@@ -44,6 +54,7 @@ export default function AdminHomePage({homeImages}) {
          <div>
             <form>
                <div className='mb-2'>Upload images for home page</div>
+
                <input
                   type='file'
                   accept='image/*'
@@ -53,19 +64,16 @@ export default function AdminHomePage({homeImages}) {
                   ref={inputFilesRef}
                />
                <div className='flex justify-between'>
-                  <button
-                     type='button'
-                     className='bg-[#333333] text-white p-2 rounded-lg'
-                     onClick={() => inputFilesRef.current.click()}>
-                     Choose images
-                  </button>
+                  <div>
+                     <AdminButton click={(e) => handleClickUploadImage(e)}>
+                        <AiOutlinePlusCircle /> Upload image to create panel
+                     </AdminButton>
+                     <span className='text-[0.9rem] italic'>(Tỉ lệ hình ảnh 16:9)</span>
+                  </div>
                   {imageFiles.length > 0 && (
-                     <button
-                        type='button'
-                        className='bg-[green] text-white p-2 rounded-lg'
-                        onClick={handleCreateNewPanel}>
-                        Upload images
-                     </button>
+                     <AdminButton className='bg-green-700' click={(e) => handleCreateNewPanel(e)}>
+                        <AiOutlinePlusCircle /> Create new Panel
+                     </AdminButton>
                   )}
                </div>
             </form>
@@ -83,14 +91,25 @@ export default function AdminHomePage({homeImages}) {
             )}
          </div>
 
-         {/* {homeImages.map((item) => {
-            return (
-               <div key={item._id}>
-                  <img src={item.pictures} alt='' />
-                  <p>hinfh cho nay: {item.pictures[0]}</p>
+         {/* pannel list */}
+         <div className='grid grid-cols-1 gap-5 mt-5'>
+            <p className='font-bold border-b-2'>Pannel list</p>
+
+            {homeImages.map((item, index) => (
+               // list image of each pannel
+               <div className=''>
+                  <p className='mb-1'>
+                     {index + 1}. {item.description}
+                  </p>
+                  <div key={item._id} className='grid grid-cols-3 gap-y-2'>
+                     {item?.pictures?.length > 0 &&
+                        item.pictures.map((pic) => (
+                           <img src={pic} alt='Hình ảnh panel' key={pic}></img>
+                        ))}
+                  </div>
                </div>
-            );
-         })} */}
+            ))}
+         </div>
       </AdminLayout>
    );
 }

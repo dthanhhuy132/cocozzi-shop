@@ -4,7 +4,7 @@ type Props = {
    isShow3Col?: boolean;
 };
 
-export default function CategoryTableHeader({isShow3Col = true}: Props) {
+export default function EventTableHeader({isShow3Col = true}: Props) {
    return (
       <thead>
          <tr>
@@ -13,12 +13,14 @@ export default function CategoryTableHeader({isShow3Col = true}: Props) {
             </th>
 
             <th className='px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs text-gray-700 uppercase tracking-wider'>
+               <span className='font-extrabold'>Image</span>
+            </th>
+
+            <th className='px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs text-gray-700 uppercase tracking-wider'>
                <span className='font-extrabold'>Status</span>
             </th>
 
-            {isShow3Col && (
-               <th className='px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs text-gray-700 uppercase tracking-wider'></th>
-            )}
+            <th className='px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs text-gray-700 uppercase tracking-wider'></th>
          </tr>
       </thead>
    );
