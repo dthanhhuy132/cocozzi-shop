@@ -85,8 +85,6 @@ export default function HeaderNavResponsive({handleCloseMenu, isShowMenuRps}: IH
                         className={`flex justify-center gap-x-4 gap-y-3 uppercase flex-col mt-5 mx-auto`}>
                         {navbarHeader.map((item) => (
                            <div key={item} className='flex justify-start items-center gap-3'>
-                              {/*   */}
-                              {/* */}
                               <a
                                  className={`hover:text-[#891a1c] font-[500] ml-[40%] text-[1.1rem] min-w-[70px] text-left`}
                                  onClick={(e) => handleClickNavItem(e, item)}>
@@ -132,9 +130,9 @@ export default function HeaderNavResponsive({handleCloseMenu, isShowMenuRps}: IH
                      className={`relative inline-block min-w-[100vw] 
                      ${subMenu.isShow ? 'right-[100%]' : 'right-0'} transition-all`}>
                      <ul
-                        className={`flex justify-center gap-x-4 gap-y-3 uppercase flex-col mt-5 
+                        className={`flex justify-center gap-y-3 uppercase flex-col mt-5 
                      `}>
-                        <div className='flex items-center justify-center gap-3 border-b-2 pb-2 mx-[30%]'>
+                        <div className='flex items-center justify-start gap-3 border-b-2 pb-2 mx-[30%]'>
                            <BsArrowLeftCircle
                               className='text-[1.2rem] font-bold'
                               onClick={() =>
@@ -148,7 +146,7 @@ export default function HeaderNavResponsive({handleCloseMenu, isShowMenuRps}: IH
                            <span>{subMenu.title}</span>
                         </div>
                         {submenuContent[subMenu.subMenuName]?.map((item) => (
-                           <a key={item} className='ml-[40%] text-[1.1rem] min-w-[70px] text-left'>
+                           <a key={item} className='text-left ml-[30%] text-[1.1rem] min-w-[70px]'>
                               {item}
                            </a>
                         ))}

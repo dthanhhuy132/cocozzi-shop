@@ -1,7 +1,7 @@
 export default function InputCustom({
    type = 'text',
    label = '',
-   defaultValue = '',
+   value = '',
    onChange = () => {},
    props,
 }: any) {
@@ -10,7 +10,7 @@ export default function InputCustom({
          <label>{label}</label>
          <input
             type={type}
-            defaultValue={defaultValue}
+            value={value}
             className='w-full border-2 px-2 py-1 rounded-md'
             onChange={onChange}
             {...props}

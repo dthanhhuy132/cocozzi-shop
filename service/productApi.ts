@@ -6,8 +6,20 @@ const productApi = {
       return api.call().get(url);
    },
 
+   getAllProductByName: () => {
+      return api.call().get('/product/allByName');
+   },
+
    searchProduct: () => {
       return {};
+   },
+
+   createNewProduct: (token, formData) => {
+      return api.callWithToken(token).post('/product/create', formData);
+   },
+
+   deleteProduct: (token, productId) => {
+      return api.callWithToken(token).delete(`/product/${productId}`);
    },
 };
 

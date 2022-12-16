@@ -1,41 +1,20 @@
 import {useState} from 'react';
 
-import {useFormik} from 'formik';
-import * as Yup from 'yup';
-
 import {AiOutlinePlusCircle} from 'react-icons/ai';
 import {AdminLayout, AdminModal} from '../../components/Admin';
 import {AdminButton, WarningText} from '../../components/Admin/common';
-import InputCustom from '../../components/Admin/common/InputCustom';
-import validateEventForPromoSchema from '../../components/Admin/Promo/PromoSchema';
 import categoryApi from '../../service/categoryApi';
 import PromoInstruction from '../../components/Admin/Promo/PromoInstruction';
+import ModalCreateEventForPromo from '../../components/Admin/Promo/ModalCreateEventForPromo';
+import ModalCreatePromo from '../../components/Admin/Promo/ModalCreatePromo';
+import eventApi from '../../service/eventApi';
 
-export default function PromoPage({promoList}) {
-   console.log('promo list la gi', promoList);
+export default function PromoPage({promoList, eventList}) {
+   // console.log('promo list la gi', promoList);
    const [isShowModalForEventPromo, setIsShowModalForEventPromo] = useState(false);
    const [isShowModalForPromo, setIsShowModalForPromo] = useState(false);
 
-   const createEventForPromoInitValue = {
-      title: '',
-      startDate: Date.now(),
-      endDate: Date.now(),
-      percent: 0.1,
-      status: true,
-      images: '',
-      description: 'event-for-promo',
-   };
-
-   const formik = useFormik({
-      initialValues: createEventForPromoInitValue,
-      validationSchema: Yup.object().shape(validateEventForPromoSchema),
-      onSubmit: (values) => {
-         console.log('values cho nay la gi', values);
-      },
-   });
-
    function createNewEventForPromo() {}
-
    function createNewPromo() {}
 
    return (
@@ -82,56 +61,19 @@ export default function PromoPage({promoList}) {
 
          {isShowModalForEventPromo && (
             <AdminModal
-               className='w-[800px]'
-               ok={createNewEventForPromo}
-               cancel={() => setIsShowModalForEventPromo(false)}
+               showFooter={false}
+               className='w-[800px] pb-2'
                title='Create new Event for Promo'>
-               <div className='flex gap-3'>
-                  <div className='w-1/3 border-[1px] rounded-md'>
-                     <div className=''></div>
-                     <img src='' alt='' />
-                  </div>
-                  <form
-                     className='w-2/3 flex flex-col gap-3'
-                     autoComplete='off'
-                     onSubmit={formik.handleSubmit}>
-                     <div>
-                        <InputCustom label='Title' value={formik.values.title} />
-                        {formik.errors.title && formik.touched.title && (
-                           <WarningText warningText={formik.errors.title} />
-                        )}
-                     </div>
-                     <div>
-                        <InputCustom
-                           type='date'
-                           label='Start Date'
-                           value={formik.values.startDate}
-                        />
+               <ModalCreateEventForPromo cancel={() => setIsShowModalForEventPromo(false)} />
+            </AdminModal>
+         )}
 
-                        {formik.errors.startDate && formik.touched.startDate && (
-                           <WarningText warningText={formik.errors.startDate} />
-                        )}
-                     </div>
-                     <div>
-                        <InputCustom type='date' label='End Date' value={formik.values.endDate} />
-                        {formik.errors.endDate && formik.touched.endDate && (
-                           <WarningText warningText={formik.errors.endDate} />
-                        )}
-                     </div>
-                     <div>
-                        <InputCustom label='% Discount for event' value={formik.values.percent} />
-                        {formik.errors.percent && formik.touched.percent && (
-                           <WarningText warningText={formik.errors.percent} />
-                        )}
-                     </div>
-                     <div>
-                        <InputCustom label='Event Status' value={formik.values.images} />
-                        {formik.errors.images && formik.touched.images && (
-                           <WarningText warningText={formik.errors.images} />
-                        )}
-                     </div>
-                  </form>
-               </div>
+         {isShowModalForPromo && (
+            <AdminModal showFooter={false} className='w-[800px] pb-2' title='Create new Promo'>
+               <ModalCreatePromo
+                  eventList={eventList}
+                  cancel={() => setIsShowModalForPromo(false)}
+               />
             </AdminModal>
          )}
       </AdminLayout>
@@ -140,15 +82,17 @@ export default function PromoPage({promoList}) {
 
 export const getServerSideProps = async () => {
    const categoryRes = await categoryApi.getAllCategory();
+   const eventRes = await eventApi.getAllEvent();
 
    const categoryList = categoryRes.data.data || [];
-
+   const eventList = eventRes?.data?.data || [];
    const promoList = categoryList.filter((item) => item);
    // const promoList = categoryList.filter((item) => item.name.indexOf('for-promo') >= 0);
 
    return {
       props: {
          promoList: promoList || [],
+         eventList: eventList,
       },
    };
 };

@@ -1,6 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
 import {createWrapper, HYDRATE} from 'next-redux-wrapper';
+import {getAllEventAsync} from './eventAsynAction';
 
 interface IEventSlice {
    eventState: any;
@@ -16,6 +17,13 @@ const eventSlice = createSlice({
       updateEvent: (state, action) => {
          state.eventState = action.payload;
       },
+   },
+
+   extraReducers: (builder) => {
+      builder.addCase(getAllEventAsync.fulfilled, (state, action) => {
+         const data = action.payload;
+         state.eventState = data.data;
+      });
    },
 });
 

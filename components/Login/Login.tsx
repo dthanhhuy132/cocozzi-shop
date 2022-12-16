@@ -38,7 +38,7 @@ export default function Login({
 
    const formik = useFormik({
       initialValues: formValue,
-      validationSchema: Yup.object().shape(yupFormValidateSchema),
+      validationSchema: Yup.object(yupFormValidateSchema),
       onSubmit: (values) => {
          handleSubmitForm(values);
       },

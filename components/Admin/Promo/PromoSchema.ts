@@ -1,19 +1,22 @@
 import * as Yup from 'yup';
+import moment from 'moment';
 
-const validateEventForPromoSchema = {
+export const validateEventForPromoSchema = {
    title: Yup.string().required('Vui lòng nhập title!'),
-   startDate: Yup.date()
-      .required('Vui lòng nhập thời gian bắt đầu cho event')
-      .min(new Date(), 'Please choose future date'),
+   description: Yup.string().required('Vui lòng nhập description!'),
+   startDate: Yup.date().required('Vui lòng nhập start time'),
    endDate: Yup.date()
-      .required('Vui lòng nhập thời gian kết thúc cho event')
-      .test('same_dates_test', 'Start and end dates must not be equal.', function (value) {
-         const {startDate} = this.parent;
-         return value.getTime() !== startDate.getTime();
-      }),
+      .required('Vui lòng nhập end time')
+      .when('startDate', (startDate, schema) => startDate && schema.min(startDate)),
    percent: Yup.number().required('vui lòng nhập phần trăm giảm giá cho Event'),
-   status: Yup.boolean().required('Vui lòng chọn status cho event'),
    images: Yup.mixed().required('Images is required'),
 };
 
-export default validateEventForPromoSchema;
+export const validatePromoSchema = {
+   name: Yup.string().required('Vui lòng nhập name!'),
+   categoryImage: Yup.mixed().required('Images is required'),
+   event: Yup.array()
+      .of(Yup.string())
+      .required('Vui lòng chọn event tương ứng với promo')
+      .min(1, 'Vui lòng chọn event tương ứng với promo'),
+};

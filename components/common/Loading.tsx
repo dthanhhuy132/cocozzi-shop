@@ -1,4 +1,4 @@
-export default function Loading() {
+export default function Loading({width = '20px', height = '20px'}) {
    return (
       <svg
          xmlns='http://www.w3.org/2000/svg'
@@ -8,8 +8,8 @@ export default function Loading() {
             background: 'transparent',
             display: 'block',
          }}
-         width='20px'
-         height='20px'
+         width={width}
+         height={height}
          viewBox='0 0 100 100'
          preserveAspectRatio='xMidYMid'>
          <circle
