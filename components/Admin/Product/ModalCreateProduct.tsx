@@ -10,47 +10,64 @@ import {ProductValidateSchema} from './productValidateSchema';
 export default function ModalCreateProduct({
    ok = () => {},
    cancel = () => {},
-   createProdcut,
+   createUpdateProduct,
    categoryList,
+   productEditing,
 }: any) {
+   console.log('productEditing la gi', productEditing);
+
    //create image
-   const [productAvatar, setProdcutAvatar] = useState(null);
-   const [productAvatarURL, setProdcutAvatarURL] = useState(null);
-   const [imageFiles, setImageFiles] = useState<any>([]);
-   const [imgesURL, setImagesURL] = useState([]);
+   const [productAvatarFile, setProdcutAvatarFile] = useState(productEditing?.pictures[0] || null);
+   const [productAvatarURL, setProdcutAvatarURL] = useState(productEditing?.pictures[0] || null);
+   const [imageFiles, setImageFiles] = useState<any>(
+      productEditing?.pictures.slice(1, productEditing.pictures.length) || []
+   );
+   const [imgesURL, setImagesURL] = useState(
+      productEditing?.pictures.slice(1, productEditing.pictures.length) || []
+   );
 
    const inputFilesRef = useRef(null);
    const inputFilesAvatarRef = useRef(null);
 
-   const [sizeQuantity, setSizeQuantity] = useState({S: '', M: '', L: '', XL: '', XXL: ''});
-   const [categoryName, setCategoryName] = useState('');
+   const [sizeQuantity, setSizeQuantity] = useState({
+      S: productEditing?.size['S'] || '',
+      M: productEditing?.size['M'] || '',
+      L: productEditing?.size['L'] || '',
+      XL: productEditing?.size['XL'] || '',
+      XXL: productEditing?.size['XXL'] || '',
+   });
+
+   // find init category for product
+   const [categoryName, setCategoryName] = useState(
+      categoryList.filter((item) => item.id === productEditing?.categoryId)[0]?.name || ''
+   );
 
    const initProductValue = {
-      name: '',
-      description: '',
-      quantity: [],
-      price: 100000,
-      colorList: '',
-      avatar: '',
-      pictures: '',
-      categoryId: '',
+      name: productEditing?.name || '',
+      description: productEditing?.description || '',
+      price: productEditing?.price || 100000,
+      colorList: productEditing?.colorList?.toString() || '',
+      avatar: productEditing?.pictures[0] || '',
+      pictures: productEditing?.pictures.slice(1, productEditing.pictures.length) || '',
+      categoryId: productEditing?.categoryId || '', //using state
    };
 
    const formik = useFormik({
       initialValues: initProductValue,
       validationSchema: Yup.object(ProductValidateSchema),
       onSubmit: (values) => {
-         console.log('sản phẩm chỗ này là gì', values);
-         // const product = {
-         //    name: values.name,
-         //    description: values.description,
-         //    size: values.size,
-         //    quantity: values.quantity,
-         //    colorList: values.colorList.split(', '),
-
-         //    images: imageFiles,
-         // };
-         // createProdcut(product);
+         const product = {
+            name: values.name,
+            price: values.price,
+            description: values.description,
+            sizeQuantity: sizeQuantity,
+            colorList: values.colorList.split(', '),
+            productAvatar: productAvatarFile,
+            productPictures: imageFiles,
+            categoryId: values.categoryId,
+            productId: productEditing?.productID || null,
+         };
+         createUpdateProduct(product);
       },
    });
 
@@ -75,12 +92,12 @@ export default function ModalCreateProduct({
 
    function handleUploadAvatar(e: any) {
       const file = [...e.target.files][0];
-      setProdcutAvatar(file);
+      setProdcutAvatarFile(file);
       setProdcutAvatarURL(URL.createObjectURL(file));
    }
 
    function handleResetAvatar() {
-      setProdcutAvatar(null);
+      setProdcutAvatarFile(null);
       setProdcutAvatarURL(null);
    }
 
@@ -105,6 +122,7 @@ export default function ModalCreateProduct({
                <div className='flex gap-3 '>
                   <div className='w-1/3'>
                      <p>Hình ảnh bìa sản phẩm</p>
+
                      <div className='relative w-full min-h-[300px] border-[1px] rounded-md'>
                         {formik.errors.avatar && formik.touched.avatar && (
                            <WarningText warningText={formik.errors.avatar} />
@@ -182,8 +200,8 @@ export default function ModalCreateProduct({
                      <div className=''>
                         <p>Số lượng từng size</p>
                         <div className='flex gap-5'>
-                           {Object.keys(sizeQuantity).map((sizeItem, index) => (
-                              <div className='flex gap-1 items-center'>
+                           {Object.keys(sizeQuantity).map((sizeItem) => (
+                              <div className='flex gap-1 items-center' key={sizeItem}>
                                  <label>{sizeItem}:</label>
                                  <input
                                     className='w-[60px] border-2 text-[0.8rem] px-1 py-1 rounded-md'
@@ -231,9 +249,10 @@ export default function ModalCreateProduct({
                               {formik.values.colorList
                                  .split(',')
                                  .filter((item) => item !== '')
-                                 .map((color) => {
+                                 .map((color, index) => {
                                     return (
                                        <div
+                                          key={`${color}-${index}`}
                                           className={`w-[50px] h-[20px]`}
                                           style={{backgroundColor: `${color}`}}></div>
                                     );

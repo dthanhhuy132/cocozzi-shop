@@ -26,11 +26,11 @@ const imgArr = [img1, img2, img3, img4, img5, img6, img7, img8];
 export default function SubMenu({isShowSubMenu = false, name, hoverItem}) {
    const [headerHeight] = useGlobalState('headerHeight');
    // get caategory, event in redux
-   const {categoryState} = useAppSelector((state) => state.category);
+   const {categoryProductState} = useAppSelector((state) => state.category);
    const {eventState} = useAppSelector((state) => state.event);
 
    const content = {
-      shop: categoryState?.map((item) => item.name) || [],
+      shop: categoryProductState?.map((item) => item.name) || [],
       event: eventState?.map((item) => item.title) || [],
    };
 

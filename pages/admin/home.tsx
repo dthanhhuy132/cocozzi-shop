@@ -115,9 +115,11 @@ export default function AdminHomePage({homeImages}) {
 }
 
 export const getServerSideProps: GetServerSideProps<any> = async () => {
+   let homeImageList = [];
    const response = await homeApi.getAllHomeImage();
    const homeImages = response.data.data.filter((item) => item.status !== 'cancel');
-
+   try {
+   } catch (error) {}
    return {
       props: {
          homeImages: homeImages || [],

@@ -125,7 +125,7 @@ export default function HeaderNavResponsive({handleCloseMenu, isShowMenuRps}: IH
                      </ul>
                   </div>
 
-                  {/* sub menu */}
+                  {/* sub menu for event and shop */}
                   <div
                      className={`relative inline-block min-w-[100vw] 
                      ${subMenu.isShow ? 'right-[100%]' : 'right-0'} transition-all`}>
@@ -145,8 +145,10 @@ export default function HeaderNavResponsive({handleCloseMenu, isShowMenuRps}: IH
                            />
                            <span>{subMenu.title}</span>
                         </div>
-                        {submenuContent[subMenu.subMenuName]?.map((item) => (
-                           <a key={item} className='text-left ml-[30%] text-[1.1rem] min-w-[70px]'>
+                        {submenuContent[subMenu.subMenuName]?.map((item, index) => (
+                           <a
+                              key={`${item}-${index}`}
+                              className='text-left ml-[30%] text-[1.1rem] min-w-[70px]'>
                               {item}
                            </a>
                         ))}

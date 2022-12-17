@@ -1,5 +1,4 @@
 import {useState, useEffect} from 'react';
-import Cookies from 'js-cookie';
 
 import {AdminLayout, AdminModal} from '../../components/Admin';
 import {CategoryTableHeader} from '../../components/Admin/Category';
@@ -12,143 +11,185 @@ import {AdminButton} from '../../components/Admin/common';
 import ModalCreateEvent from '../../components/Admin/Event/ModalCreateEvent';
 import moment from 'moment';
 import {useDispatch} from 'react-redux';
-import {createEventAsyns} from '../../store/event/eventAsynAction';
+import {
+   createEventAsyns,
+   getAllEventAsync,
+   udpateEvetAsync,
+} from '../../store/event/eventAsynAction';
 import LoadingActionPage from '../../components/common/LoadingPage';
+import EventTableBody from '../../components/Admin/Event/EventTableBody';
 
-export default function AdminEventPage({eventList: eventListProps}) {
+import Cookies from 'js-cookie';
+import {toast} from 'react-toastify';
+const accessToken = Cookies.get('accessToken');
+
+export default function AdminEventPage({eventList}) {
    const dispatch = useDispatch();
    const {eventState} = useAppSelector((state) => state.event);
 
-   const [isLoading, setIsLoading] = useState(false);
+   const [isShowLoading, setIsShowLoading] = useState(false);
 
-   const [isShowActive, setIsShowactive] = useState(false);
-   const [isShowModal, setIsShowModal] = useState(false);
+   const [isShowModalCreateUpdateEvent, setIsShowModalCreateUpdateEvent] = useState(false);
+   const [editingEvent, setEditingEvent] = useState(null);
 
-   const [eventList, setEventList] = useState(eventState || eventListProps);
-
-   const accessToken = Cookies.get('accessToken');
-
-   useEffect(() => {
-      if (isShowActive) {
-         const showOnlyActiveEventList = eventList.filer((item) => item.status !== false);
-         setEventList(showOnlyActiveEventList);
-      }
-   }, [isShowActive]);
-
-   function handleClickEditEvent(editEvent) {}
+   const [renderEventList, setRenderEventList] = useState(eventList);
 
    // handle create new event
-   function handleCreateEvent(newEvent) {
-      setIsLoading(true);
-      const {title, description, startDate, endDate, status, percent, typeEvent, images} = newEvent;
+   function handleCreateUpdateEvent(event) {
+      setIsShowLoading(true);
+      const {
+         title,
+         description,
+         startDate,
+         endDate,
+         status,
+         percent,
+         typeEvent,
+         images,
+         id: eventId,
+         isChangeImage,
+      } = event;
 
-      const formData = new FormData();
-      formData.append('title', title);
-      formData.append('description', description);
-      formData.append('startDate', startDate);
-      formData.append('endDate', endDate);
-      formData.append('percent', percent);
+      if (eventId) {
+         // xóa id rồi cập nhật
+         // 1. cập nhật có hình
+         // 2. cập nhật không hình
 
-      // event type chưa sửa
-      // formData.append('typeEvent', typeEvent);
+         if (isChangeImage) {
+            const data = new FormData();
+            data.append('title', title);
+            data.append('description', description);
+            data.append('startDate', startDate);
+            data.append('endDate', endDate);
+            data.append('percent', percent);
+            data.append('typeEvent', 'event-for-event');
+            images.forEach((imageFile) => {
+               data.append('images', imageFile);
+            });
 
-      images.forEach((imageFile) => {
-         formData.append('images', imageFile);
-      });
+            dispatch(udpateEvetAsync({accessToken, eventId, data})).then((res) => {
+               if (res.payload.ok) {
+                  dispatch(getAllEventAsync());
+                  setIsShowModalCreateUpdateEvent(false);
+               } else {
+                  toast.error(res.payload.message);
+               }
+               setIsShowLoading(false);
+            });
+         } else {
+            const data = {title, description, startDate, endDate, percent, typeEvent};
+            console.log('chay vao else ne');
+            dispatch(udpateEvetAsync({accessToken, eventId, data})).then((res) => {
+               if (res.payload.ok) {
+                  dispatch(getAllEventAsync());
+                  setIsShowModalCreateUpdateEvent(false);
+               } else {
+                  toast.error(res.payload.messsage);
+               }
+               setIsShowLoading(false);
+            });
+         }
+      }
+      if (!eventId) {
+         // change event -> need to send new formData to BE
+         const formData = new FormData();
+         formData.append('title', title);
+         formData.append('description', description);
+         formData.append('startDate', startDate);
+         formData.append('endDate', endDate);
+         formData.append('percent', percent);
+         formData.append('typeEvent', 'event-for-event');
 
-      dispatch(createEventAsyns({accessToken, formData}));
+         images.forEach((imageFile) => {
+            formData.append('images', imageFile);
+         });
+         dispatch(createEventAsyns({accessToken, formData})).then((res) => {
+            if (res.payload.ok) {
+               dispatch(getAllEventAsync());
+               setIsShowModalCreateUpdateEvent(false);
+            } else {
+               toast.error(res.payload.message);
+            }
+            setIsShowLoading(false);
+         });
+      }
    }
 
    // function handle edit event
-   function handleEditEvent(editEvent) {}
+   function handleClickEditEvent(editEvent) {
+      setIsShowModalCreateUpdateEvent(true);
+      setEditingEvent(editEvent);
+   }
+
+   // reset Editting Event
+   useEffect(() => {
+      if (!isShowModalCreateUpdateEvent) {
+         setEditingEvent(null);
+      }
+   }, [isShowModalCreateUpdateEvent]);
+
+   useEffect(() => {
+      if (eventState || eventState?.length > 0) {
+         setRenderEventList(eventState);
+      }
+   }, [eventState]);
 
    return (
       <AdminLayout>
          <div className='container w-full px-8'>
             <div className='flex gap-10 items-center'>
                <h2 className='text-2xl font-semibold'>Event list</h2>
-               <AdminButton click={() => setIsShowModal(true)}>
+               <AdminButton click={() => setIsShowModalCreateUpdateEvent(true)}>
                   <AiOutlinePlusCircle /> Create new Event
                </AdminButton>
             </div>
             <div className='-mx-4 sm:-mx-8 px-4 py-4 overflow-x-auto'>
                <div className='inline-block min-w-full shadow-md rounded-lg overflow-hidden'>
-                  <table className='min-w-full leading-normal'>
-                     <EventTableHeader />
-                     <tbody>
-                        {eventList.map((eventItem) => (
-                           <tr key={eventItem._id}>
-                              {/* name */}
-                              <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-                                 <span>{eventItem.title}</span>
-                              </td>
-                              {/* image */}
-                              <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-                                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
-                                    {eventItem.images.map((img) => (
-                                       <img src={img} className='w-[200px]'></img>
-                                    ))}
-                                 </div>
-                              </td>
-
-                              {/* status */}
-                              <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-                                 <span className='relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight'>
-                                    <span
-                                       aria-hidden
-                                       className='absolute inset-0 bg-green-400 opacity-50 rounded-full'
-                                    />
-                                    <span className='px-2'>
-                                       {eventItem.status ? 'active' : 'disabled'}
-                                    </span>
-                                 </span>
-                              </td>
-
-                              {/* Date start and end */}
-                              <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm text-right'>
-                                 <div className='flex flex-col items-start'>
-                                    <span>{moment(eventItem.startDate).format('DD/MM/YYYY')}</span>
-                                    <span>-</span>
-                                    <span>{moment(eventItem.endDate).format('DD/MM/YYYY')}</span>
-                                 </div>
-                              </td>
-
-                              {/* edit */}
-                              <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm text-right'>
-                                 <button
-                                    data-tooltip-target='tooltip-light'
-                                    data-tooltip-style='light'
-                                    type='button'
-                                    onClick={() => handleClickEditEvent(eventItem)}
-                                    className='text-white bg-black hover:bg-blue-800 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center'>
-                                    Edit
-                                 </button>
-                              </td>
-                           </tr>
-                        ))}
-                     </tbody>
-                  </table>
+                  {renderEventList.length > 0 ? (
+                     <table className='min-w-full leading-normal'>
+                        <EventTableHeader />
+                        <tbody>
+                           {renderEventList.map((eventItem) => (
+                              <EventTableBody
+                                 key={eventItem._id}
+                                 eventItem={eventItem}
+                                 handleClickEditEvent={handleClickEditEvent}
+                              />
+                           ))}
+                        </tbody>
+                     </table>
+                  ) : (
+                     <p>Danh sách event trống</p>
+                  )}
                </div>
             </div>
          </div>
-         {isShowModal && (
-            <AdminModal title='Create new Event' showFooter={false} className='w-[800px] pb-2'>
+         {isShowModalCreateUpdateEvent && (
+            <AdminModal
+               title='Create new Event'
+               showFooter={false}
+               className='w-[800px] pb-2'
+               cancel={() => setIsShowModalCreateUpdateEvent(false)}>
                <ModalCreateEvent
-                  cancel={() => setIsShowModal(false)}
-                  handleCreateEvent={handleCreateEvent}
+                  cancel={() => setIsShowModalCreateUpdateEvent(false)}
+                  handleCreateUpdateEvent={handleCreateUpdateEvent}
+                  editingEvent={editingEvent}
                />
             </AdminModal>
          )}
 
-         {isLoading && <LoadingActionPage />}
+         {isShowLoading && <LoadingActionPage />}
       </AdminLayout>
    );
 }
 
 export const getServerSideProps = async () => {
-   const eventRes = await eventApi.getAllEvent();
+   let eventList = [];
 
-   const eventList = eventRes?.data?.data;
+   try {
+      const eventRes = await eventApi.getAllEvent();
+      eventList = eventRes?.data?.data.filter((item) => item.status == true);
+   } catch (error) {}
 
    return {
       props: {

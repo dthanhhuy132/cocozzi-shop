@@ -1,35 +1,35 @@
 import Image, {StaticImageData} from 'next/image';
 import {useRouter} from 'next/router';
+import FormatPrice from '../../helper/FormatPrice';
 
 interface IProductItem {
-   img: StaticImageData | string;
+   product: any;
    displayPrice?: boolean;
    smallName?: boolean;
 }
 
-export default function ProductItem({img, displayPrice = false, smallName = false}: IProductItem) {
+export default function ProductItem({
+   product,
+   displayPrice = false,
+   smallName = false,
+}: IProductItem) {
    const router = useRouter();
+
+   const productAvatar = product?.pictures ? product?.pictures[0] : '';
+
    return (
       <div className='p-[2px] md:px-2 transition'>
-         <div className='relative cursor-pointer rounded-[12px] md:rounded-[16px] overflow-hidden'>
-            <Image
-               className='absolute top-0 left-0 w-full transition hover:scale-[1.1]'
-               src={img}
-               alt=''
-               layout='responsive'
-               objectFit='cover'
-               onClick={() => router.push('/product/123')}
-            />
-         </div>
-         {displayPrice && (
-            <div className={`flex justify-between mt-2 px-2 text-[0.9rem] md:text-[1rem]`}>
-               <div>
-                  <h3>Product name</h3>
-                  <p>$50</p>
-               </div>
-               <i className='fa-solid fa-cart-plus text-[1.2rem] text-gray-500 hover:text-[#891a1c] cursor-pointer mt-1'></i>
+         {/* avatar */}
+         <img src={productAvatar} className='rounded-md' alt='Hình ảnh sản phẩm' />
+         <div className={`flex justify-between mt-2 px-2 text-[0.9rem] md:text-[1rem]`}>
+            <div className='w-[80%] flex flex-col justify-between'>
+               <h3 className='font-bold'>{product?.name}</h3>
+               <p>
+                  <FormatPrice price={product?.price}></FormatPrice>
+               </p>
             </div>
-         )}
+            <i className='fa-solid fa-cart-plus text-[1.2rem] text-gray-500 hover:text-[#891a1c] cursor-pointer mt-1'></i>
+         </div>
       </div>
    );
 }

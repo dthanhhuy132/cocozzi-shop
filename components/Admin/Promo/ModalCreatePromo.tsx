@@ -7,7 +7,12 @@ import {useFormik} from 'formik';
 import * as Yup from 'yup';
 import {validatePromoSchema} from './PromoSchema';
 
-export default function ModalCreatePromo({ok = () => {}, cancel = () => {}, eventList}: any) {
+export default function ModalCreatePromo({
+   ok = () => {},
+   cancel = () => {},
+   eventList,
+   createUpdatePromo,
+}: any) {
    // console.log('evetnlist cho nay la gi', eventList);
    //create image
    const [imageFiles, setImageFiles] = useState<any>([]);
@@ -19,18 +24,23 @@ export default function ModalCreatePromo({ok = () => {}, cancel = () => {}, even
 
    const createEventForPromoInitValue = {
       name: '',
-      status: true,
       description: '',
       categoryImage: '',
       event: [],
-      typeEvent: 'event-for-promo',
    };
 
    const formik = useFormik({
       initialValues: createEventForPromoInitValue,
       validationSchema: Yup.object(validatePromoSchema),
       onSubmit: (values) => {
-         console.log('values cho nay la gi', values);
+         // console.log('values cho nay la gi', values);
+         const promo = {
+            name: values.name,
+            description: values.description,
+            eventId: values.event,
+            categoryImage: imageFiles[0],
+         };
+         createUpdatePromo(promo);
       },
    });
 
@@ -64,9 +74,7 @@ export default function ModalCreatePromo({ok = () => {}, cancel = () => {}, even
                   )}
                   <>
                      {imgesURL.length > 0 ? (
-                        imgesURL.map((imgURL, index) => (
-                           <img src={imgURL} alt='image' key={index} />
-                        ))
+                        imgesURL.map((imgURL) => <img src={imgURL} alt='image' key={imgURL} />)
                      ) : (
                         <button
                            className='absolute p-5 text-[4rem] hover:text-[5rem] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] transition-all'
@@ -117,11 +125,11 @@ export default function ModalCreatePromo({ok = () => {}, cancel = () => {}, even
                   </div>
 
                   <div>
-                     <label htmlFor=''>Promo name</label>
-                     <input
+                     <label htmlFor=''>Promo description</label>
+                     <textarea
                         name='description'
                         className='w-full border-2 px-2 py-1 rounded-md'
-                        value={formik.values.name}
+                        value={formik.values.description}
                         onChange={formik.handleChange}
                      />
                      {formik.errors.description && formik.touched.description && (
@@ -132,16 +140,18 @@ export default function ModalCreatePromo({ok = () => {}, cancel = () => {}, even
                   {/* select event for modal */}
                   <div>
                      <p className='font-bold'>Event for promo</p>
-                     <div className='flex gap-5'>
-                        {eventList.map((item) => (
-                           <div className='flex items-center gap-1' key={item.id}>
-                              <label htmlFor={item.title}>{item.title}</label>
+                     <div className='flex gap-x-5 flex-wrap'>
+                        {eventList.map((item, index) => (
+                           <div className='flex items-center gap-1' key={index}>
+                              <label htmlFor={index} className='whitespace-nowrap'>
+                                 {item.title}
+                              </label>
                               <input
                                  name='event'
                                  className='cursor-pointer mt-1'
                                  type='checkbox'
                                  value={item.title}
-                                 id={item.title}
+                                 id={index}
                                  onChange={(e) => {
                                     if (
                                        e.target.checked &&

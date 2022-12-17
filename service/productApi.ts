@@ -10,16 +10,24 @@ const productApi = {
       return api.call().get('/product/allByName');
    },
 
-   searchProduct: () => {
-      return {};
+   searchProduct: (searchStr) => {
+      return api.call().get(`product/search?keyName=${searchStr}`);
    },
 
    createNewProduct: (token, formData) => {
       return api.callWithToken(token).post('/product/create', formData);
    },
 
+   updateProduct: (token, id, formData) => {
+      return api.callWithToken(token).put(`/product/${id}`, formData);
+   },
+
    deleteProduct: (token, productId) => {
       return api.callWithToken(token).delete(`/product/${productId}`);
+   },
+
+   getProductById: (productId) => {
+      return api.call().get(`/product/${productId}`);
    },
 };
 

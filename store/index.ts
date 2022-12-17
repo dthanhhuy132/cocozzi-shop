@@ -3,11 +3,20 @@ import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
 
 import authReducer from './auth/authSlice';
 import cartReducer from './cart/cartSlice';
-import categoryReducer from './category/categorySlice';
+import categoryPromoSlice from './categoryPromo/categoryPromoSlice';
 import eventReducer from './event/eventSlice';
+import voucherReducer from './voucher/voucherSlice';
+import productReducer from './product/productSlice';
 
 const store = configureStore({
-   reducer: {auth: authReducer, cart: cartReducer, category: categoryReducer, event: eventReducer},
+   reducer: {
+      auth: authReducer,
+      cart: cartReducer,
+      category: categoryPromoSlice,
+      event: eventReducer,
+      voucher: voucherReducer,
+      product: productReducer,
+   },
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

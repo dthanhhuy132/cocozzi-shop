@@ -11,7 +11,7 @@ const initialState = {
 };
 
 const eventSlice = createSlice({
-   name: 'auth',
+   name: 'eventSlice',
    initialState,
    reducers: {
       updateEvent: (state, action) => {
@@ -21,8 +21,9 @@ const eventSlice = createSlice({
 
    extraReducers: (builder) => {
       builder.addCase(getAllEventAsync.fulfilled, (state, action) => {
-         const data = action.payload;
-         state.eventState = data.data;
+         const eventList = action.payload.data;
+         const eventActive = eventList.filter((event) => event.status == true);
+         state.eventState = eventActive;
       });
    },
 });

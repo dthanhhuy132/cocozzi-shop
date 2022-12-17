@@ -19,24 +19,27 @@ import HeaderUserControl from './HeaderUserControl';
 import SubMenu from './SubMenu';
 import useGlobalState from '../../state';
 import {useAppDispatch, useAppSelector} from '../../store';
-import {updateCategory} from '../../store/category/categorySlice';
+import {updateCategoryProduct} from '../../store/categoryPromo/categoryPromoSlice';
 import {updateCart} from '../../store/cart/cartSlice';
 import {updateEvent} from '../../store/event/eventSlice';
+import {updateProductListByGroupName} from '../../store/product/productSlice';
 
 interface IHeader {}
 
 const navbarHeader = ['shop', 'promo', 'event', 'info', 'membership'];
 const submenuArr = ['shop', 'event'];
 
-export default function Header({carts, categoryList, eventList}) {
+export default function Header({carts, categoryList, eventList, productGroupByNameList}) {
    const router = useRouter();
    const dispatch = useAppDispatch();
    const [, setHeaderHeight] = useGlobalState('headerHeight');
 
    // get category, get cart item in redux
-   const {categoryState} = useAppSelector((state) => state.category);
+   const {categoryProductState} = useAppSelector((state: any) => state.category);
    const {cartState} = useAppSelector((state) => state.cart);
    const {eventState} = useAppSelector((state) => state.event);
+   // get product list by group Name
+   const {productListByGroupNameState} = useAppSelector((state) => state.product);
 
    const {isMobile} = useWindowDimensions();
    // menu responsive + bag
@@ -81,8 +84,8 @@ export default function Header({carts, categoryList, eventList}) {
 
    // save event and category in redux
    useEffect(() => {
-      if (!categoryState) {
-         dispatch(updateCategory(categoryList));
+      if (!categoryProductState) {
+         dispatch(updateCategoryProduct(categoryList));
       }
       if (!cartState) {
          dispatch(updateCart(carts));
@@ -94,6 +97,13 @@ export default function Header({carts, categoryList, eventList}) {
    }, []);
 
    const eventArr = eventState ? eventState : eventList;
+
+   // using header to update productListbyGroupProductName
+   useEffect(() => {
+      if (!productListByGroupNameState) {
+         dispatch(updateProductListByGroupName(productGroupByNameList));
+      }
+   }, [productListByGroupNameState]);
 
    return (
       <>
@@ -107,7 +117,7 @@ export default function Header({carts, categoryList, eventList}) {
             </div>
             {/* menu bar */}
             <ul
-               className='order-1 relative hidden lg:flex justify-center gap-x-5 gap-y-3 uppercase lg:w-1/3 flex-wrap md:gap-5 lg:gap-[70px] md:flex-nowrap z-50 before:content-(" ") before:absolute before:bottom-[-100%] before:left-[-10%] before:w-[120%] before:h-[30px] before:z-[51]'
+               className='order-1 relative hidden lg:flex justify-center gap-x-5 gap-y-3 uppercase lg:w-1/3 flex-wrap md:gap-5 mdlg:gap-[30px] lg:gap-[70px] md:flex-nowrap z-50 before:content-(" ") before:absolute before:bottom-[-100%] before:left-[-10%] before:w-[120%] before:h-[30px] before:z-[51]'
                onMouseLeave={() => !isMobile && setIsShowSubMenu(false)}>
                {navbarHeader.map((item, index) => (
                   <div

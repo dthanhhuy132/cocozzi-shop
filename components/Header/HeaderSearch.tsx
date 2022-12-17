@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from 'react';
 import styled from 'styled-components';
 import {BsSearch} from 'react-icons/bs';
 import {useRouter} from 'next/router';
+import {useDebounce} from 'use-debounce';
 interface IHeaderSearch {
    whiteLine?: Boolean;
 }
@@ -10,24 +11,23 @@ export default function HeaderSearch({whiteLine = false}: IHeaderSearch) {
    const [isOnInput, setOnInput] = useState(false);
    const [searchStr, setSearchStr] = useState('');
 
+   const [searchStrDebounced] = useDebounce(searchStr, 500);
+
    const router = useRouter();
 
    const inputRef = useRef(null);
 
    useEffect(() => {
       if (searchStr.trim()) {
-         router.push(`/search?q=${searchStr}`);
-      } else if (!searchStr.trim() && router.pathname.indexOf('/search') >= 0) {
+         router.push(`/search?q=${searchStrDebounced}`);
+      } else if (!searchStrDebounced.trim() && router.pathname.indexOf('/search') >= 0) {
          router.push('/');
       }
-   }, [searchStr]);
+   }, [searchStrDebounced]);
 
    return (
       <div className='flex items-end'>
-         <DivSC
-            isOnInput={isOnInput}
-            hasSearchStr={searchStr.length > 0}
-            whiteLine={whiteLine}>
+         <DivSC isOnInput={isOnInput} hasSearchStr={searchStr.length > 0} whiteLine={whiteLine}>
             <input
                type='text'
                className='lg:block p-0 outline-none relative bg-transparent w-full'
@@ -56,9 +56,7 @@ const DivSC = styled('div')<any>(
                content: '';
                position: absolute;
                right: 0;
-               bottom: ${
-                  props.isOnInput || props.hasSearchStr ? '-2px' : '1px'
-               };
+               bottom: ${props.isOnInput || props.hasSearchStr ? '-2px' : '1px'};
                width: 100%;
                height: 1px;
                background: ${

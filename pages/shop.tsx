@@ -10,10 +10,14 @@ import {LoadingPage} from '../components/LoadingPage';
 import animateScrollTo from 'animated-scroll-to';
 import useGlobalState from '../state';
 import debouce from 'lodash.debounce';
+import filterProductActive from '../helper/filterProductActive';
+import {useAppSelector} from '../store';
 
-export default function ShopPage({products = []}) {
+export default function ShopPage() {
    const {isMobile} = useWindowDimensions();
    const [isMobileDevice, setIsMobileDevice] = useState(false);
+
+   const {categoryProductState} = useAppSelector((state) => state.category);
 
    const ref1 = useRef(null);
    const ref2 = useRef(null);
@@ -77,36 +81,20 @@ export default function ShopPage({products = []}) {
          </div>
          <div className='mx-0 md:mx-20 md:h-full active-2' ref={ref3}>
             <div className='sticky top-[35px] md:top-[50px] pb-3 md:pb-5 bg-white z-10 flex justify-center  border-b-[1px]'>
-               <div className='flex gap-3 mt-5 text-[1rem] md:text-[1.1rem] font-bold pl-4 md:pl-2'>
-                  <p>MEN</p>
-                  <p>WOMEN</p>
+               <div className='flex gap-y-5 gap-x-5 md:gap-x-10 mt-5 font-bold'>
+                  {categoryProductState &&
+                     categoryProductState.map((category) => (
+                        <p key={category._id} className='uppercase'>
+                           {category.name}
+                        </p>
+                     ))}
                </div>
             </div>
             <div className='mt-[40px] md:mt-[70px]'>
-               <ShopProduct></ShopProduct>
+               <ShopProduct />
             </div>
          </div>
          <LoadingPage>Shop page loading</LoadingPage>;
       </div>
    );
 }
-
-export const getServerSideProps: GetServerSideProps<any> = async () => {
-   try {
-      const response = [];
-      // const response = await productApi.getAllProduct();
-
-      return {
-         props: {
-            ok: true,
-            // products: response?.data?.data || [],
-         },
-      };
-   } catch (error) {
-      return {
-         props: {
-            ok: false,
-         },
-      };
-   }
-};

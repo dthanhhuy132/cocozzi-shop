@@ -16,7 +16,7 @@ const user = parseJwt(accessToken);
 const initialState: IAuthSlice = {user: user, accessToken: accessToken};
 
 const authSlice = createSlice({
-   name: 'auth',
+   name: 'authSlice',
    initialState,
    reducers: {
       logout: (state) => {

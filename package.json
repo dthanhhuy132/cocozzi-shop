@@ -20,7 +20,6 @@
       "formik": "^2.2.9",
       "intersection-observer": "^0.12.2",
       "js-cookie": "^3.0.1",
-      "lodash.debounce": "^4.0.8",
       "moment": "^2.29.4",
       "next": "12.3.1",
       "next-auth": "^4.16.3",
@@ -38,9 +37,11 @@
       "react-redux": "^8.0.5",
       "react-select": "^5.6.0",
       "react-slick": "^0.29.0",
+      "react-toastify": "^9.1.1",
       "slick-carousel": "^1.8.1",
       "styled-components": "^5.3.6",
       "tailwind-capitalize-first-letter": "^1.0.4",
+      "use-debounce": "^9.0.2",
       "yup": "^0.32.11"
    },
    "devDependencies": {

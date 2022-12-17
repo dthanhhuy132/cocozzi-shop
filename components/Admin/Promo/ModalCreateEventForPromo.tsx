@@ -22,7 +22,6 @@ export default function ModalCreateEventForPromo({ok = () => {}, cancel = () => 
       endDate: '',
       percent: 10,
       status: true,
-      description: 'event-for-promo',
       images: '',
    };
 

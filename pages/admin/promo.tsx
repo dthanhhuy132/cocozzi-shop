@@ -1,6 +1,6 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 
-import {AiOutlinePlusCircle} from 'react-icons/ai';
+import {AiOutlinePlusCircle, AiTwotoneEdit} from 'react-icons/ai';
 import {AdminLayout, AdminModal} from '../../components/Admin';
 import {AdminButton, WarningText} from '../../components/Admin/common';
 import categoryApi from '../../service/categoryApi';
@@ -9,20 +9,70 @@ import ModalCreateEventForPromo from '../../components/Admin/Promo/ModalCreateEv
 import ModalCreatePromo from '../../components/Admin/Promo/ModalCreatePromo';
 import eventApi from '../../service/eventApi';
 
+import Cookies from 'js-cookie';
+import handleCategoryDescription from '../../components/Admin/common/handleCategoryDescription';
+import {RiDeleteBin4Fill} from 'react-icons/ri';
+import PromoAdminItem from '../../components/Admin/Promo/PromoAdminItem';
+import {useAppDispatch, useAppSelector} from '../../store';
+import {
+   createNewCategoryAsync,
+   getAllCategoryAsync,
+} from '../../store/categoryPromo/categoryAsynAcion';
+
+import LoadingActionPage from '../../components/common/LoadingPage';
+
+import {toast} from 'react-toastify';
+
 export default function PromoPage({promoList, eventList}) {
-   // console.log('promo list la gi', promoList);
+   const {allPromoState} = useAppSelector((state) => state.category);
+   const [isShowLoading, setIsShowLoading] = useState(false);
+   const dispatch = useAppDispatch();
+
+   // create render promo list -> auto update list when delete/create/update
+   const [rederPromoList, setRenderPromoList] = useState(allPromoState || promoList);
+
    const [isShowModalForEventPromo, setIsShowModalForEventPromo] = useState(false);
    const [isShowModalForPromo, setIsShowModalForPromo] = useState(false);
 
+   const [edittingPromo, setEdittingPromo] = useState(null);
+   const accessToken = Cookies.get('accessToken');
+
    function createNewEventForPromo() {}
-   function createNewPromo() {}
+
+   function createUpdatePromo(promo) {
+      setIsShowLoading(true);
+      const {name, description, eventId, categoryImage} = promo;
+      const promoDescription = `${description} -category-for-promo`;
+      const formData = new FormData();
+
+      formData.append('name', name);
+      formData.append('description', promoDescription);
+      eventId.forEach((event, index) => formData.append(`event[${index}][eventId]`, event));
+
+      formData.append('categoryImage', categoryImage);
+
+      dispatch(createNewCategoryAsync({accessToken, formData})).then((res) => {
+         if (res.payload.ok) {
+            dispatch(getAllCategoryAsync());
+         } else {
+            toast.error(res.payload.message);
+         }
+         setIsShowLoading(false);
+      });
+   }
+
+   useEffect(() => {
+      if (allPromoState?.length > 0 && allPromoState) {
+         setRenderPromoList(allPromoState);
+      }
+   }, [allPromoState]);
 
    return (
       <AdminLayout>
          <div className='border-b-2 pb-2'>
             <PromoInstruction></PromoInstruction>
 
-            {/* Tạo event */}
+            {/* button Tạo event vaf promo */}
             <div className=''>
                <AdminButton
                   className='min-w-[250px]'
@@ -38,23 +88,12 @@ export default function PromoPage({promoList, eventList}) {
             </div>
          </div>
 
-         {/* Promo list */}
+         {/* render promo list */}
          <div>
             <h2 className='mt-4 font-extrabold text-[1.3rem]'>Promo list</h2>
             <div className='grid grid-cols-3 gap-5 gap-y-10 mt-5'>
-               {promoList.map((promo) => (
-                  <div>
-                     <img
-                        src={
-                           promo.categoryImage[0] ||
-                           'https://t4.ftcdn.net/jpg/03/17/25/45/360_F_317254576_lKDALRrvGoBr7gQSa1k4kJBx7O2D15dc.jpg'
-                        }
-                        className='h-[300px] object-cover'
-                        alt='Promo img'
-                     />
-                     <p className='font-bold'>Name: {promo.name}</p>
-                     <p className='italic'>Description: {promo?.description}</p>
-                  </div>
+               {rederPromoList.map((promo) => (
+                  <PromoAdminItem promo={promo} eventList={eventList} />
                ))}
             </div>
          </div>
@@ -73,9 +112,11 @@ export default function PromoPage({promoList, eventList}) {
                <ModalCreatePromo
                   eventList={eventList}
                   cancel={() => setIsShowModalForPromo(false)}
+                  createUpdatePromo={createUpdatePromo}
                />
             </AdminModal>
          )}
+         {isShowLoading && <LoadingActionPage />}
       </AdminLayout>
    );
 }

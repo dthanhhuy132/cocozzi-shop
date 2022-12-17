@@ -4,6 +4,7 @@ import {WarningText} from '../common';
 
 import {useFormik} from 'formik';
 import * as Yup from 'yup';
+import moment from 'moment';
 
 export const EventSchema = {
    title: Yup.string().required('Vui lòng nhập title!'),
@@ -19,29 +20,32 @@ export const EventSchema = {
 export default function ModalCreateEvent({
    ok = () => {},
    cancel = () => {},
-   handleCreateEvent,
+   handleCreateUpdateEvent,
+   editingEvent,
 }: any) {
+   // check user change images or not -> to send formData or just body
+   const [isChangeImage, setIsChangeImage] = useState(false);
    //create image
    const [imageFiles, setImageFiles] = useState<any>([]);
-   const [imgesURL, setImagesURL] = useState([]);
+   const [imgesURL, setImagesURL] = useState(editingEvent?.images || []);
 
    const inputFilesRef = useRef(null);
 
    const createEventForPromoInitValue = {
-      title: '',
-      startDate: '',
-      endDate: '',
-      percent: 10,
-      status: true,
-      description: '',
-      images: '',
+      title: editingEvent?.title || '',
+      startDate: editingEvent?.startDate || '',
+      endDate: editingEvent?.endDate || '',
+      percent: editingEvent?.percent || 10,
+      status: editingEvent?.status || true,
+      description: editingEvent?.description || '',
+      images: editingEvent?.images || '',
    };
 
    const formik = useFormik({
       initialValues: createEventForPromoInitValue,
       validationSchema: Yup.object(EventSchema),
       onSubmit: (values) => {
-         const newEvent = {
+         let event = {
             title: values.title,
             description: values.description,
             startDate: values.startDate,
@@ -50,9 +54,12 @@ export default function ModalCreateEvent({
             percent: 10,
             typeEvent: 'event-for-event',
             images: imageFiles,
+            id: editingEvent?._id || null,
+            isChangeImage: isChangeImage,
          };
+         // using for create or update event when image change
 
-         handleCreateEvent(newEvent);
+         handleCreateUpdateEvent(event);
       },
    });
 
@@ -61,11 +68,14 @@ export default function ModalCreateEvent({
    function handleResetImg() {
       setImageFiles([]);
       setImagesURL([]);
+
+      setIsChangeImage(true);
    }
 
    function handleUploadImages(e: any) {
       const tempImgFiles = [];
       const tempImgURL = [];
+      setIsChangeImage(true);
 
       [...e.target.files].forEach((file) => {
          tempImgFiles.push(file);
@@ -153,13 +163,18 @@ export default function ModalCreateEvent({
                         <WarningText warningText={formik.errors.description} />
                      )}
                   </div>
+                  {/* start */}
                   <div>
                      <label htmlFor=''>Start date</label>
                      <input
                         name='startDate'
                         className='w-full border-2 px-2 py-1 rounded-md'
                         type='date'
-                        value={formik.values.startDate}
+                        value={
+                           formik.values.startDate
+                              ? moment(formik.values.startDate).format('YYYY-MM-DD')
+                              : ''
+                        }
                         onChange={formik.handleChange}
                      />
 
@@ -167,6 +182,8 @@ export default function ModalCreateEvent({
                         <WarningText warningText={formik.errors.startDate} />
                      )}
                   </div>
+
+                  {/* end date */}
                   <div>
                      <label htmlFor=''>End date</label>
 
@@ -174,7 +191,11 @@ export default function ModalCreateEvent({
                         name='endDate'
                         className='w-full border-2 px-2 py-1 rounded-md'
                         type='date'
-                        value={formik.values.endDate}
+                        value={
+                           formik.values.startDate
+                              ? moment(formik.values.startDate).format('YYYY-MM-DD')
+                              : ''
+                        }
                         onChange={formik.handleChange}
                      />
                      {formik.errors.endDate && formik.touched.endDate && (

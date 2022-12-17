@@ -9,6 +9,14 @@ const categoryApi = {
    getCategoryById(categoryId: string) {
       return api.call().get(`/category/${categoryId}`);
    },
+
+   createCategory(token, formData) {
+      return api.callWithToken(token).post('/category/create', formData);
+   },
+
+   deleteCategory(token, categoryId) {
+      return api.callWithToken(token).delete(`/category/delete/${categoryId}`);
+   },
 };
 
 export default categoryApi;

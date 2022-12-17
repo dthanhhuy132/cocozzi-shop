@@ -18,11 +18,11 @@ export default function HeaderUserControl({hasToken, isMobile}) {
                   </li>
 
                   {isAdmin(user) && (
-                     <li className='py-1 px-2 hover:bg-[#891a1c] hover:text-white cursor-pointer'>
-                        <Link href='/admin/home'>
+                     <Link href='/admin/home'>
+                        <li className='py-1 px-2 hover:bg-[#891a1c] hover:text-white cursor-pointer'>
                            <a>Trang Admin</a>
-                        </Link>
-                     </li>
+                        </li>
+                     </Link>
                   )}
                   <li className='py-1 px-2 hover:bg-[#891a1c] hover:text-white cursor-pointer'>
                      Đăng xuất

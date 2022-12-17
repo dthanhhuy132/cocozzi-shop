@@ -3,6 +3,8 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import 'animate.css';
 
+import 'react-toastify/dist/ReactToastify.css';
+
 import 'nprogress/nprogress.css';
 import '../styles/nprogress-custom.css';
 import 'react-dropdown/style.css';
@@ -36,9 +38,16 @@ import Cookies from 'js-cookie';
 import AdminSideBar from '../components/Admin/AdminSidebar';
 import eventApi from '../service/eventApi';
 
+// toast message
+import {ToastContainer} from 'react-toastify';
+import productApi from '../service/productApi';
+import filterProductActive from '../helper/filterProductActive';
+
 const MyApp = ({Component, pageProps, session}) => {
    const router = useRouter();
-   const {carts, categoryList, eventList, token, userToken} = pageProps;
+   const {carts, categoryList, eventList, productGroupByNameList, token, userToken} = pageProps;
+
+   console.log('productGroupByNameList ơ _app', productGroupByNameList);
 
    const [, setToken] = useGlobalState('accessToken');
    const [, setCurrentUser] = useGlobalState('currentUser');
@@ -79,36 +88,73 @@ const MyApp = ({Component, pageProps, session}) => {
             </Head>
             <Script src='https://sp.zalo.me/plugins/sdk.js'></Script>
 
-            <Header carts={carts} categoryList={categoryList} eventList={eventList}></Header>
+            <Header
+               carts={carts}
+               categoryList={categoryList}
+               eventList={eventList}
+               productGroupByNameList={productGroupByNameList}></Header>
             <div className=''>
                {isAdminPage && <AdminSideBar />}
                <Component {...pageProps} />
             </div>
             <Footer></Footer>
+
+            <ToastContainer
+               position='bottom-right'
+               autoClose={5000}
+               hideProgressBar={false}
+               newestOnTop={false}
+               closeOnClick
+               rtl={false}
+               pauseOnFocusLoss
+               pauseOnHover
+               theme='dark'
+            />
          </Provider>
       </SessionProvider>
    );
 };
 
 MyApp.getInitialProps = async (appContext: AppContext) => {
+   let appProps, categoryRes, cartRes, eventRes, productGroupNameRes;
    const [token, userToken] = getTokenSSRAndCSS(appContext.ctx);
-
    const userId = userToken?.data._id;
-   const appProps = await App.getInitialProps(appContext);
+   try {
+      appProps = await App.getInitialProps(appContext);
 
-   const categoryRes = await categoryApi.getAllCategory();
-   const cartRes = await bagApi.getUserCart(userId, token);
-   const eventRes = await eventApi.getAllEvent();
+      const categoryPos = categoryApi.getAllCategory();
+      const cartPos = bagApi.getUserCart(userId, token);
+      const eventPos = eventApi.getAllEvent();
+      const productGroupNamePos = productApi.getAllProductByName();
+
+      const [categories, carts, events, productGroupNames] = await Promise.all([
+         categoryPos,
+         cartPos,
+         eventPos,
+         productGroupNamePos,
+      ]);
+
+      categoryRes = categories;
+      cartRes = carts;
+      eventRes = events;
+      productGroupNameRes = productGroupNames;
+
+      categoryRes;
+   } catch (error) {}
 
    const carts = cartRes?.data?.data;
-   const categoryList = categoryRes?.data?.data;
-   const eventList = eventRes?.data?.data;
+   const categoryList = categoryRes?.data?.data.filter(
+      (cate) => cate.status == true && cate.categoryImage.length == 0
+   );
+   const eventList = eventRes?.data?.data.filter((event) => event.status == true);
+   const productGroupByNameList = filterProductActive(productGroupNameRes?.data?.data);
 
    return {
       pageProps: {
          ...appProps.pageProps,
          categoryList: categoryList || [],
          eventList: eventList || [],
+         productGroupByNameList: productGroupByNameList || [],
          carts: carts || [],
          token: token,
          userToken: userToken,

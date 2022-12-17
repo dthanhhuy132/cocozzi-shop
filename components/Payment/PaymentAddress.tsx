@@ -12,8 +12,7 @@ export default function PaymentAddress() {
    const [district, setDistrict] = useState([]);
 
    function getAndFormatDistrict() {
-      const districtList = address.filter((x) => x.province === initProvince)[0]
-         .districtsArr;
+      const districtList = address.filter((x) => x.province === initProvince)[0].districtsArr;
 
       return districtList.map((item) => ({value: item, label: item}));
    }
@@ -28,7 +27,7 @@ export default function PaymentAddress() {
             <div className='md:w-[50%]'>
                <label className='font-semibold'>Tỉnh/Thành phố *</label>
                <Select
-                  placeholder='Vui lòng chọn Tỉnh/Thành phố'
+                  placeholder='Chọn Tỉnh/Thành phố'
                   defaultInputValue={initProvince}
                   name='Provice'
                   options={formatProvince}
@@ -39,17 +38,14 @@ export default function PaymentAddress() {
             <div className='md:w-[50%]'>
                <label className='font-semibold'>Quận/Huyện *</label>
                <Select
-                  placeholder='Vui lòng chọn Quận/Huyện'
+                  placeholder='Chọn Quận/Huyện'
                   options={district}
                   onChange={(e) => setDistrictName(e.value)}
                />
             </div>
          </div>
 
-         <PaymetnInputForm
-            label='Địa chỉ'
-            placeHolder='Vui lòng nhập Địa chỉ cụ thể'
-         />
+         <PaymetnInputForm label='Địa chỉ' placeHolder='Địa chỉ cụ thể' />
       </div>
    );
 }
