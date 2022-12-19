@@ -19,7 +19,7 @@ import {udpatePanelForUser} from '../store/panel/panelSlice';
 import panelApi from '../service/panelApi';
 
 export default function ShopPage({productListByName, storyList}) {
-   const {isMobile} = useWindowDimensions();
+   const {isMobile, width} = useWindowDimensions();
    const [isMobileDevice, setIsMobileDevice] = useState(false);
    const dispatch = useDispatch();
 
@@ -42,7 +42,7 @@ export default function ShopPage({productListByName, storyList}) {
       let lastScrollTop = 0;
 
       function detectScroll() {
-         if (!isMobileDevice || !isMobile) {
+         if (width > 500) {
             const ref1OFT = ref1?.current?.offsetTop;
          const ref2OFT = ref2?.current?.offsetTop;
          const ref3OFT = ref3?.current?.offsetTop;

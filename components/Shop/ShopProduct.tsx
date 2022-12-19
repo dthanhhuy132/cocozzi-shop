@@ -10,7 +10,7 @@ import productApi from '../../service/productApi';
 import filterProductActive from '../../helper/filterProductActive';
 
 export default function ShopProduct({productListByName}: any) {
-   const {isMobile} = useWindowDimensions();
+   const {isMobile, width} = useWindowDimensions();
    const [isMobileDevice, setIsMobileDevice] = useState(false);
    const {productListByGroupNameState} = useAppSelector((state) => state.product);
 
@@ -24,7 +24,7 @@ export default function ShopProduct({productListByName}: any) {
    return (
       <>
          <Masonry
-            breakpointCols={isMobileDevice || isMobile ? 2 : 5}
+            breakpointCols={width < 600  ? 2 : 5}
             className='my-masonry-grid'
             columnClassName='my-masonry-grid_column'>
             {productListByName.map((product, index) => (
