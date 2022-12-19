@@ -90,7 +90,7 @@ export default function ShopPage({productListByName, storyList}) {
                      categoryProductState.map((category, index) => (
                         <p
                            key={index}
-                           className='uppercase text-[0.8rem] md:[1.1rem] whitespace-nowrap'>
+                           className='uppercase text-[0.8rem] md:text-[0.9rem] whitespace-nowrap hover:underline cursor-pointer'>
                            {category.name}
                         </p>
                      ))}

@@ -33,8 +33,8 @@ export default function ProductItem({
             />
          </div>
          <div className={`flex justify-between mt-2 px-2 text-[0.9rem] md:text-[1rem]`}>
-            <div className='w-[80%] flex flex-col justify-between'>
-               <h3 className={`font-bold ${smallName && 'text-[0.9rem] flex justify-center'}`}>
+            <div className={`${smallName ? 'w-[100%]' : 'w-[80%]'} flex flex-col justify-between`}>
+               <h3 className={`font-bold ${smallName && 'text-[0.9rem] text-center'} line-clamp-2`}>
                   {uppercaseFirstLetter(product?.name)}
                </h3>
                {showPrice && (

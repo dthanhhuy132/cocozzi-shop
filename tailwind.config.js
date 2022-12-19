@@ -25,5 +25,5 @@ module.exports = {
          },
       },
    },
-   plugins: [require('tailwind-capitalize-first-letter')],
+   plugins: [require('@tailwindcss/line-clamp')],
 };
