@@ -50,7 +50,7 @@ export default function ProductItem({product, handleClickEditProduct}: any) {
       <>
          {/* product avatar */}
          <div className='relative group'>
-            <div className='absolute top-1 right-1 opacity-90 z-[50]'>
+            <div className='absolute top-1 right-1 opacity-90 z-[1]'>
                <CopyProductSlug text={`/product/${stringToSlug(product.name)}`} />
             </div>
 

@@ -24,11 +24,13 @@ const categoryPromoSlice = createSlice({
    },
    extraReducers: (builder) => {
       builder.addCase(getAllCategoryAsync.fulfilled, (state, action) => {
-         const data = action.payload;
-         const allCategoryStateAdmin = data.filter(
-            (cate) => cate.status == true && cate?.description?.indexOf('-category-for-promo') < 0
+         const data = action.payload.data;
+         const allCategoryStateAdmin = data?.filter(
+            (cate) =>
+               cate.status == true &&
+               (cate?.description?.indexOf('-category-for-promo') < 0 || !cate?.description)
          );
-         const allCategoryPromoStateAmin = data.filter(
+         const allCategoryPromoStateAmin = data?.filter(
             (cate) => cate.status == true && cate?.description?.indexOf('-category-for-promo') >= 0
          );
          state.allCategoryStateAdmin = allCategoryStateAdmin;

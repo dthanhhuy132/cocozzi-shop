@@ -23,6 +23,7 @@ import {updateCategoryProduct} from '../../store/categoryPromo/categoryPromoSlic
 import {updateCart} from '../../store/cart/cartSlice';
 import {updateEvent} from '../../store/event/eventSlice';
 import {updateProductListByGroupName} from '../../store/product/productSlice';
+import randomProductIndexForHeader from '../../helper/randomProductIndexForHeader';
 
 interface IHeader {}
 
@@ -55,6 +56,7 @@ export default function Header({carts, categoryList, eventList, productGroupByNa
 
    const {accessToken} = useSelector((state: any) => state.auth);
 
+   // check token to create submenu
    useEffect(() => {
       setHasToken(accessToken ? true : false);
    }, [accessToken]);
@@ -133,7 +135,12 @@ export default function Header({carts, categoryList, eventList, productGroupByNa
                            {item}
                         </a>
                      </Link>
-                     <SubMenu isShowSubMenu={isShowSubMenu} name={submenuName} hoverItem={item} />
+                     <SubMenu
+                        productGroupByNameList={productGroupByNameList}
+                        isShowSubMenu={isShowSubMenu}
+                        name={submenuName}
+                        hoverItem={item}
+                     />
                   </div>
                ))}
             </ul>

@@ -15,7 +15,7 @@ const categoryApi = {
    },
 
    updateCategory(token, categoryId, data) {
-      return api.callWithToken(token).delete(`/category/delete/${categoryId}`, data);
+      return api.callWithToken(token).put(`/category/${categoryId}`, data);
    },
 
    deleteCategory(token, categoryId) {

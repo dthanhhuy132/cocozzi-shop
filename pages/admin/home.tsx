@@ -1,4 +1,4 @@
-import {useState, useRef} from 'react';
+import {useState, useRef, useEffect} from 'react';
 import Cookies from 'js-cookie';
 
 import {GetServerSideProps} from 'next';
@@ -8,12 +8,27 @@ import {AdminLayout} from '../../components/Admin';
 import {AdminButton} from '../../components/Admin/common';
 import {AiOutlinePlusCircle} from 'react-icons/ai';
 import panelApi from '../../service/panelApi';
+import {PANEL_FOR_BANNER, PANEL_FOR_HOME} from '../../store/panel/panelSlice';
+import sortDataByUpdatedTime from '../../components/Admin/common/sortDataByUpdatedTime';
+import {useAppDispatch, useAppSelector} from '../../store';
+import {createPanelAsyns, getAllPanelAsync} from '../../store/panel/panelAsyncAction';
+import {create} from 'yup/lib/array';
+import LoadingActionPage from '../../components/common/LoadingPage';
+import {toast} from 'react-toastify';
 
-export default function AdminHomePage({homeImages}) {
+const accessToken = Cookies.get('accessToken');
+export default function AdminHomePage({homePanelList}) {
+   const dispatch = useAppDispatch();
+   const [isShowLoading, setIsShowLoading] = useState(false);
+
    const [imageFiles, setImageFiles] = useState<any>([]);
    const [imgesURL, setImagesURL] = useState([]);
+   const [renderHomePanelList, setRenderHomePanelList] = useState(
+      homePanelList?.filter((item) => item?.description?.indexOf(PANEL_FOR_HOME) >= 0)
+   );
 
-   const accessToken = Cookies.get('accessToken');
+   // get data from redux
+   const {panelForHomeState} = useAppSelector((state) => state.panel);
 
    const inputFilesRef = useRef(null);
 
@@ -25,16 +40,29 @@ export default function AdminHomePage({homeImages}) {
 
    // function add new panel
    function handleCreateNewPanel(e) {
+      setIsShowLoading(true);
       e.preventDefault();
 
       const formData = new FormData();
-      formData.append('description', 'panel-test');
+      formData.append('description', PANEL_FOR_HOME);
 
       imageFiles.forEach((imageFile) => {
          formData.append('pictures', imageFile);
       });
 
-      // homeApi.createHomeImage(accessToken, formData);
+      dispatch(createPanelAsyns({accessToken, formData})).then((res) => {
+         setIsShowLoading(false);
+
+         if (res.payload.ok) {
+            dispatch(getAllPanelAsync());
+            // reset img
+            setImageFiles([]);
+            setImagesURL([]);
+         } else {
+            toast.error(res.payload.message);
+         }
+         setIsShowLoading(false);
+      });
    }
 
    function handleUploadImages(e: any) {
@@ -50,11 +78,22 @@ export default function AdminHomePage({homeImages}) {
       setImagesURL(tempImgURL);
    }
 
+   useEffect(() => {
+      if (panelForHomeState || panelForHomeState?.length > 0) {
+         const sortHomePanelState = sortDataByUpdatedTime(panelForHomeState);
+         setRenderHomePanelList(sortHomePanelState);
+      }
+   }, [panelForHomeState]);
+
    return (
       <AdminLayout>
          <div>
             <form>
                <div className='mb-2'>Upload images for home page</div>
+               <span className='mb-2 italic'>
+                  Hình nằm ngang, kích kích các hình nên giống nhau, dung lượng &lt; 300kb, &#40;Bộ
+                  hình ảnh đầu tiên được sử dụng để hiện thị trên trang home&#41;
+               </span>
 
                <input
                   type='file'
@@ -80,7 +119,7 @@ export default function AdminHomePage({homeImages}) {
             </form>
 
             {/* preview upload file */}
-            {imageFiles.length > 0 && (
+            {imgesURL.length > 0 && (
                <div className='mt-2 p-2 border-2'>
                   <p className='mb-2 font-bold'>Preview images upload:</p>
                   <div className='grid grid-cols-3 gap-2'>
@@ -96,7 +135,7 @@ export default function AdminHomePage({homeImages}) {
          <div className='grid grid-cols-1 gap-5 mt-5'>
             <p className='font-bold border-b-2'>Pannel list</p>
 
-            {homeImages.map((item, index) => (
+            {renderHomePanelList.map((item, index) => (
                // list image of each pannel
                <div className='' key={index}>
                   <p className='mb-1'>
@@ -111,6 +150,7 @@ export default function AdminHomePage({homeImages}) {
                </div>
             ))}
          </div>
+         {isShowLoading && <LoadingActionPage />}
       </AdminLayout>
    );
 }
@@ -120,11 +160,16 @@ export const getServerSideProps: GetServerSideProps<any> = async () => {
 
    try {
       const response = await panelApi.getAllPanel();
-      homeImageList = response.data.data.filter((item) => item.status !== 'cancel');
+      const homePanelRes = response?.data?.data;
+      homeImageList = homePanelRes.filter(
+         (item) => item?.status !== 'cancel' && item?.pictures?.length > 0
+      );
    } catch (error) {}
+
+   console.log('homeImageList', homeImageList);
    return {
       props: {
-         homeImages: homeImageList || [],
+         homePanelList: homeImageList || [],
       },
    };
 };

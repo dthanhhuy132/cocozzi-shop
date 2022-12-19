@@ -33,8 +33,6 @@ export default function CategoryCreateModal({
    return (
       <form autoComplete='off' onSubmit={formik.handleSubmit}>
          <div>
-            <label htmlFor=''>Start date</label>
-
             <input
                name='name'
                type='text'

@@ -27,8 +27,6 @@ export const createNewCategoryAsync: any = createAsyncThunk(
             ok: true,
          };
       } catch (error) {
-         console.log('error', error);
-         console.log('error trong create new category la gi', error?.response?.data?.message);
          return {
             ok: false,
             messsage: error?.response?.data?.message,

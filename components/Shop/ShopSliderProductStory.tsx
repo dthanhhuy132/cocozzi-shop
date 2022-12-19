@@ -82,7 +82,7 @@ export default function ShopSliderProductStory({storyList}) {
       slidesToShow: isMobile ? 1 : 3,
       swipeToSlide: true,
       autoplay: true,
-      autoplaySpeed: 5000,
+      autoplaySpeed: 5500,
       pauseOnHover: false,
 
       centerMode: true,
@@ -132,7 +132,7 @@ export default function ShopSliderProductStory({storyList}) {
             <div
                className={`animate__animated animate__fadeIn flex justify-center items-center fixed top-0 bottom-0 right-0 z-[999] left-0 bg-[#000000fa] transition-all`}>
                <div className='fixed top-0 left-0 right-0 opacity-50'>
-                  <ProgressBar></ProgressBar>
+                  {isShowProductButton && <ProgressBar></ProgressBar>}
                </div>
 
                <div

@@ -2,17 +2,20 @@ import Image, {StaticImageData} from 'next/image';
 import {useRouter} from 'next/router';
 import FormatPrice from '../../helper/FormatPrice';
 import stringToSlug from '../../helper/stringToSlug';
+import uppercaseFirstLetter from '../../helper/uppercaseFirstLetter';
 
 interface IProductItem {
    product: any;
    displayPrice?: boolean;
    smallName?: boolean;
+   showPrice?: boolean;
 }
 
 export default function ProductItem({
    product,
    displayPrice = false,
    smallName = false,
+   showPrice = true,
 }: IProductItem) {
    const router = useRouter();
 
@@ -32,14 +35,20 @@ export default function ProductItem({
          </div>
          <div className={`flex justify-between mt-2 px-2 text-[0.9rem] md:text-[1rem]`}>
             <div className='w-[80%] flex flex-col justify-between'>
-               <h3 className='font-bold'>{product?.name}</h3>
-               <p>
-                  <FormatPrice price={product?.price}></FormatPrice>
-               </p>
+               <h3 className={`font-bold ${smallName && 'text-[0.75rem]'}`}>
+                  {uppercaseFirstLetter(product?.name)}
+               </h3>
+               {showPrice && (
+                  <p>
+                     <FormatPrice price={product?.price}></FormatPrice>
+                  </p>
+               )}
             </div>
-            <i
-               className='fa-solid fa-cart-plus text-[1.2rem] text-gray-500 hover:text-[#891a1c] cursor-pointer mt-1'
-               onClick={handleClickAddToCart}></i>
+            {showPrice && (
+               <i
+                  className='fa-solid fa-cart-plus text-[1.2rem] text-gray-500 hover:text-[#891a1c] cursor-pointer mt-1'
+                  onClick={handleClickAddToCart}></i>
+            )}
          </div>
 
          <div className='absolute'>

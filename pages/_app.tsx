@@ -114,7 +114,7 @@ const MyApp = ({Component, pageProps, session}) => {
 };
 
 MyApp.getInitialProps = async (appContext: AppContext) => {
-   let appProps, categoryRes, cartRes, eventRes, productGroupNameRes;
+   let appProps, categoryList, cartList, eventList, productGroupByNameList;
    const [token, userToken] = getTokenSSRAndCSS(appContext.ctx);
    const userId = userToken?.data._id;
    try {
@@ -125,29 +125,25 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
       const eventPos = eventApi.getAllEvent();
       const productGroupNamePos = productApi.getAllProductByName();
 
-      const [categories, carts, events, productGroupNames] = await Promise.all([
+      const [categoryRes, cartRes, eventRes, productGroupNameRes] = await Promise.all([
          categoryPos,
          cartPos,
          eventPos,
          productGroupNamePos,
       ]);
 
-      categoryRes = categories;
-      cartRes = carts;
-      eventRes = events;
-      productGroupNameRes = productGroupNames;
+      cartList = cartRes?.data?.data;
+      categoryList = categoryRes?.data?.data?.filter(
+         (cate) =>
+            cate.status == true &&
+            (cate?.description?.indexOf('-category-for-promo') < 0 || !cate?.description)
+      );
+      eventList = eventRes?.data?.data.filter((event) => event.status == true);
+      const productByGroupNameData = productGroupNameRes?.data?.data;
 
-      categoryRes;
+      productGroupByNameList =
+         productByGroupNameData?.length > 0 ? filterProductActive(productByGroupNameData) : [];
    } catch (error) {}
-
-   const carts = cartRes?.data?.data;
-   const categoryList = categoryRes?.data?.data.filter(
-      (cate) => cate.status == true && cate?.description?.indexOf('-category-for-promo') < 0
-   );
-   const eventList = eventRes?.data?.data.filter((event) => event.status == true);
-   const productByGroupNameData = productGroupNameRes?.data?.data;
-   const productGroupByNameList =
-      productByGroupNameData?.length > 0 ? filterProductActive(productByGroupNameData) : [];
 
    return {
       pageProps: {
@@ -155,7 +151,7 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
          categoryList: categoryList || [],
          eventList: eventList || [],
          productGroupByNameList: productGroupByNameList || [],
-         carts: carts || [],
+         carts: cartList || [],
          token: token,
          userToken: userToken,
       },

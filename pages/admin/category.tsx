@@ -14,7 +14,9 @@ import CategoryCreateModal from '../../components/Admin/Category/CategoryCreateM
 import {
    createNewCategoryAsync,
    getAllCategoryAsync,
+   updateCategoryAnsync,
 } from '../../store/categoryPromo/categoryAsynAcion';
+import LoadingActionPage from '../../components/common/LoadingPage';
 const accessToken = Cookies.get('accessToken');
 
 export default function Category({categoryList}) {
@@ -40,15 +42,24 @@ export default function Category({categoryList}) {
 
    // function handler
    function createAndUpdateNewCategory(category) {
-      console.log('tao moi category trong function nay', category);
-      console.log('editingCategory la gi', editingCategory);
-
+      setIsShowLoading(true);
       const {name, categoryId} = category;
+
       if (categoryId) {
+         const data = {name};
          // cập nhật category
+         dispatch(updateCategoryAnsync({accessToken, categoryId, data})).then((res) => {
+            if (res.payload.ok) {
+               dispatch(getAllCategoryAsync());
+               setIsShowModalCategory(false);
+            } else {
+               toast.error(res.payload.messsage);
+            }
+            setIsShowLoading(false);
+         });
       } else {
          // create new category
-         const data = {name: category.name};
+         const data = {name: name};
          dispatch(createNewCategoryAsync({accessToken, data})).then((res) => {
             if (res.payload.ok) {
                dispatch(getAllCategoryAsync());
@@ -104,7 +115,9 @@ export default function Category({categoryList}) {
                </div>
             </div>
             {isShowModalCetegory && (
-               <AdminModal showFooter={false} title='Create category'>
+               <AdminModal
+                  showFooter={false}
+                  title={`${editingCategory ? 'Edit category' : 'Create new category'}`}>
                   <CategoryCreateModal
                      cancel={() => setIsShowModalCategory(false)}
                      editingCategory={editingCategory}
@@ -113,6 +126,7 @@ export default function Category({categoryList}) {
                </AdminModal>
             )}
          </div>
+         {isShowLoading && <LoadingActionPage />}
       </AdminLayout>
    );
 }

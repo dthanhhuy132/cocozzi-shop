@@ -23,9 +23,8 @@ const accessToken = Cookies.get('accessToken');
 
 export default function AdminStoryPage({storyList}) {
    const dispatch = useAppDispatch();
-   const [renderStoryList, setRenderStoryList] = useState(
-      storyList?.filter((item) => item?.description?.indexOf(PANEL_FOR_STORY) >= 0)
-   );
+   const [renderStoryList, setRenderStoryList] = useState(storyList);
+
    const [showModalForStory, setIsShowModalForStory] = useState(false);
 
    // get storyList from redux
@@ -166,7 +165,7 @@ export const getServerSideProps = async () => {
       const panelRes = await panelApi.getAllPanel();
       const panelData = panelRes?.data?.data;
 
-      storyList = panelData;
+      storyList = panelData?.filter((item) => item?.description?.indexOf(PANEL_FOR_STORY) >= 0);
    } catch (error) {}
 
    return {

@@ -20,15 +20,21 @@ import Image from 'next/image';
 import {useRouter} from 'next/router';
 import uppercaseFirstLetter from '../../helper/uppercaseFirstLetter';
 import {useAppSelector} from '../../store';
+import {ProductItem} from '../ProductItem';
+import randomProductIndexForHeader from '../../helper/randomProductIndexForHeader';
 
 const imgArr = [img1, img2, img3, img4, img5, img6, img7, img8];
 
-export default function SubMenu({isShowSubMenu = false, name, hoverItem}) {
+export default function SubMenu({isShowSubMenu = false, name, hoverItem, productGroupByNameList}) {
    const [headerHeight] = useGlobalState('headerHeight');
    // get caategory, event in redux
    const {categoryProductState} = useAppSelector((state) => state.category);
    const {eventState} = useAppSelector((state) => state.event);
 
+   // random product for header
+   const [renderListProductForSubMenu, setRenderListProductForSubMenu] = useState([]);
+
+   // sub menu content
    const content = {
       shop: categoryProductState?.map((item) => item.name) || [],
       event: eventState?.map((item) => item.title) || [],
@@ -81,6 +87,16 @@ export default function SubMenu({isShowSubMenu = false, name, hoverItem}) {
       autoplay: true,
    };
 
+   // useEffect random product
+   useEffect(() => {
+      const randomIndexArr = randomProductIndexForHeader(productGroupByNameList.length);
+      const randomProductForHeader = randomIndexArr.map(
+         (randomIndex) => productGroupByNameList.filter((item, index) => index === randomIndex)[0]
+      );
+
+      setRenderListProductForSubMenu(randomProductForHeader);
+   }, [productGroupByNameList]);
+
    return (
       <>
          <div
@@ -92,34 +108,26 @@ export default function SubMenu({isShowSubMenu = false, name, hoverItem}) {
             }}>
             {/* category slider || event slider */}
             <div className='absolute right-0 pr-[44px] w-[500px] top-[15px]'>
-               <p className='px-2 mb-3 text-[1.2rem] text-[#891a1c]'>
-                  SẢN PHẨM ĐƯỢC YÊU THÍCH NHẤT
-               </p>
+               <p className='px-2 mb-3 text-[#891a1c]'>SẢN PHẨM NỔI BẬT</p>
                <SliderSlick
                   arrows={false}
                   {...settings}
                   beforeChange={handleBeforeChange}
                   afterChange={handleAfterChange}>
-                  {imgArr.map((img, index) => (
-                     <div key={index} onClickCapture={handleOnItemClick}>
-                        <div
-                           className='md:px-2 font-thin normal-case text-[0.8rem]'
-                           style={{fontFamily: 'Gilroy'}}>
-                           <div className='relative cursor-pointer md:rounded-[6px] overflow-hidden'>
-                              <Image
-                                 src={img}
-                                 alt=''
-                                 layout='responsive'
-                                 objectFit='cover'
-                                 onClick={() => router.push('/product/123')}
-                              />
-                              <p className=''>{uppercaseFirstLetter('Ten san pham')}</p>
-
-                              <p className=''>50.000</p>
+                  {renderListProductForSubMenu.length > 0 &&
+                     renderListProductForSubMenu.map((product, index) => (
+                        <div key={index} onClickCapture={handleOnItemClick}>
+                           <div
+                              className='md:px-2 font-thin normal-case text-[0.8rem]'
+                              style={{fontFamily: 'Gilroy'}}>
+                              <ProductItem
+                                 product={product}
+                                 key={index}
+                                 showPrice={false}
+                                 smallName={true}></ProductItem>
                            </div>
                         </div>
-                     </div>
-                  ))}
+                     ))}
                </SliderSlick>
             </div>
          </div>
