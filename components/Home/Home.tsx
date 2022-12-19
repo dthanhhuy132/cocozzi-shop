@@ -31,8 +31,8 @@ export default function Home({homeImage}) {
    return (
       <div className='grid grid-cols-1 md:grid-cols-2 gap-0 '>
          {homeImage?.pictures?.map((imgSRC, index) => (
-            <div className='overflow-hidden'>
-               <a key={index} onClick={() => handleClickImage()}>
+            <div className='overflow-hidden' key={index}>
+               <a onClick={() => handleClickImage()}>
                   <ImageSC
                      src={imgSRC}
                      active={isActiveAnimation === index ? '1' : ''}
