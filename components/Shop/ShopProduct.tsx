@@ -24,7 +24,13 @@ export default function ShopProduct({productListByName}: any) {
    return (
       <>
          <Masonry
-            breakpointCols={width < 600  ? 2 : 5}
+            breakpointCols={{
+               default: 5,
+               1100: 3,
+               800: 3,
+               700: 2,
+               500: 2
+             }}
             className='my-masonry-grid'
             columnClassName='my-masonry-grid_column'>
             {productListByName.map((product, index) => (
