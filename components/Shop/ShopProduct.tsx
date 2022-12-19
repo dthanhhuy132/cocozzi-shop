@@ -14,6 +14,8 @@ export default function ShopProduct({productListByName}: any) {
    const [isMobileDevice, setIsMobileDevice] = useState(false);
    const {productListByGroupNameState} = useAppSelector((state) => state.product);
 
+
+   console.log('isMobile',isMobile)
    useEffect(() => {
       if (isMobile) {
          setIsMobileDevice(true);
@@ -22,7 +24,7 @@ export default function ShopProduct({productListByName}: any) {
    return (
       <>
          <Masonry
-            breakpointCols={isMobileDevice ? 2 : 5}
+            breakpointCols={isMobileDevice || isMobile ? 2 : 5}
             className='my-masonry-grid'
             columnClassName='my-masonry-grid_column'>
             {productListByName.map((product, index) => (

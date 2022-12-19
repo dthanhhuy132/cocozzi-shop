@@ -42,12 +42,11 @@ export default function ShopPage({productListByName, storyList}) {
       let lastScrollTop = 0;
 
       function detectScroll() {
-         if (isMobileDevice) return;
-         const ref1OFT = ref1?.current?.offsetTop;
+         if (!isMobileDevice || !isMobile) {
+            const ref1OFT = ref1?.current?.offsetTop;
          const ref2OFT = ref2?.current?.offsetTop;
          const ref3OFT = ref3?.current?.offsetTop;
 
-         if (isMobileDevice) return;
          let st = window.pageYOffset || document.documentElement.scrollTop;
 
          if (st > lastScrollTop) {
@@ -67,6 +66,8 @@ export default function ShopPage({productListByName, storyList}) {
             }
          }
          lastScrollTop = st <= 0 ? 0 : st;
+         };
+         
       }
       document.addEventListener('scroll', () => setTimeout(detectScroll, 0));
       return () => {
