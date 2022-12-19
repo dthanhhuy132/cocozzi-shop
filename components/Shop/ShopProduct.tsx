@@ -14,17 +14,18 @@ export default function ShopProduct({productListByName}: any) {
    const [isMobileDevice, setIsMobileDevice] = useState(false);
    const {productListByGroupNameState} = useAppSelector((state) => state.product);
 
-
-   console.log('isMobile',isMobile)
+   console.log('isMobile', isMobile);
    useEffect(() => {
-      if (isMobile) {
+      if (width > 600) {
+         setIsMobileDevice(false);
+      } else {
          setIsMobileDevice(true);
-      } else setIsMobileDevice(false);
+      }
    }, [isMobile]);
    return (
       <>
          <Masonry
-            breakpointCols={ width > 600 ? 5 : 2}
+            breakpointCols={width > 600 || !isMobileDevice ? 5 : 2}
             className='my-masonry-grid'
             columnClassName='my-masonry-grid_column'>
             {productListByName.map((product, index) => (

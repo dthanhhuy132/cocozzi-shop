@@ -19,8 +19,7 @@ import {udpatePanelForUser} from '../store/panel/panelSlice';
 import panelApi from '../service/panelApi';
 
 export default function ShopPage({productListByName, storyList}) {
-   const {isMobile, width} = useWindowDimensions();
-   const [isMobileDevice, setIsMobileDevice] = useState(false);
+   const {width} = useWindowDimensions();
    const dispatch = useDispatch();
 
    const {categoryProductState} = useAppSelector((state) => state.category);
@@ -30,44 +29,35 @@ export default function ShopPage({productListByName, storyList}) {
    const ref3 = useRef(null);
 
    useEffect(() => {
-      if (isMobile) {
-         setIsMobileDevice(true);
-      } else {
-         setIsMobileDevice(false);
-      }
-   }, [isMobile]);
-
-   useEffect(() => {
       window.scrollTo({top: 0});
       let lastScrollTop = 0;
 
       function detectScroll() {
          if (width > 500) {
             const ref1OFT = ref1?.current?.offsetTop;
-         const ref2OFT = ref2?.current?.offsetTop;
-         const ref3OFT = ref3?.current?.offsetTop;
+            const ref2OFT = ref2?.current?.offsetTop;
+            const ref3OFT = ref3?.current?.offsetTop;
 
-         let st = window.pageYOffset || document.documentElement.scrollTop;
+            let st = window.pageYOffset || document.documentElement.scrollTop;
 
-         if (st > lastScrollTop) {
-            // downscroll code
-            if (st > ref1OFT && st < ref2OFT + 200) {
-               animateScrollTo(ref2OFT, {speed: 100});
+            if (st > lastScrollTop) {
+               // downscroll code
+               if (st > ref1OFT && st < ref2OFT + 200) {
+                  animateScrollTo(ref2OFT, {speed: 100});
+               }
+               if (st > ref2OFT && st < ref3OFT) {
+                  animateScrollTo(ref3OFT, {speed: 100});
+               }
+            } else if (st < lastScrollTop) {
+               if (st < ref2OFT) {
+                  animateScrollTo(0, {speed: 100});
+               }
+               if (st > ref2OFT && st < ref3OFT) {
+                  animateScrollTo(ref2OFT, {speed: 100});
+               }
             }
-            if (st > ref2OFT && st < ref3OFT) {
-               animateScrollTo(ref3OFT, {speed: 100});
-            }
-         } else if (st < lastScrollTop) {
-            if (st < ref2OFT) {
-               animateScrollTo(0, {speed: 100});
-            }
-            if (st > ref2OFT && st < ref3OFT) {
-               animateScrollTo(ref2OFT, {speed: 100});
-            }
+            lastScrollTop = st <= 0 ? 0 : st;
          }
-         lastScrollTop = st <= 0 ? 0 : st;
-         };
-         
       }
       document.addEventListener('scroll', () => setTimeout(detectScroll, 0));
       return () => {
@@ -92,12 +82,15 @@ export default function ShopPage({productListByName, storyList}) {
             {/* story product */}
             <ShopSliderProductStory storyList={storyList} />
          </div>
-         <div className='mx-0 md:mx-20 md:h-full active-2' ref={ref3}>
+         {/* shop category */}
+         <div className='mx-0 md:mx-20 md:h-full active-2 my-10 border-t-2' ref={ref3}>
             <div className='sticky top-[35px] md:top-[50px] pb-3 md:pb-5 bg-white z-10 flex justify-center  border-b-[1px]'>
-               <div className='flex gap-y-5 gap-x-5 md:gap-x-10 mt-5 font-bold'>
+               <div className='flex gap-5 md:gap-x-10 mt-5 font-bold flex-wrap justify-center'>
                   {categoryProductState &&
                      categoryProductState.map((category, index) => (
-                        <p key={index} className='uppercase'>
+                        <p
+                           key={index}
+                           className='uppercase text-[0.8rem] md:[1.1rem] whitespace-nowrap'>
                            {category.name}
                         </p>
                      ))}
