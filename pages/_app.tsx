@@ -47,8 +47,6 @@ const MyApp = ({Component, pageProps, session}) => {
    const router = useRouter();
    const {carts, categoryList, eventList, productGroupByNameList, token, userToken} = pageProps;
 
-   console.log('productGroupByNameList ơ _app', productGroupByNameList);
-
    const [, setToken] = useGlobalState('accessToken');
    const [, setCurrentUser] = useGlobalState('currentUser');
 
@@ -144,10 +142,12 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
 
    const carts = cartRes?.data?.data;
    const categoryList = categoryRes?.data?.data.filter(
-      (cate) => cate.status == true && cate.categoryImage.length == 0
+      (cate) => cate.status == true && cate?.description?.indexOf('-category-for-promo') < 0
    );
    const eventList = eventRes?.data?.data.filter((event) => event.status == true);
-   const productGroupByNameList = filterProductActive(productGroupNameRes?.data?.data);
+   const productByGroupNameData = productGroupNameRes?.data?.data;
+   const productGroupByNameList =
+      productByGroupNameData?.length > 0 ? filterProductActive(productByGroupNameData) : [];
 
    return {
       pageProps: {

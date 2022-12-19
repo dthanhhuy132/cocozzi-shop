@@ -6,6 +6,7 @@ import {useFormik} from 'formik';
 import * as Yup from 'yup';
 import Dropdown from 'react-dropdown';
 import {ProductValidateSchema} from './productValidateSchema';
+import ProductCreateDescription from './ProductCreateDescription';
 
 export default function ModalCreateProduct({
    ok = () => {},
@@ -14,8 +15,6 @@ export default function ModalCreateProduct({
    categoryList,
    productEditing,
 }: any) {
-   console.log('productEditing la gi', productEditing);
-
    //create image
    const [productAvatarFile, setProdcutAvatarFile] = useState(productEditing?.pictures[0] || null);
    const [productAvatarURL, setProdcutAvatarURL] = useState(productEditing?.pictures[0] || null);
@@ -25,6 +24,8 @@ export default function ModalCreateProduct({
    const [imgesURL, setImagesURL] = useState(
       productEditing?.pictures.slice(1, productEditing.pictures.length) || []
    );
+
+   const [changeImageUpload, setChangeImageUpload] = useState(false);
 
    const inputFilesRef = useRef(null);
    const inputFilesAvatarRef = useRef(null);
@@ -66,16 +67,13 @@ export default function ModalCreateProduct({
             productPictures: imageFiles,
             categoryId: values.categoryId,
             productId: productEditing?.productID || null,
+            sizeProductWithID: productEditing?.sizeID || null,
+            changeImageUpload: changeImageUpload,
          };
+
          createUpdateProduct(product);
       },
    });
-
-   // function click upload file
-   function handleResetImg() {
-      setImageFiles([]);
-      setImagesURL([]);
-   }
 
    function handleUploadImages(e: any) {
       const tempImgFiles = [];
@@ -99,6 +97,15 @@ export default function ModalCreateProduct({
    function handleResetAvatar() {
       setProdcutAvatarFile(null);
       setProdcutAvatarURL(null);
+      setChangeImageUpload(true);
+   }
+
+   // function click upload file
+   function handleResetImg() {
+      setImageFiles([]);
+      setImagesURL([]);
+      // -> change update img
+      setChangeImageUpload(true);
    }
 
    const handleOnChange = (e, key) => {
@@ -114,6 +121,14 @@ export default function ModalCreateProduct({
       });
    }
 
+   useEffect(() => {
+      // reset image upload
+      if (productEditing?.productID && changeImageUpload) {
+         handleResetAvatar();
+         handleResetImg();
+      }
+   }, [changeImageUpload]);
+
    return (
       <div>
          <form autoComplete='off' onSubmit={formik.handleSubmit}>
@@ -121,7 +136,7 @@ export default function ModalCreateProduct({
                {/* avatar và info */}
                <div className='flex gap-3 '>
                   <div className='w-1/3'>
-                     <p>Hình ảnh bìa sản phẩm</p>
+                     <div>Hình ảnh bìa sản phẩm</div>
 
                      <div className='relative w-full min-h-[300px] border-[1px] rounded-md'>
                         {formik.errors.avatar && formik.touched.avatar && (
@@ -133,7 +148,10 @@ export default function ModalCreateProduct({
                            ) : (
                               <button
                                  className='absolute p-5 text-[4rem] hover:text-[5rem] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] transition-all'
-                                 onClick={() => inputFilesAvatarRef.current.click()}>
+                                 onClick={(e) => {
+                                    e.preventDefault();
+                                    inputFilesAvatarRef.current.click();
+                                 }}>
                                  +
                               </button>
                            )}
@@ -184,12 +202,12 @@ export default function ModalCreateProduct({
 
                      {/* description */}
                      <div>
-                        <label htmlFor=''>Description</label>
-                        <textarea
-                           name='description'
-                           className='w-full border-2 px-2 py-1 rounded-md'
+                        <label htmlFor=''>
+                           Description - Hình ảnh với dung lượng nhỏ hơn 200kb nên sử dụng webp
+                        </label>
+                        <ProductCreateDescription
                            value={formik.values.description}
-                           onChange={formik.handleChange}
+                           onChange={(text) => (formik.values.description = text)}
                         />
                         {formik.errors.description && formik.touched.description && (
                            <WarningText warningText={formik.errors.description} />
@@ -198,7 +216,15 @@ export default function ModalCreateProduct({
 
                      {/* size & quantity */}
                      <div className=''>
-                        <p>Số lượng từng size</p>
+                        <div className='mb-2'>
+                           <p className='text-red-600 font-bold'>Số lượng từng size: </p>
+                           {productEditing && (
+                              <p>
+                                 (Nếu<span className='font-bold'>thêm</span> size mới =&gt; xóa sản
+                                 phẩm =&gt; tạo mới =&gt; tạo mới size)
+                              </p>
+                           )}
+                        </div>
                         <div className='flex gap-5'>
                            {Object.keys(sizeQuantity).map((sizeItem) => (
                               <div className='flex gap-1 items-center' key={sizeItem}>
@@ -208,6 +234,7 @@ export default function ModalCreateProduct({
                                     type='number'
                                     value={sizeQuantity[sizeItem]}
                                     onChange={(e) => handleOnChange(e, sizeItem)}
+                                    disabled={productEditing && !sizeQuantity[sizeItem]}
                                  />
                               </div>
                            ))}
@@ -233,7 +260,7 @@ export default function ModalCreateProduct({
                      {/* color list */}
                      <div>
                         <label htmlFor=''>
-                           Màu sản phẩm (mỗi mã màu cách nhau bằng dấu phẩy: " , ")
+                           Màu sản phẩm (mỗi mã màu cách nhau bằng dấu phẩy: , )
                         </label>
                         <input
                            name='colorList'
@@ -287,7 +314,7 @@ export default function ModalCreateProduct({
 
                {/* hình ảnh sản phẩm */}
                <div className='mt-3'>
-                  <p>Hình ảnh sản phẩm:</p>
+                  <p>Hình ảnh sản phẩm (tỷ lệ hình 9:16 - hình dọc):</p>
                   <div className='border-[1px] rounded-md relative min-h-[200px]'>
                      {formik.errors.pictures && formik.touched.pictures && (
                         <WarningText warningText={formik.errors.pictures} />
@@ -305,7 +332,10 @@ export default function ModalCreateProduct({
                         ) : (
                            <button
                               className='absolute p-5 text-[4rem] hover:text-[5rem] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] transition-all'
-                              onClick={() => inputFilesRef.current.click()}>
+                              onClick={(e) => {
+                                 e.preventDefault();
+                                 inputFilesRef.current.click();
+                              }}>
                               +
                            </button>
                         )}

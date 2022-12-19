@@ -130,6 +130,7 @@
    width: 100%;
    /* border: 1px solid #f4a261; */
    border-radius: 15px;
+   z-index: 999999999999999999999999;
 }
 .progress-bar-dth .color-progress-bar-dth {
    position: absolute;
@@ -138,6 +139,7 @@
    height: 6px;
    border-radius: 15px;
    animation: progres 5s infinite linear;
+   z-index: 9999999999999999999990999;
 }
 @keyframes progres {
    0% {

@@ -1,46 +1,51 @@
 import {useState, useEffect, useRef} from 'react';
 
 import {WarningText} from '../common';
-import Cookies from 'js-cookie';
 
 import {useFormik} from 'formik';
 import * as Yup from 'yup';
-import {validatePromoSchema} from './PromoSchema';
+import moment from 'moment';
+import slicePanelLinkName from './slicePanelLinkName';
 
-export default function ModalCreatePromo({
+export const EventSchema = {
+   description: Yup.string().required('Vui lòng nhập/paste link sản phẩm cho Story!'),
+   pictures: Yup.mixed().required('picture is required'),
+};
+
+export default function StoryAdminModal({
    ok = () => {},
    cancel = () => {},
-   eventList,
-   createUpdatePromo,
+   handleCreateUpdateStory,
+   editingStory,
 }: any) {
-   // console.log('evetnlist cho nay la gi', eventList);
+   console.log('editingStory la gi', editingStory);
+
+   // check user change images or not -> to send formData or just body
+   const [isChangeImage, setIsChangeImage] = useState(false);
    //create image
    const [imageFiles, setImageFiles] = useState<any>([]);
-   const [imgesURL, setImagesURL] = useState([]);
+   const [imgesURL, setImagesURL] = useState(editingStory?.pictures || []);
 
    const inputFilesRef = useRef(null);
 
-   const accessToken = Cookies.get('accessToken');
-
-   const createEventForPromoInitValue = {
-      name: '',
-      description: '',
-      categoryImage: '',
-      event: [],
+   const initStoryValue = {
+      description: slicePanelLinkName(editingStory?.description) || '',
+      pictures: editingStory?.pictures || '',
    };
 
    const formik = useFormik({
-      initialValues: createEventForPromoInitValue,
-      validationSchema: Yup.object(validatePromoSchema),
+      initialValues: initStoryValue,
+      validationSchema: Yup.object(EventSchema),
       onSubmit: (values) => {
-         // console.log('values cho nay la gi', values);
-         const promo = {
-            name: values.name,
+         let story = {
             description: values.description,
-            eventId: values.event,
-            categoryImage: imageFiles[0],
+            picture: imageFiles[0],
+            storyId: editingStory?._id || null,
+            isChangeImage: isChangeImage,
          };
-         createUpdatePromo(promo);
+         // using for create or update event when image change
+
+         handleCreateUpdateStory(story);
       },
    });
 
@@ -49,11 +54,14 @@ export default function ModalCreatePromo({
    function handleResetImg() {
       setImageFiles([]);
       setImagesURL([]);
+
+      setIsChangeImage(true);
    }
 
    function handleUploadImages(e: any) {
       const tempImgFiles = [];
       const tempImgURL = [];
+      setIsChangeImage(true);
 
       [...e.target.files].forEach((file) => {
          tempImgFiles.push(file);
@@ -67,14 +75,21 @@ export default function ModalCreatePromo({
    return (
       <div>
          <form autoComplete='off' onSubmit={formik.handleSubmit}>
+            <div>Hình ảnh bìa sản phẩm - tỷ lệ 9:16</div>
+            <div>Các hình nên có cùng độ phân giải</div>
+            <div>Dung lượng &lt; 200KB </div>
+
             <div className='flex gap-3'>
                <div className='w-1/3 border-[1px] rounded-md relative'>
-                  {formik.errors.categoryImage && formik.touched.categoryImage && (
-                     <WarningText warningText={formik.errors.categoryImage} />
+                  {formik.errors.pictures && formik.touched.pictures && (
+                     <WarningText warningText={formik.errors.pictures} />
                   )}
+
                   <>
                      {imgesURL.length > 0 ? (
-                        imgesURL.map((imgURL) => <img src={imgURL} alt='image' key={imgURL} />)
+                        imgesURL.map((imgURL, index) => (
+                           <img src={imgURL} alt='image' key={index} />
+                        ))
                      ) : (
                         <button
                            className='absolute p-5 text-[4rem] hover:text-[5rem] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] transition-all'
@@ -92,7 +107,7 @@ export default function ModalCreatePromo({
                         className='absolute text-gray-300 hover:text-gray-900 text-[2rem] top-[-10px] right-[10px] transition-all'
                         onClick={() => {
                            handleResetImg();
-                           formik.values.categoryImage = '';
+                           formik.values.pictures = '';
                         }}>
                         x
                      </button>
@@ -100,9 +115,10 @@ export default function ModalCreatePromo({
 
                   <div>
                      <input
-                        name='categoryImage'
+                        name='pictures'
                         type='file'
                         accept='image/*'
+                        multiple
                         hidden
                         onChange={(e) => {
                            formik.handleChange(e);
@@ -114,66 +130,18 @@ export default function ModalCreatePromo({
                </div>
 
                <div className='w-2/3 flex flex-col gap-3'>
+                  {/* description */}
                   <div>
-                     <label htmlFor=''>Promo name</label>
-                     <input
-                        name='name'
-                        className='w-full border-2 px-2 py-1 rounded-md'
-                        value={formik.values.name}
-                        onChange={formik.handleChange}
-                     />
-                     {formik.errors.name && formik.touched.name && (
-                        <WarningText warningText={formik.errors.name} />
-                     )}
-                  </div>
-
-                  <div>
-                     <label htmlFor=''>Promo description</label>
+                     <label htmlFor=''>Link sản phẩm</label>
                      <textarea
                         name='description'
+                        placeholder='/product/ao-quan'
                         className='w-full border-2 px-2 py-1 rounded-md'
                         value={formik.values.description}
                         onChange={formik.handleChange}
                      />
                      {formik.errors.description && formik.touched.description && (
                         <WarningText warningText={formik.errors.description} />
-                     )}
-                  </div>
-
-                  {/* select event for modal */}
-                  <div>
-                     <p className='font-bold'>Event for promo</p>
-                     <div className='flex gap-x-5 flex-wrap'>
-                        {eventList.map((item, index) => (
-                           <div className='flex items-center gap-1' key={index}>
-                              <label htmlFor={index} className='whitespace-nowrap'>
-                                 {item.title}
-                              </label>
-                              <input
-                                 name='event'
-                                 className='cursor-pointer mt-1'
-                                 type='checkbox'
-                                 value={item.title}
-                                 id={index}
-                                 onChange={(e) => {
-                                    if (
-                                       e.target.checked &&
-                                       formik.values.event.indexOf(item._id) < 0
-                                    ) {
-                                       formik.values.event.push(item._id);
-                                    }
-                                    if (!e.target.checked) {
-                                       formik.values.event = formik.values.event.filter(
-                                          (eventItem) => eventItem !== item._id
-                                       );
-                                    }
-                                 }}
-                              />
-                           </div>
-                        ))}
-                     </div>
-                     {formik.errors.event && formik.touched.event && (
-                        <WarningText warningText={formik?.errors.event} />
                      )}
                   </div>
                </div>

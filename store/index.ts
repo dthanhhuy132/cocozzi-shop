@@ -7,6 +7,7 @@ import categoryPromoSlice from './categoryPromo/categoryPromoSlice';
 import eventReducer from './event/eventSlice';
 import voucherReducer from './voucher/voucherSlice';
 import productReducer from './product/productSlice';
+import panelReducer from './panel/panelSlice';
 
 const store = configureStore({
    reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
       event: eventReducer,
       voucher: voucherReducer,
       product: productReducer,
+      panel: panelReducer,
    },
 });
 

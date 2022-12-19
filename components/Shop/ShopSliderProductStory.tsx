@@ -1,3 +1,5 @@
+import {useRef} from 'react';
+
 import {useRouter} from 'next/router';
 import SliderSlick from 'react-slick';
 import {AiOutlineCloseCircle} from 'react-icons/ai';
@@ -15,9 +17,16 @@ import useWindowDimensions from '../../hooks/UseWindowDimensions';
 import {useCallback, useEffect, useState} from 'react';
 import Image from 'next/image';
 import ProgressBar from './Slick/ProgressBar';
+import {useAppSelector} from '../../store';
+import {PANEL_FOR_STORY} from '../../store/panel/panelSlice';
+import slicePanelLinkName from '../Admin/Product/slicePanelLinkName';
 
 const imgArr = [img1, img2, img3, img4, img5, img6, img7, img8];
-export default function ShopSliderProductStory() {
+export default function ShopSliderProductStory({storyList}) {
+   const storyListActive =
+      storyList?.filter((item) => item?.description?.indexOf(PANEL_FOR_STORY) >= 0) || [];
+
+   console.log('storyListActive', storyListActive);
    const router = useRouter();
    const {isMobile} = useWindowDimensions();
    const [isShowCenterMode, setIsShowCenterMode] = useState(false);
@@ -44,6 +53,8 @@ export default function ShopSliderProductStory() {
    );
 
    const [sliderQuantity, setSliderQuantity] = useState(3);
+   const [activeIndexSlideImg, setActiveIndexSlideImg] = useState(0);
+   const [showButtonAtFirstTime, setShowButtonAtFirstTime] = useState(true);
 
    useEffect(() => {
       if (isMobile) {
@@ -53,9 +64,7 @@ export default function ShopSliderProductStory() {
       }
    }, [isMobile]);
 
-   function getSlickCenter() {
-      const slickCenterEl = document.querySelector('.slick-custom-center-dth .slick-center');
-   }
+   const sliderRef = useRef<any>();
 
    const settings = {
       className: 'center w-full',
@@ -80,36 +89,38 @@ export default function ShopSliderProductStory() {
       centerPadding: 0,
 
       beforeChange: (currentSlide) => {
-         getSlickCenter();
          setCurrentIndexSlickCenter(currentSlide);
          setIsShowProductButton(false);
       },
 
-      afterChange: () => {
+      afterChange: (currentSlide) => {
+         setActiveIndexSlideImg(currentSlide);
          setIsShowProductButton(true);
       },
    };
 
+   useEffect(() => {
+      if (isShowProductButton) {
+         setShowButtonAtFirstTime(false);
+      }
+   }, [isShowProductButton]);
+
    return (
       <>
-         <SliderSlick
-            {...settings}
-            beforeChange={handleBeforeChange}
-            afterChange={handleAfterChange}
-            centerMode={true}>
-            {imgArr.map((img, index) => (
+         <SliderSlick {...settings} centerMode={true}>
+            {storyListActive.map((story, index) => (
                <div key={index} onClickCapture={handleOnItemClick}>
                   <div className='p-[2px] md:px-2 transition'>
                      <div className='relative cursor-pointer rounded-[12px] md:rounded-[16px] overflow-hidden'>
-                        <Image
-                           className='absolute top-0 left-0 w-full transition hover:scale-[1.1] cursor-pointer'
-                           src={img}
+                        <img
+                           className='w-full transition hover:scale-[1.1] cursor-pointer aspect-[9/16] object-cover'
+                           src={story.pictures[0] || ''}
                            alt=''
-                           width={9}
-                           height={16}
-                           layout='responsive'
-                           objectFit='cover'
-                           onClick={() => setIsShowCenterMode(true)}
+                           onClick={() => {
+                              setIsShowCenterMode(true);
+                              setActiveIndexSlideImg(index);
+                              setTimeout(() => sliderRef?.current?.slickGoTo(index), 50);
+                           }}
                         />
                      </div>
                   </div>
@@ -120,39 +131,45 @@ export default function ShopSliderProductStory() {
          {isShowCenterMode && (
             <div
                className={`animate__animated animate__fadeIn flex justify-center items-center fixed top-0 bottom-0 right-0 z-[999] left-0 bg-[#000000fa] transition-all`}>
-               <div className='fixed top-0 left-0 right-0 opacity-0'>
-                  {isShowProductButton && <ProgressBar></ProgressBar>}
+               <div className='fixed top-0 left-0 right-0 opacity-50'>
+                  <ProgressBar></ProgressBar>
                </div>
+
                <div
                   className='absolute top-2 left-2 z-[100] text-[gray] text-[3rem] cursor-pointer hover:text-[white]'
                   onClick={() => setIsShowCenterMode(false)}>
                   <AiOutlineCloseCircle />
                </div>
                <div className='w-[79%] mb-10'>
-                  <SliderSlick {...openSetting} centerMode={true}>
-                     {imgArr.map((img, index) => (
-                        <div key={index} className=''>
-                           <div className='p-[10px] text-center md:px-[30px] lg:px-[50px] transition'>
-                              <div className='relative rounded-[12px] md:rounded-[16px] overflow-hidden'>
-                                 <Image
-                                    className='absolute top-0 left-0 w-full transition'
-                                    src={img}
-                                    alt=''
-                                    width={9}
-                                    height={16}
-                                    layout='responsive'
-                                    objectFit='cover'
-                                 />
+                  <SliderSlick {...openSetting} centerMode={true} ref={sliderRef}>
+                     {storyListActive.map((story, index) => {
+                        return (
+                           <div key={index} className=''>
+                              <div className='p-[10px] text-center md:px-[30px] lg:px-[50px] transition'>
+                                 <div className='relative rounded-[12px] md:rounded-[16px] overflow-hidden'>
+                                    <img
+                                       className='w-full transition aspect-[9/16] object-cover'
+                                       src={story.pictures[0] || ''}
+                                       alt=''
+                                    />
+                                 </div>
                               </div>
                            </div>
-                        </div>
-                     ))}
+                        );
+                     })}
                   </SliderSlick>
                   <button
                      className={`absolute left-[50%] translate-x-[-50%] bg-[white] rounded-full mt-2 px-2 py-1 flex items-center text-[1.1rem] transition-all ${
-                        isShowProductButton ? 'bottom-[40px]' : 'bottom-[-100%] mb-[4px]'
+                        isShowProductButton || (showButtonAtFirstTime && isShowCenterMode)
+                           ? 'bottom-[15px]'
+                           : 'bottom-[-100%] mb-[4px]'
                      }`}
-                     onClick={() => router.push('/product/123')}>
+                     onClick={() => {
+                        setIsShowCenterMode(false);
+                        console.log(activeIndexSlideImg);
+                        const pathName = storyListActive[activeIndexSlideImg].description;
+                        router.push(`${slicePanelLinkName(pathName)}`);
+                     }}>
                      Xem sản phẩm
                   </button>
                </div>

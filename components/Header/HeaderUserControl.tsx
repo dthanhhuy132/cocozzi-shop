@@ -18,7 +18,7 @@ export default function HeaderUserControl({hasToken, isMobile}) {
                   </li>
 
                   {isAdmin(user) && (
-                     <Link href='/admin/home'>
+                     <Link href='/admin/product'>
                         <li className='py-1 px-2 hover:bg-[#891a1c] hover:text-white cursor-pointer'>
                            <a>Trang Admin</a>
                         </li>

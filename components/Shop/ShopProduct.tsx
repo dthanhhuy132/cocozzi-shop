@@ -6,18 +6,13 @@ import Masonry from 'react-masonry-css';
 import {useEffect, useState} from 'react';
 import {useAppSelector} from '../../store';
 import {ProductItem} from '../ProductItem';
+import productApi from '../../service/productApi';
+import filterProductActive from '../../helper/filterProductActive';
 
-export default function ShopProduct() {
+export default function ShopProduct({productListByName}: any) {
    const {isMobile} = useWindowDimensions();
    const [isMobileDevice, setIsMobileDevice] = useState(false);
    const {productListByGroupNameState} = useAppSelector((state) => state.product);
-
-   const normalProductList = useMemo(
-      () =>
-         productListByGroupNameState.filter((product) => product.productType === 'normal-product'),
-      [productListByGroupNameState]
-   );
-   console.log('productListByGroupNameState la gi', productListByGroupNameState);
 
    useEffect(() => {
       if (isMobile) {
@@ -30,8 +25,8 @@ export default function ShopProduct() {
             breakpointCols={isMobileDevice ? 2 : 5}
             className='my-masonry-grid'
             columnClassName='my-masonry-grid_column'>
-            {normalProductList.map((product) => (
-               <ProductItem product={product} key={product.name}></ProductItem>
+            {productListByName.map((product, index) => (
+               <ProductItem product={product} key={index}></ProductItem>
             ))}
          </Masonry>
       </>

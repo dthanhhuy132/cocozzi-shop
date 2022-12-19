@@ -14,6 +14,10 @@ const categoryApi = {
       return api.callWithToken(token).post('/category/create', formData);
    },
 
+   updateCategory(token, categoryId, data) {
+      return api.callWithToken(token).delete(`/category/delete/${categoryId}`, data);
+   },
+
    deleteCategory(token, categoryId) {
       return api.callWithToken(token).delete(`/category/delete/${categoryId}`);
    },

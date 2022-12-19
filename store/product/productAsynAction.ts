@@ -1,13 +1,16 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
+import filterProductActive from '../../helper/filterProductActive';
 import productApi from '../../service/productApi';
 
 export const getProductByNameAsync: any = createAsyncThunk('prodcut/getProductByName', async () => {
    try {
       const res = await productApi.getAllProductByName();
+      const data = res?.data?.data;
+      const productListByName = filterProductActive(data);
 
       return {
          ok: true,
-         // data: res.data.res,
+         data: productListByName,
       };
    } catch (error) {
       return {

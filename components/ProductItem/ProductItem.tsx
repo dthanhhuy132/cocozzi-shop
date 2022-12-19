@@ -1,6 +1,7 @@
 import Image, {StaticImageData} from 'next/image';
 import {useRouter} from 'next/router';
 import FormatPrice from '../../helper/FormatPrice';
+import stringToSlug from '../../helper/stringToSlug';
 
 interface IProductItem {
    product: any;
@@ -15,12 +16,20 @@ export default function ProductItem({
 }: IProductItem) {
    const router = useRouter();
 
-   const productAvatar = product?.pictures ? product?.pictures[0] : '';
+   function handleClickAddToCart() {}
 
+   const productAvatar = product?.pictures ? product?.pictures[0] : '';
    return (
-      <div className='p-[2px] md:px-2 transition'>
+      <div className='relative flex flex-col justify-between p-[2px] md:px-2 transition'>
          {/* avatar */}
-         <img src={productAvatar} className='rounded-md' alt='Hình ảnh sản phẩm' />
+         <div>
+            <img
+               src={productAvatar}
+               className='rounded-md cursor-pointer'
+               alt='Hình ảnh sản phẩm'
+               onClick={() => router.push(`/product/${stringToSlug(product.name)}`)}
+            />
+         </div>
          <div className={`flex justify-between mt-2 px-2 text-[0.9rem] md:text-[1rem]`}>
             <div className='w-[80%] flex flex-col justify-between'>
                <h3 className='font-bold'>{product?.name}</h3>
@@ -28,7 +37,13 @@ export default function ProductItem({
                   <FormatPrice price={product?.price}></FormatPrice>
                </p>
             </div>
-            <i className='fa-solid fa-cart-plus text-[1.2rem] text-gray-500 hover:text-[#891a1c] cursor-pointer mt-1'></i>
+            <i
+               className='fa-solid fa-cart-plus text-[1.2rem] text-gray-500 hover:text-[#891a1c] cursor-pointer mt-1'
+               onClick={handleClickAddToCart}></i>
+         </div>
+
+         <div className='absolute'>
+            <div></div>
          </div>
       </div>
    );

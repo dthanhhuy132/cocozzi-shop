@@ -6,6 +6,7 @@ import {AdminButton} from '../common';
 import handleCategoryDescription from '../common/handleCategoryDescription';
 
 export default function PromoAdminItem({promo, eventList}: any) {
+   console.log('promo item la gi', promo);
    const [isShowModalDelete, setIsShowModalDelete] = useState(false);
    function handleClickEditPromo(promo) {}
 
@@ -24,8 +25,8 @@ export default function PromoAdminItem({promo, eventList}: any) {
             {/* render event for promo */}
             <div>
                <div className='font-bold'>Event: </div>
-               {promo.event.map((eventItem) => (
-                  <p>- {eventItem?.eventId?.title}</p>
+               {promo.event.map((eventItem, index) => (
+                  <p key={index}>- {eventItem?.eventId?.title}</p>
                ))}
             </div>
          </div>
@@ -39,7 +40,8 @@ export default function PromoAdminItem({promo, eventList}: any) {
                </AdminButton>
                <AdminButton
                   click={() => setIsShowModalDelete(true)}
-                  className='py-[4px] w-[80px] flex justify-center bg-red-800 hover:bg-red-700'>
+                  type='delete'
+                  className='py-[4px] w-[80px] flex justify-center'>
                   <RiDeleteBin4Fill fontSize='1.5rem' />
                   Delete
                </AdminButton>

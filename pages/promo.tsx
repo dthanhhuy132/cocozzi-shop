@@ -1,5 +1,7 @@
 import {useMemo, useState} from 'react';
 import handleCategoryDescription from '../components/Admin/common/handleCategoryDescription';
+import {LoadingPage} from '../components/LoadingPage';
+import {Logo} from '../components/Logo';
 import categoryApi from '../service/categoryApi';
 import {useAppSelector} from '../store';
 
@@ -7,21 +9,28 @@ export default function PromoPage({promoList}) {
    console.log('promoList', promoList);
 
    return (
-      <div className='grid grid-cols-2 md:grid-cols-4 gap-5 mt-5 mx-1 md:mx-[10%]'>
-         {promoList.map((promo) => (
-            <div className='border-2'>
-               <img
-                  src={promo.categoryImage[0]}
-                  alt='Promo image'
-                  className='w-full min-h-[200px] object-cover'
-               />
-               <div className='p-1'>
-                  <p className='font-bold'># {promo.name}</p>
-                  <p>{handleCategoryDescription(promo.description)}</p>
+      <>
+         <div className='grid grid-cols-2 md:grid-cols-3 gap-10 mt-5 mx-1 md:mx-[10%]'>
+            {promoList.map((promo, index) => (
+               <div className='' key={index}>
+                  <img
+                     src={promo.categoryImage[0]}
+                     alt='Promo image'
+                     className='w-full min-h-[200px] object-cover'
+                  />
+                  <div className='p-1'>
+                     <p className='font-bold'># {promo.name}</p>
+                     <p>{handleCategoryDescription(promo.description)}</p>
+                  </div>
                </div>
-            </div>
-         ))}
-      </div>
+            ))}
+         </div>
+
+         <LoadingPage>
+            <Logo />
+            <div>Chương trình hấp dẫn</div>
+         </LoadingPage>
+      </>
    );
 }
 

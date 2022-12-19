@@ -1,4 +1,5 @@
-const tabName = ['Product Banner', 'Product story', 'Product'];
+// const tabName = ['Product Banner', 'Product story', 'Product'];
+const tabName = ['Story', 'Product'];
 
 export default function ProductTab({tabActive, setTabActive}: any) {
    return (

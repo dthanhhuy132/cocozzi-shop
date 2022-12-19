@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import {useState} from 'react';
-import {AiTwotoneEdit} from 'react-icons/ai';
+import {AiFillCopy, AiTwotoneEdit} from 'react-icons/ai';
 import {RiDeleteBin4Fill} from 'react-icons/ri';
 
 import FormatPrice from '../../../helper/FormatPrice';
@@ -8,12 +8,18 @@ import productApi from '../../../service/productApi';
 import AdminModal from '../AdminModal';
 import {AdminButton} from '../common';
 
-import Cookies from 'js-cookie';
 import LoadingActionPage from '../../common/LoadingPage';
+import {toast} from 'react-toastify';
+import {useDispatch} from 'react-redux';
+
+import Cookies from 'js-cookie';
+import {getProductByNameAsync} from '../../../store/product/productAsynAction';
+import CopyProductSlug from './copyProductSlug';
+import stringToSlug from '../../../helper/stringToSlug';
+const accessToken = Cookies.get('accessToken');
 
 export default function ProductItem({product, handleClickEditProduct}: any) {
-   const accessToken = Cookies.get('accessToken');
-
+   const dispatch = useDispatch();
    const [isShowLoading, setIsShowLoading] = useState(false);
    const [isShowModalDelete, setIsShowModalDelete] = useState(false);
 
@@ -22,29 +28,42 @@ export default function ProductItem({product, handleClickEditProduct}: any) {
       quantity: product.size[item],
    }));
 
+   // delete product
    async function handleDeleteProduct() {
-      // setIsShowLoading(true);
+      setIsShowLoading(true);
 
       const productId = product.productID;
 
-      Promise.all(productId.map((id) => productApi.deleteProduct(accessToken, id)))
-         .then((res) => {
-            return res;
-         })
-         .then((res) => {});
+      Promise.all(productId.map((id) => productApi.deleteProduct(accessToken, id))).then((res) => {
+         setIsShowLoading(false);
+
+         if (res.some((item) => item >= 400)) {
+            toast.error('có lỗi xảy ra, vui lòng kiểm tra lại tên sản phẩm, hoặc kết nối mạng');
+         } else {
+            setIsShowModalDelete(false);
+            dispatch(getProductByNameAsync());
+         }
+      });
    }
 
    return (
       <>
          {/* product avatar */}
-         <div>
-            <div className='grid grid-row-2 '>
+         <div className='relative group'>
+            <div className='absolute top-1 right-1 opacity-90 z-[50]'>
+               <CopyProductSlug text={`/product/${stringToSlug(product.name)}`} />
+            </div>
+
+            <div className=' grid grid-row-2 '>
                {/* <img src='' alt='Hình ảnh sản phẩm avatar' /> */}
-               <img src={product.pictures[0]} alt='Prodcut avatar' className='h-auto w-full'></img>
+               <img
+                  src={product?.pictures ? product?.pictures[0] : ''}
+                  alt='Prodcut avatar'
+                  className='h-auto w-full'></img>
 
                {/* product imag list */}
                <div className='flex gap-1 mt-1 w-full overflow-auto'>
-                  {product.pictures.length > 0 &&
+                  {product?.pictures?.length > 0 &&
                      product.pictures
                         .slice(1, product.pictures.length)
                         .map((img) => (
@@ -60,7 +79,6 @@ export default function ProductItem({product, handleClickEditProduct}: any) {
 
             <div>
                <p className='font-bold'>{product.name}</p>
-               {/* <p className='italic'>{product.description}</p> */}
                <p>
                   <FormatPrice price={product.price} />
                </p>
@@ -90,14 +108,19 @@ export default function ProductItem({product, handleClickEditProduct}: any) {
 
          <div className='flex justify-between mt-2'>
             <AdminButton
-               click={() => handleClickEditProduct(product)}
-               className='py-[4px] w-[80px] flex justify-center'>
+               // pending function update product
+               // click={() => handleClickEditProduct(product)}
+               click={() =>
+                  toast.info('Tính năng này đang được phát triển, vui lòng xóa sản phẩm và tạo lại')
+               }
+               className='py-[4px] w-[80px] flex justify-center bg-gray-600 hover:bg-gray-400'>
                <AiTwotoneEdit fontSize='1rem' />
                Edit
             </AdminButton>
             <AdminButton
                click={() => setIsShowModalDelete(true)}
-               className='py-[4px] w-[80px] flex justify-center bg-red-800 hover:bg-red-700'>
+               className='py-[4px] w-[80px] flex justify-center'
+               type='delete'>
                <RiDeleteBin4Fill fontSize='1.5rem' />
                Delete
             </AdminButton>

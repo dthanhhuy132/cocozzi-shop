@@ -79,7 +79,8 @@ export default function EventTableBody({eventItem, handleClickEditEvent, handleE
                </AdminButton>
                <AdminButton
                   click={() => setIsShowModalDelete(true)}
-                  className='py-[4px] w-[80px] flex justify-center bg-red-800 hover:bg-red-700'>
+                  type='delete'
+                  className='py-[4px] w-[80px] flex justify-center'>
                   <RiDeleteBin4Fill fontSize='1.5rem' />
                   Delete
                </AdminButton>

@@ -7,7 +7,7 @@ interface IProductSlice {
 }
 const initialState = {
    productListByGroupNameState: undefined,
-   productList: undefined,
+   productListState: undefined,
 };
 
 const productSlice = createSlice({
@@ -22,7 +22,9 @@ const productSlice = createSlice({
    extraReducers: (builder) => {
       builder.addCase(getProductByNameAsync.fulfilled, (state, action) => {
          const data = action.payload;
-         state.productList = data.data;
+
+         console.log('data trong fulfill la gi', data);
+         state.productListState = data.data;
       });
    },
 });

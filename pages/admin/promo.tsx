@@ -93,7 +93,7 @@ export default function PromoPage({promoList, eventList}) {
             <h2 className='mt-4 font-extrabold text-[1.3rem]'>Promo list</h2>
             <div className='grid grid-cols-3 gap-5 gap-y-10 mt-5'>
                {rederPromoList.map((promo) => (
-                  <PromoAdminItem promo={promo} eventList={eventList} />
+                  <PromoAdminItem key={promo._id} promo={promo} eventList={eventList} />
                ))}
             </div>
          </div>
@@ -122,18 +122,22 @@ export default function PromoPage({promoList, eventList}) {
 }
 
 export const getServerSideProps = async () => {
-   const categoryRes = await categoryApi.getAllCategory();
-   const eventRes = await eventApi.getAllEvent();
+   let promoList, eventList;
+   try {
+      const categoryRes = await categoryApi.getAllCategory();
+      const eventRes = await eventApi.getAllEvent();
 
-   const categoryList = categoryRes.data.data || [];
-   const eventList = eventRes?.data?.data || [];
-   const promoList = categoryList.filter((item) => item);
-   // const promoList = categoryList.filter((item) => item.name.indexOf('for-promo') >= 0);
+      eventList = eventRes?.data?.data || [];
+      // promoList = categoryList.filter((item) => item);
+      promoList = categoryRes?.data?.data.filter(
+         (cate) => cate.status == true && cate?.description?.indexOf('-category-for-promo') >= 0
+      );
+   } catch (error) {}
 
    return {
       props: {
          promoList: promoList || [],
-         eventList: eventList,
+         eventList: eventList || [],
       },
    };
 };

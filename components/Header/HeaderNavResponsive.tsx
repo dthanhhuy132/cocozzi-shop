@@ -22,11 +22,11 @@ export default function HeaderNavResponsive({handleCloseMenu, isShowMenuRps}: IH
    const router = useRouter();
 
    // get category and event from redux
-   const {categoryState} = useAppSelector((state) => state.category);
+   const {categoryProductState} = useAppSelector((state) => state.category);
    const {eventState} = useAppSelector((state) => state.event);
 
    const submenuContent = {
-      shop: categoryState?.map((item) => item.name) || [],
+      shop: categoryProductState?.map((item) => item.name) || [],
       event: eventState?.map((item) => item.title) || [],
    };
 

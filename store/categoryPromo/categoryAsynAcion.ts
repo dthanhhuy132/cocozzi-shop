@@ -6,10 +6,9 @@ export const getAllCategoryAsync: any = createAsyncThunk('category/getAllCategor
    try {
       const res = await categoryApi.getAllCategory();
 
-      console.log('res cho nay la gi trong get getAllCategoryAsync', res);
       return {
          ok: true,
-         // data: res.data.res,
+         data: res.data.data,
       };
    } catch (error) {
       return {
@@ -18,30 +17,31 @@ export const getAllCategoryAsync: any = createAsyncThunk('category/getAllCategor
    }
 });
 
-export const deleteCategory: any = createAsyncThunk(
-   'category/getAllCategory',
-   async ({token, id}: any) => {
+export const createNewCategoryAsync: any = createAsyncThunk(
+   'category/create',
+   async ({accessToken, data}: any) => {
       try {
-         const res = await categoryApi.deleteCategory(token, id);
+         const res = await categoryApi.createCategory(accessToken, data);
 
-         console.log('res cho nay la gi trong get getAllCategoryAsync', res);
          return {
             ok: true,
-            // data: res.data.res,
          };
       } catch (error) {
+         console.log('error', error);
+         console.log('error trong create new category la gi', error?.response?.data?.message);
          return {
             ok: false,
+            messsage: error?.response?.data?.message,
          };
       }
    }
 );
 
-export const createNewCategoryAsync: any = createAsyncThunk(
-   'category/create',
-   async ({accessToken, formData}: any) => {
+export const updateCategoryAnsync: any = createAsyncThunk(
+   'category/updateCategoryAnsync',
+   async ({accessToken, categoryId, data}: any) => {
       try {
-         const res = await categoryApi.createCategory(accessToken, formData);
+         const res = await categoryApi.updateCategory(accessToken, categoryId, data);
 
          return {
             ok: true,
@@ -50,6 +50,24 @@ export const createNewCategoryAsync: any = createAsyncThunk(
          return {
             ok: false,
             message: error.response.data.message,
+         };
+      }
+   }
+);
+
+export const deleteCategoryAsync: any = createAsyncThunk(
+   'category/deleteCategory',
+   async ({accessToken, categoryId}: any) => {
+      try {
+         const res = await categoryApi.deleteCategory(accessToken, categoryId);
+
+         return {
+            ok: true,
+            // data: res.data.res,
+         };
+      } catch (error) {
+         return {
+            ok: false,
          };
       }
    }

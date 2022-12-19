@@ -24,8 +24,8 @@ export default function SearchPage({listSearchProduct}: any) {
             <span className='font-semibold'> {searchStr}</span>
          </p>
          <div className='px-1 md:px-0 grid grid-cols-2 md:grid-cols-4 gap-x-2 gap-y-5'>
-            {listSearchProduct.map((product) => (
-               <ProductItem product={product}></ProductItem>
+            {listSearchProduct.map((product, index) => (
+               <ProductItem product={product} key={index}></ProductItem>
             ))}
          </div>
       </div>

@@ -8,8 +8,10 @@ interface IAuthSlice {
 }
 const initialState = {
    categoryProductState: undefined,
-   allCategoryState: undefined,
+   allCategoryStateAdmin: undefined,
    allPromoState: undefined,
+
+   allPromoStateAdmin: undefined,
 };
 
 const categoryPromoSlice = createSlice({
@@ -22,8 +24,15 @@ const categoryPromoSlice = createSlice({
    },
    extraReducers: (builder) => {
       builder.addCase(getAllCategoryAsync.fulfilled, (state, action) => {
-         const allPromo = action.payload;
-         // state.eventState = data.data;
+         const data = action.payload;
+         const allCategoryStateAdmin = data.filter(
+            (cate) => cate.status == true && cate?.description?.indexOf('-category-for-promo') < 0
+         );
+         const allCategoryPromoStateAmin = data.filter(
+            (cate) => cate.status == true && cate?.description?.indexOf('-category-for-promo') >= 0
+         );
+         state.allCategoryStateAdmin = allCategoryStateAdmin;
+         state.allPromoStateAdmin = allCategoryPromoStateAmin;
       });
    },
 });

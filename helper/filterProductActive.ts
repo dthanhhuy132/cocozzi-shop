@@ -15,6 +15,7 @@ export default function filterProductActive(productListByName: any) {
             size[item.size] = item.quantity;
             sizeID[item.size] = item._id;
          });
+
          return {
             name: product.name,
             size: size,
@@ -27,6 +28,7 @@ export default function filterProductActive(productListByName: any) {
             productType: product.data[0]?.productType || null,
             categoryId: product.data[0]?.idCategory || null,
             status: product.data[0]?.status || null,
+            updatedAt: product.data[0].updatedAt,
          };
       });
 

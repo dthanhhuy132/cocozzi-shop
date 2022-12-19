@@ -171,10 +171,10 @@ export default function Header({carts, categoryList, eventList, productGroupByNa
                      <span
                         className='absolute left-[50%] translate-x-[-50%] bottom-0 md:bottom-[1px] font-bold text-[#891a1c] text-[0.6rem] md:text-[0.7rem]'
                         onClick={() => router.push('/bag')}>
-                        68
+                        0
                      </span>
 
-                     {isShowBag && <BagHover />}
+                     {/* {isShowBag && <BagHover />} */}
                   </div>
                )}
             </div>

@@ -11,25 +11,38 @@ import {
 import SliderSlick from 'react-slick';
 import useWindowDimensions from '../../hooks/UseWindowDimensions';
 import slickSliderMobile from '../../helper/slickSliderMobile';
+import {useRouter} from 'next/router';
+import {useAppSelector} from '../../store';
+import stringToSlug from '../../helper/stringToSlug';
+import filterProductActive from '../../helper/filterProductActive';
+import productApi from '../../service/productApi';
+import FormatPrice from '../../helper/FormatPrice';
+import converFirstLetterToUpperCase from '../../helper/converFirstLetterToUpperCase';
 
-const imageArr = [
-   '/images/shop/16.webp',
-   '/images/shop/17.webp',
-   '/images/shop/18.webp',
-   '/images/shop/18.webp',
-   '/images/shop/16.webp',
-   '/images/shop/17.webp',
-   '/images/shop/18.webp',
-];
+export default function ProductDetailPage({productListByName}: any) {
+   const router = useRouter();
 
-export default function ProductDetailPage() {
+   const productName = router.query.productId as string;
+   const productSlug = productName.split('-').slice(0, -1).join('-');
+
+   console.log('productSlug', productSlug);
+
+   const {productListByGroupNameState} = useAppSelector((state) => state.product);
+
+   const [productDetail, setProductDetail] = useState(
+      productListByName?.filter(
+         (product) => stringToSlug(product.name).split('-').slice(0, -1).join('-') == productSlug
+      )[0]
+   );
+
+   console.log('productDetail', productDetail);
+
    const {isMobile} = useWindowDimensions();
    const [isMobileScreen, setIsMobileScreen] = useState(false);
    const [sizeSelect, setSizeSelect] = useState('');
    const [colorSelect, setColorSelect] = useState(0);
 
    const [isShowSizeAndColor, setIsShowSizeAndColor] = useState(false);
-
    const settings = {
       className: 'center w-full',
       infinite: true,
@@ -57,6 +70,10 @@ export default function ProductDetailPage() {
       }
    }, [isMobile]);
 
+   // product Information
+   const imagesArr = productDetail?.pictures.slice(1, productDetail?.pictures.length);
+   console.log('imgesArr', imagesArr);
+
    return (
       <div className='md:px-20 md:w-[780px] lg:w-[1200px] mx-[auto]'>
          {/* product image */}
@@ -68,7 +85,7 @@ export default function ProductDetailPage() {
                </video> */}
                {/* image slider */}
 
-               {imageArr.map((img, index) => (
+               {imagesArr?.map((img, index) => (
                   <div className='relative' key={index}>
                      <img src={img} className='w-full h-auto' alt={img} />
                   </div>
@@ -77,43 +94,43 @@ export default function ProductDetailPage() {
 
             <div className='md:hidden'>
                <SliderSlick {...settings}>
-                  {imageArr.map((img, index) => (
+                  {imagesArr?.map((img, index) => (
                      <div className='relative' key={index}>
                         <img src={img} className='w-full h-auto' alt={img} />
                      </div>
                   ))}
                </SliderSlick>
-               <ProductDescription></ProductDescription>
+               <ProductDescription description={productDetail?.description}></ProductDescription>
             </div>
 
             {/* product info */}
             <div className='w-full md:pl-5 md:top-2 md:w-[350px]'>
-               {/* name */}
+               {/* product name */}
                <div className='px-2 md:px-0 md:sticky top-20'>
-                  <p className='pb-0 md:pb-5 font-semibold text-[1.2rem] '>
-                     Product name Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                     Voluptas, officia.
+                  <p className='pb-0 md:pb-5 font-semibold text-[1.2rem]'>
+                     {converFirstLetterToUpperCase(productDetail?.name)}
                   </p>
 
                   {/* price */}
                   <div className='mt-2 pb-2 md:pb-5 flex justify-between items-center border-b-[1px]'>
-                     <div>
+                     <div className='flex items-end'>
                         <span className='font-semibold text-[1.2rem] mr-2'>
-                           {(456000).toLocaleString()} VNĐ
+                           <FormatPrice price={productDetail.price} />
                         </span>
-                        <span className='line-through text-gray-500 text-[0.9rem]'>
-                           {(567000).toLocaleString()} VNĐ
+                        <span className='line-through text-gray-500 text-[0.9rem] mb-[2px]'>
+                           {(
+                              productDetail.price +
+                              (productDetail.price * 10) / 100
+                           ).toLocaleString()}{' '}
+                           VNĐ
                         </span>
 
-                        <span className='text-[#891a1c] font-semibold text-[0.9rem] ml-2'>8%</span>
+                        <span className='text-[#891a1c] font-semibold text-[0.9rem] ml-2 mb-[2px]'>
+                           10%
+                        </span>
                      </div>
                      <BsShare fontSize='1.3rem' cursor='pointer' className='hover:text-[#891a1c]' />
                   </div>
-
-                  {/* product description */}
-                  {!isMobileScreen && <ProductDescription></ProductDescription>}
-
-                  {/* payment */}
 
                   <div className='fixed bottom-0 right-0 left-0 md:relative md:mx-0 md:bg-transparent text-black md:text-black z-[101] '>
                      <div
@@ -122,11 +139,14 @@ export default function ProductDetailPage() {
                         }`}>
                         {/* size select */}
                         <ProductDetailSizeSelect
+                           sizeID={productDetail.sizeID}
+                           sizeList={productDetail.size}
                            sizeSelect={sizeSelect}
                            setSizeSelect={setSizeSelect}
                         />
                         {/* color select */}
                         <ProductDetailColorSelect
+                           colorList={productDetail.colorList}
                            setColorSelect={setColorSelect}
                            colorSelect={colorSelect}
                         />
@@ -154,8 +174,28 @@ export default function ProductDetailPage() {
                </div>
             </div>
          </div>
-         {/* Product review */}
-         {/* <ProductDetailReview /> */}
+
+         <div className='w-2/3'>
+            {!isMobileScreen && (
+               <ProductDescription description={productDetail.description}></ProductDescription>
+            )}
+         </div>
       </div>
    );
 }
+
+export const getServerSideProps = async () => {
+   let productRes;
+   try {
+      productRes = await productApi.getAllProductByName();
+   } catch (error) {}
+
+   const productListByName = productRes?.data?.data;
+   const activeProduct = filterProductActive(productListByName);
+
+   return {
+      props: {
+         productListByName: activeProduct || [],
+      },
+   };
+};

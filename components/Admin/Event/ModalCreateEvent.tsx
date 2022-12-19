@@ -102,7 +102,10 @@ export default function ModalCreateEvent({
                      ) : (
                         <button
                            className='absolute p-5 text-[4rem] hover:text-[5rem] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] transition-all'
-                           onClick={() => inputFilesRef.current.click()}>
+                           onClick={(e) => {
+                              e.preventDefault();
+                              inputFilesRef.current.click();
+                           }}>
                            +
                         </button>
                      )}

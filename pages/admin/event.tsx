@@ -19,8 +19,8 @@ import {
 import LoadingActionPage from '../../components/common/LoadingPage';
 import EventTableBody from '../../components/Admin/Event/EventTableBody';
 
-import Cookies from 'js-cookie';
 import {toast} from 'react-toastify';
+import Cookies from 'js-cookie';
 const accessToken = Cookies.get('accessToken');
 
 export default function AdminEventPage({eventList}) {
@@ -78,7 +78,6 @@ export default function AdminEventPage({eventList}) {
             });
          } else {
             const data = {title, description, startDate, endDate, percent, typeEvent};
-            console.log('chay vao else ne');
             dispatch(udpateEvetAsync({accessToken, eventId, data})).then((res) => {
                if (res.payload.ok) {
                   dispatch(getAllEventAsync());
@@ -128,6 +127,7 @@ export default function AdminEventPage({eventList}) {
       }
    }, [isShowModalCreateUpdateEvent]);
 
+   // update render event list
    useEffect(() => {
       if (eventState || eventState?.length > 0) {
          setRenderEventList(eventState);
@@ -166,7 +166,7 @@ export default function AdminEventPage({eventList}) {
          </div>
          {isShowModalCreateUpdateEvent && (
             <AdminModal
-               title='Create new Event'
+               title={`${editingEvent ? 'Edit Event' : 'Create new Event'}`}
                showFooter={false}
                className='w-[800px] pb-2'
                cancel={() => setIsShowModalCreateUpdateEvent(false)}>

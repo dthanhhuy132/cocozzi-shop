@@ -78,7 +78,8 @@ export default function VoucherItem({voucher, handleClickEditVoucher}: any) {
                </AdminButton>
                <AdminButton
                   click={() => setIsShowModalDelete(true)}
-                  className='py-[4px] w-[80px] flex justify-center bg-red-800 hover:bg-red-700'>
+                  className='py-[4px] w-[80px] flex justify-center'
+                  type='delete'>
                   <RiDeleteBin4Fill fontSize='1.5rem' />
                   Delete
                </AdminButton>

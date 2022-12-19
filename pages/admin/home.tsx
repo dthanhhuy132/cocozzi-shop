@@ -2,11 +2,12 @@ import {useState, useRef} from 'react';
 import Cookies from 'js-cookie';
 
 import {GetServerSideProps} from 'next';
-import homeApi from '../../service/homeApi';
+import homeApi from '../../service/panelApi';
 
 import {AdminLayout} from '../../components/Admin';
 import {AdminButton} from '../../components/Admin/common';
 import {AiOutlinePlusCircle} from 'react-icons/ai';
+import panelApi from '../../service/panelApi';
 
 export default function AdminHomePage({homeImages}) {
    const [imageFiles, setImageFiles] = useState<any>([]);
@@ -97,7 +98,7 @@ export default function AdminHomePage({homeImages}) {
 
             {homeImages.map((item, index) => (
                // list image of each pannel
-               <div className=''>
+               <div className='' key={index}>
                   <p className='mb-1'>
                      {index + 1}. {item.description}
                   </p>
@@ -115,14 +116,15 @@ export default function AdminHomePage({homeImages}) {
 }
 
 export const getServerSideProps: GetServerSideProps<any> = async () => {
-   let homeImageList = [];
-   const response = await homeApi.getAllHomeImage();
-   const homeImages = response.data.data.filter((item) => item.status !== 'cancel');
+   let homeImageList;
+
    try {
+      const response = await panelApi.getAllPanel();
+      homeImageList = response.data.data.filter((item) => item.status !== 'cancel');
    } catch (error) {}
    return {
       props: {
-         homeImages: homeImages || [],
+         homeImages: homeImageList || [],
       },
    };
 };

@@ -24,7 +24,7 @@ export default function Home() {
 
    const handleClickImage = () => {
       if (router.pathname === '/') {
-         router.push('/product/124');
+         // router.push('/product/124');
       } else {
          return;
       }
