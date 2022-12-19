@@ -4,14 +4,6 @@ import {useRouter} from 'next/router';
 import SliderSlick from 'react-slick';
 import {AiOutlineCloseCircle} from 'react-icons/ai';
 
-import img1 from '../../public/images/shop/1.webp';
-import img2 from '../../public/images/shop/2.webp';
-import img3 from '../../public/images/shop/3.webp';
-import img4 from '../../public/images/shop/4.webp';
-import img5 from '../../public/images/shop/5.webp';
-import img6 from '../../public/images/shop/6.webp';
-import img7 from '../../public/images/shop/7.webp';
-import img8 from '../../public/images/shop/8.webp';
 import useWindowDimensions from '../../hooks/UseWindowDimensions';
 
 import {useCallback, useEffect, useState} from 'react';
@@ -21,29 +13,19 @@ import {useAppSelector} from '../../store';
 import {PANEL_FOR_STORY} from '../../store/panel/panelSlice';
 import slicePanelLinkName from '../Admin/Product/slicePanelLinkName';
 
-const imgArr = [img1, img2, img3, img4, img5, img6, img7, img8];
 export default function ShopSliderProductStory({storyList}) {
    const storyListActive =
       storyList?.filter((item) => item?.description?.indexOf(PANEL_FOR_STORY) >= 0) || [];
 
-   console.log('storyListActive', storyListActive);
    const router = useRouter();
-   const {isMobile} = useWindowDimensions();
+   const {width} = useWindowDimensions();
+   const [isMobileDevice, setIsMobileDevice] = useState(true);
    const [isShowCenterMode, setIsShowCenterMode] = useState(false);
 
-   const [currentIndexSlickCenter, setCurrentIndexSlickCenter] = useState(0);
    const [isShowProductButton, setIsShowProductButton] = useState(false);
    //    beforeChange={}
 
    const [dragging, setDragging] = useState(false);
-
-   const handleBeforeChange = useCallback(() => {
-      setDragging(true);
-   }, [setDragging]);
-
-   const handleAfterChange = useCallback(() => {
-      setDragging(false);
-   }, [setDragging]);
 
    const handleOnItemClick = useCallback(
       (e) => {
@@ -54,15 +36,18 @@ export default function ShopSliderProductStory({storyList}) {
 
    const [sliderQuantity, setSliderQuantity] = useState(3);
    const [activeIndexSlideImg, setActiveIndexSlideImg] = useState(0);
-   const [showButtonAtFirstTime, setShowButtonAtFirstTime] = useState(true);
+
+   const [runStoryModalFirstTime, setRunStoryModalFirstTime] = useState(false);
+
+   // detemine mobile device
 
    useEffect(() => {
-      if (isMobile) {
+      if (width < 600) {
          setSliderQuantity(1.5);
       } else {
          setSliderQuantity(4);
       }
-   }, [isMobile]);
+   }, [width]);
 
    const sliderRef = useRef<any>();
 
@@ -79,18 +64,22 @@ export default function ShopSliderProductStory({storyList}) {
    const openSetting = {
       className: 'center w-full slick-custom-center-dth',
       infinite: true,
-      slidesToShow: isMobile ? 1 : 3,
+      slidesToShow: width < 600 ? 1 : 3,
       swipeToSlide: true,
       autoplay: true,
-      autoplaySpeed: 5500,
+      autoplaySpeed: runStoryModalFirstTime ? 4000 : 5500,
       pauseOnHover: false,
 
       centerMode: true,
       centerPadding: 0,
 
       beforeChange: (currentSlide) => {
-         setCurrentIndexSlickCenter(currentSlide);
-         setIsShowProductButton(false);
+         if (runStoryModalFirstTime == true) {
+            setIsShowProductButton(true);
+            setRunStoryModalFirstTime(false);
+         } else {
+            setIsShowProductButton(false);
+         }
       },
 
       afterChange: (currentSlide) => {
@@ -100,10 +89,12 @@ export default function ShopSliderProductStory({storyList}) {
    };
 
    useEffect(() => {
-      if (isShowProductButton) {
-         setShowButtonAtFirstTime(false);
+      if (isShowCenterMode) {
+         setRunStoryModalFirstTime(true);
       }
-   }, [isShowProductButton]);
+   }, [isShowCenterMode]);
+
+   console.log('isShowProductButton', isShowProductButton);
 
    return (
       <>
@@ -117,6 +108,7 @@ export default function ShopSliderProductStory({storyList}) {
                            src={story.pictures[0] || ''}
                            alt=''
                            onClick={() => {
+                              setIsShowProductButton(true);
                               setIsShowCenterMode(true);
                               setActiveIndexSlideImg(index);
                               setTimeout(() => sliderRef?.current?.slickGoTo(index), 50);
@@ -131,22 +123,18 @@ export default function ShopSliderProductStory({storyList}) {
          {isShowCenterMode && (
             <div
                className={`animate__animated animate__fadeIn flex justify-center items-center fixed top-0 bottom-0 right-0 z-[999] left-0 bg-[#000000fa] transition-all`}>
-               <div className='fixed top-0 left-0 right-0 opacity-50'>
-                  {isShowProductButton && <ProgressBar></ProgressBar>}
-               </div>
-
                <div
                   className='absolute top-2 left-2 z-[100] text-[gray] text-[3rem] cursor-pointer hover:text-[white]'
                   onClick={() => setIsShowCenterMode(false)}>
                   <AiOutlineCloseCircle />
                </div>
-               <div className='w-[79%] mb-10'>
+               <div className='w-[75%] md:w-[80%] my-10'>
                   <SliderSlick {...openSetting} centerMode={true} ref={sliderRef}>
                      {storyListActive.map((story, index) => {
                         return (
                            <div key={index} className=''>
                               <div className='p-[10px] text-center md:px-[30px] lg:px-[50px] transition'>
-                                 <div className='relative rounded-[12px] md:rounded-[16px] overflow-hidden'>
+                                 <div className='relative rounded-[8px] md:rounded-[16px] overflow-hidden'>
                                     <img
                                        className='w-full transition aspect-[9/16] object-cover'
                                        src={story.pictures[0] || ''}
@@ -158,11 +146,12 @@ export default function ShopSliderProductStory({storyList}) {
                         );
                      })}
                   </SliderSlick>
+                  <div className='fixed top-0 left-0 right-0 opacity-50'>
+                     {isShowProductButton && <ProgressBar></ProgressBar>}
+                  </div>
                   <button
                      className={`absolute left-[50%] translate-x-[-50%] bg-[white] rounded-full mt-2 px-2 py-1 flex items-center text-[1.1rem] transition-all ${
-                        isShowProductButton || (showButtonAtFirstTime && isShowCenterMode)
-                           ? 'bottom-[15px]'
-                           : 'bottom-[-100%] mb-[4px]'
+                        isShowProductButton ? 'bottom-[15px]' : 'bottom-[-100%] mb-[4px]'
                      }`}
                      onClick={() => {
                         setIsShowCenterMode(false);

@@ -4,8 +4,6 @@ type Props = {};
 
 const SIZE = ['s', 'm', 'l', 'xl', 'xxl'];
 export default function ProductDetailSizeSelect({sizeID, sizeList, sizeSelect, setSizeSelect}) {
-   console.log('sizeList', sizeList);
-
    const sizeMap = Object.keys(sizeList).map((sizeItem) => ({
       size: sizeItem,
       quantity: sizeList[sizeItem],

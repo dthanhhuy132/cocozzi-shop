@@ -47,6 +47,7 @@
       "yup": "^0.32.11"
    },
    "devDependencies": {
+      "@tailwindcss/line-clamp": "^0.4.2",
       "@types/node": "18.8.0",
       "@types/nprogress": "^0.2.0",
       "@types/react": "18.0.21",

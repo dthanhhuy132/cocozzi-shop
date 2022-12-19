@@ -65,11 +65,10 @@
    object-fit: fill;
 }
 .slick-custom-center-dth .slick-slide img {
-   border-radius: 20px;
    filter: brightness(0.15);
 }
 .slick-custom-center-dth .slick-slide.slick-center img {
-   border-radius: 20px;
+   /* border-radius: 20px; */
    filter: brightness(1);
 }
 

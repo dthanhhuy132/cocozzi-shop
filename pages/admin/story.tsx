@@ -35,8 +35,9 @@ export default function AdminStoryPage({storyList}) {
    const [editingStory, setEditingStory] = useState(null);
 
    function handleCreateUpdateStory(story) {
+      setIsShowLoading(true);
+
       const {description, picture, storyId, isChangeImage} = story;
-      console.log('storyId la gi', storyId);
       // update story
       if (storyId) {
          // xóa id rồi cập nhật
@@ -44,41 +45,36 @@ export default function AdminStoryPage({storyList}) {
          // 2. cập nhật không hình
 
          const panelId = storyId;
-
          if (isChangeImage == true) {
-            setIsShowLoading(true);
-
             const data = new FormData();
-            data.append('description', description);
-
+            data.append('description', `${PANEL_FOR_STORY}${description}`);
             data.append('pictures', picture);
 
             dispatch(udpatePanelAsync({accessToken, panelId, data})).then((res) => {
+               setIsShowLoading(false);
                if (res.payload.ok) {
                   dispatch(getAllPanelAsync());
                   setIsShowModalForStory(false);
                } else {
                   toast.error(res.payload.message);
                }
-               setIsShowLoading(false);
             });
          } else {
-            const data = {description};
+            const data = {description: `${PANEL_FOR_STORY}${description}`};
             dispatch(udpatePanelAsync({accessToken, panelId, data})).then((res) => {
+               setIsShowLoading(false);
                if (res.payload.ok) {
                   dispatch(getAllPanelAsync());
                   setIsShowModalForStory(false);
                } else {
                   toast.error(res.payload.messsage);
                }
-               setIsShowLoading(false);
             });
          }
       }
 
       // create new story
       if (!storyId) {
-         setIsShowLoading(true);
          const formData = new FormData();
          const descriptionForStory = `${PANEL_FOR_STORY}${description}`;
          formData.append('description', descriptionForStory);
@@ -86,14 +82,12 @@ export default function AdminStoryPage({storyList}) {
 
          dispatch(createPanelAsyns({accessToken, formData})).then((res) => {
             setIsShowLoading(false);
-
             if (res.payload.ok) {
                dispatch(getAllPanelAsync());
                setIsShowModalForStory(false);
             } else {
                toast.error(res.payload.message);
             }
-            setIsShowLoading(false);
          });
       }
    }
