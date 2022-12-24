@@ -34,7 +34,7 @@ export default function Bag({carts}) {
                <tbody className='p-2'>
                   {carts?.cartItems?.length > 0 ? (
                      carts?.cartItems?.map((productCart, index) => (
-                        <BagItem productCart={productCart} />
+                        <BagItem productCart={productCart} key={index} />
                      ))
                   ) : (
                      <p>Giỏ hàng trống!</p>

@@ -72,7 +72,7 @@ export default function HomePanaleItem({
          <div key={homePanel._id} className='grid grid-cols-4 gap-2 whitespace-nowrap'>
             {homePanel?.pictures?.length > 0 &&
                homePanel.pictures.map((pic, index) => (
-                  <div className='flex flex-col'>
+                  <div className='flex flex-col' key={pic}>
                      <img src={pic} alt='Hình ảnh panel' key={pic}></img>
                      {getLinkHomePanel(homePanelLink)[index] && (
                         <div className='text-[0.9rem] px-2'>
