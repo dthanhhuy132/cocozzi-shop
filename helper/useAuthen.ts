@@ -40,10 +40,10 @@ function useAdminAuthen() {
 function useNotAuthen() {
    const router = useRouter();
    const [accessToken] = useGlobalState('accessToken');
+   const token = Cookies.get('accessToken') || accessToken;
 
    useEffect(() => {
       const userToken = parseJwt(accessToken);
-      console.log('userToken la gi', userToken);
 
       if (!isAdmin(userToken)) {
          router.push('/');

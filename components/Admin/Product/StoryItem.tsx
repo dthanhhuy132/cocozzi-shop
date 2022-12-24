@@ -14,7 +14,7 @@ import {useDispatch} from 'react-redux';
 import Cookies from 'js-cookie';
 const accessToken = Cookies.get('accessToken');
 
-export default function StoryItem({story, handleClickEditStory = () => {}, editingStory}: any) {
+export default function StoryItem({story, handleClickEditStory = () => {}}: any) {
    const dispatch = useDispatch();
    const [isShowModalDelete, setIsShowModalDelete] = useState(false);
    const [isShowLoading, setIsShowLoading] = useState(false);

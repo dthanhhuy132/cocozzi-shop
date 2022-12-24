@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
-import {loginAsyncAction} from './authAsyncAction';
+import {loginAsyncAction, registerAsyncAction} from './authAsyncAction';
 
 import Cookies from 'js-cookie';
 import {parseJwt} from '../../helper';
@@ -25,11 +25,17 @@ const authSlice = createSlice({
          state.accessToken = undefined;
       },
    },
-   extraReducers: {
-      [loginAsyncAction.fulfilled]: (state, action) => {
+
+   extraReducers: (builder) => {
+      builder.addCase(loginAsyncAction.fulfilled, (state, action) => {
          state.user = action.payload?.user?.user;
          state.accessToken = action.payload?.user?.accessToken;
-      },
+      });
+
+      builder.addCase(registerAsyncAction.fulfilled, (state, action) => {
+         // state.user = action.payload?.user?.user;
+         // state.accessToken = action.payload?.user?.accessToken;
+      });
    },
 });
 

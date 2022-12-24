@@ -17,15 +17,14 @@ export default function Footer() {
       return excludePath.indexOf(currentPath) === -1;
    }, [router.pathname]);
 
-   const {isMobile} = useWindowDimensions();
-
    const adjustFooter = useMemo(() => {
-      const includePath = ['/shop', '/promo', '/info', '/bag'];
+      const includePath = ['/promo', '/info', '/bag'];
       return includePath.indexOf(router.pathname) >= 0;
    }, [router.pathname]);
 
    const hiddenFooter = useMemo(() => {
       const includePath = 'admin';
+
       return router.pathname.indexOf(includePath) < 0;
    }, [router.pathname]);
    return (

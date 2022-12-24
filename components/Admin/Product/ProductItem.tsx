@@ -48,35 +48,8 @@ export default function ProductItem({product, handleClickEditProduct}: any) {
 
    return (
       <>
-         {/* product avatar */}
-         <div className='relative group'>
-            <div className='absolute top-1 right-1 opacity-90 z-[1]'>
-               <CopyProductSlug text={`/product/${stringToSlug(product.name)}`} />
-            </div>
-
-            <div className=' grid grid-row-2 '>
-               {/* <img src='' alt='Hình ảnh sản phẩm avatar' /> */}
-               <img
-                  src={product?.pictures ? product?.pictures[0] : ''}
-                  alt='Prodcut avatar'
-                  className='h-auto w-full'></img>
-
-               {/* product imag list */}
-               <div className='flex gap-1 mt-1 w-full overflow-auto'>
-                  {product?.pictures?.length > 0 &&
-                     product.pictures
-                        .slice(1, product.pictures.length)
-                        .map((img) => (
-                           <img
-                              key={img}
-                              src={img}
-                              className='h-[150px] object-cover'
-                              alt='Hình ảnh sản phẩm chi tiết'
-                           />
-                        ))}
-               </div>
-            </div>
-
+         <div>
+            {/* product info */}
             <div>
                <p className='font-bold'>{product.name}</p>
                <p>
@@ -102,6 +75,34 @@ export default function ProductItem({product, handleClickEditProduct}: any) {
                            className='w-[40px] h-[20px]'
                            style={{backgroundColor: `${color}`}}></div>
                      ))}
+               </div>
+            </div>
+
+            <div className='relative grid grid-row-2 mt-3'>
+               {/* copy product link */}
+               <div className='absolute top-1 right-1 opacity-90 z-[1]'>
+                  <CopyProductSlug text={`/product/${stringToSlug(product.name)}`} />
+               </div>
+
+               {/* product avatar */}
+               <img
+                  src={product?.pictures ? product?.pictures[0] : ''}
+                  alt='Prodcut avatar'
+                  className='h-auto w-full'></img>
+
+               {/* product imag list */}
+               <div className='flex gap-1 mt-1 w-full overflow-auto'>
+                  {product?.pictures?.length > 0 &&
+                     product.pictures
+                        .slice(1, product.pictures.length)
+                        .map((img) => (
+                           <img
+                              key={img}
+                              src={img}
+                              className='h-[150px] object-cover'
+                              alt='Hình ảnh sản phẩm chi tiết'
+                           />
+                        ))}
                </div>
             </div>
          </div>

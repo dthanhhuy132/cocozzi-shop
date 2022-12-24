@@ -250,10 +250,12 @@ export default function AdminProductPage({productList, categoryList, storyList})
                />
             </div>
 
-            <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-20 mt-5'>
+            <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-10 mt-5'>
                {renderProductList.length > 0 &&
                   renderProductList.map((product, index) => (
-                     <div key={index} className='flex justify-between flex-col border-[1px] p-1'>
+                     <div
+                        key={index}
+                        className='flex justify-between flex-col border-[1px] rounded-md p-1'>
                         <ProductItem
                            product={product}
                            handleClickEditProduct={handleClickEditProduct}></ProductItem>

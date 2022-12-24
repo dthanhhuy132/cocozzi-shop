@@ -1,11 +1,12 @@
 import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from '@reduxjs/toolkit';
+import {getCartByUserId} from './cartAsynAction';
 
 interface IAuthSlice {
    cartState: any;
 }
 const initialState = {
-   cartState: undefined,
+   cartState: [],
 };
 
 const cartSlice = createSlice({
@@ -15,6 +16,12 @@ const cartSlice = createSlice({
       updateCart: (state, action: PayloadAction<any>) => {
          state.cartState = action.payload;
       },
+   },
+   extraReducers: (builder) => {
+      builder.addCase(getCartByUserId.fulfilled, (state, action) => {
+         const cartItemArr = action.payload.data;
+         state.cartState = cartItemArr;
+      });
    },
 });
 

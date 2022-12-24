@@ -31,7 +31,6 @@ import {useRouter} from 'next/router';
 
 import NProgress from 'nprogress';
 import {getTokenSSRAndCSS} from '../helper';
-import bagApi from '../service/bagApi';
 import useGlobalState from '../state';
 
 import Cookies from 'js-cookie';
@@ -45,7 +44,7 @@ import filterProductActive from '../helper/filterProductActive';
 
 const MyApp = ({Component, pageProps, session}) => {
    const router = useRouter();
-   const {carts, categoryList, eventList, productGroupByNameList, token, userToken} = pageProps;
+   const {categoryList, eventList, productGroupByNameList, token, userToken} = pageProps;
 
    const [, setToken] = useGlobalState('accessToken');
    const [, setCurrentUser] = useGlobalState('currentUser');
@@ -87,7 +86,6 @@ const MyApp = ({Component, pageProps, session}) => {
             <Script src='https://sp.zalo.me/plugins/sdk.js'></Script>
 
             <Header
-               carts={carts}
                categoryList={categoryList}
                eventList={eventList}
                productGroupByNameList={productGroupByNameList}></Header>
@@ -95,7 +93,7 @@ const MyApp = ({Component, pageProps, session}) => {
                {isAdminPage && <AdminSideBar />}
                <Component {...pageProps} />
             </div>
-            <Footer></Footer>
+            {router.pathname.indexOf('shop') < 0 && <Footer></Footer>}
 
             <ToastContainer
                position='bottom-right'
@@ -107,6 +105,7 @@ const MyApp = ({Component, pageProps, session}) => {
                pauseOnFocusLoss
                pauseOnHover
                theme='dark'
+               className='toastify-font-dth'
             />
          </Provider>
       </SessionProvider>
@@ -114,25 +113,22 @@ const MyApp = ({Component, pageProps, session}) => {
 };
 
 MyApp.getInitialProps = async (appContext: AppContext) => {
-   let appProps, categoryList, cartList, eventList, productGroupByNameList;
+   let appProps, categoryList, eventList, productGroupByNameList;
    const [token, userToken] = getTokenSSRAndCSS(appContext.ctx);
    const userId = userToken?.data._id;
    try {
       appProps = await App.getInitialProps(appContext);
 
       const categoryPos = categoryApi.getAllCategory();
-      const cartPos = bagApi.getUserCart(userId, token);
       const eventPos = eventApi.getAllEvent();
       const productGroupNamePos = productApi.getAllProductByName();
 
-      const [categoryRes, cartRes, eventRes, productGroupNameRes] = await Promise.all([
+      const [categoryRes, eventRes, productGroupNameRes] = await Promise.all([
          categoryPos,
-         cartPos,
          eventPos,
          productGroupNamePos,
       ]);
 
-      cartList = cartRes?.data?.data;
       categoryList = categoryRes?.data?.data?.filter(
          (cate) =>
             cate.status == true &&
@@ -151,7 +147,6 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
          categoryList: categoryList || [],
          eventList: eventList || [],
          productGroupByNameList: productGroupByNameList || [],
-         carts: cartList || [],
          token: token,
          userToken: userToken,
       },

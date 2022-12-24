@@ -6,7 +6,7 @@ export default function HeaderUserControl({hasToken, isMobile}) {
    const {user} = useSelector((state: any) => state.auth);
 
    return (
-      <div className='absolute top-7 right-[-10px] min-w-[190px] bg-white border rounded-lg shadow-[0_3px_8px_rgba(0,0,0,0.3)]'>
+      <div className='absolute top-7 right-[-10px] min-w-[190px] bg-white border rounded-lg shadow-[0_3px_8px_rgba(0,0,0,0.3)] z-[99990]'>
          <ul className='capitalize py-1'>
             {hasToken && (
                <>

@@ -3,24 +3,20 @@ import Link from 'next/link';
 import {useRouter} from 'next/router';
 import {useEffect, useState} from 'react';
 import styled, {keyframes, css} from 'styled-components';
-
-import img1 from '../../public/images/home/1.jpg';
-import img2 from '../../public/images/home/2.jpg';
-import img3 from '../../public/images/home/3.jpg';
-import img4 from '../../public/images/home/4.jpg';
-
-const ImageArr = [img1, img2, img3, img4];
+import {useAppSelector} from '../../store';
 
 interface IHomeBackground {
    ishomepage?: boolean;
+   homePanelImg: any;
 }
 
-export default function HomeBackground({ishomepage = true}: IHomeBackground) {
+export default function HomeBackground({ishomepage = true, homePanelImg}: IHomeBackground) {
    const router = useRouter();
    const [isActiveAnimation, setIsActiveAnimation] = useState(0);
 
+   // get home panel for user from redux
    const changeImageActiveAnimate = () => {
-      if (isActiveAnimation < ImageArr.length - 1) {
+      if (isActiveAnimation < homePanelImg?.pictures?.length - 1) {
          setIsActiveAnimation((pre) => pre + 1);
       } else {
          setIsActiveAnimation(0);
@@ -41,7 +37,7 @@ export default function HomeBackground({ishomepage = true}: IHomeBackground) {
 
    return (
       <div className='grid grid-cols-1 md:grid-cols-2 gap-0'>
-         {ImageArr.map((imageSrc, index) => (
+         {homePanelImg?.pictures?.map((imageSrc, index) => (
             <a key={index} onClick={() => handleClickImage()}>
                <ImageSC
                   src={imageSrc}
@@ -67,16 +63,15 @@ const lighting = keyframes`
    }
 `;
 
-const ImageSC = styled(Image)<any>(
+const ImageSC = styled('img')<any>(
    (props) => css`
-      animation: ${props.active &&
-      props.ishomepage &&
-      css`1s linear ${lighting}`};
+      animation: ${props.active && props.ishomepage && css`1s linear ${lighting}`};
 
       animation-timing-function: linear;
       transition: all 0.3s linear;
       transform: 'scale(1.01)';
-
+      min-width: 100%;
+      height: 'auto';
       &:hover {
          transform: ${props.ishomepage && 'scale(1.1)'};
          z-index: 9;

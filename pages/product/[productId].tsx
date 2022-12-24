@@ -25,24 +25,22 @@ export default function ProductDetailPage({productListByName}: any) {
    const productName = router.query.productId as string;
    const productSlug = productName.split('-').slice(0, -1).join('-');
 
-   console.log('productSlug', productSlug);
-
-   const {productListByGroupNameState} = useAppSelector((state) => state.product);
-
    const [productDetail, setProductDetail] = useState(
       productListByName?.filter(
          (product) => stringToSlug(product.name).split('-').slice(0, -1).join('-') == productSlug
       )[0]
    );
 
-   console.log('productDetail', productDetail);
-
    const {isMobile} = useWindowDimensions();
    const [isMobileScreen, setIsMobileScreen] = useState(false);
+
+   // size and color selection
    const [sizeSelect, setSizeSelect] = useState('');
    const [colorSelect, setColorSelect] = useState(0);
 
    const [isShowSizeAndColor, setIsShowSizeAndColor] = useState(false);
+
+   //   product slide setting in mobile mode
    const settings = {
       className: 'center w-full',
       infinite: true,
@@ -72,7 +70,6 @@ export default function ProductDetailPage({productListByName}: any) {
 
    // product Information
    const imagesArr = productDetail?.pictures.slice(1, productDetail?.pictures.length);
-   console.log('imgesArr', imagesArr);
 
    return (
       <div className='md:px-20 md:w-[780px] lg:w-[1200px] mx-[auto]'>

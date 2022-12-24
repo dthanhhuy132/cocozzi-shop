@@ -11,6 +11,7 @@ interface IPanelSlice {
    eventState: any;
 }
 const initialState = {
+   panelHomeForUserState: undefined,
    panelForStoryState: undefined,
    panelForBannerState: undefined,
    panelForHomeState: undefined,
@@ -23,6 +24,10 @@ const PanelSlice = createSlice({
    reducers: {
       udpatePanelForUser: (state, action) => {
          const panelSliceForUser = action.payload;
+      },
+
+      updateHomePanelUser: (state, action) => {
+         state.panelForHomeState = action.payload;
       },
    },
 
@@ -47,5 +52,5 @@ const PanelSlice = createSlice({
    },
 });
 
-export const {udpatePanelForUser} = PanelSlice.actions;
+export const {udpatePanelForUser, updateHomePanelUser} = PanelSlice.actions;
 export default PanelSlice.reducer;

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {BsSearch} from 'react-icons/bs';
 import {useRouter} from 'next/router';
 import {useDebounce} from 'use-debounce';
+import useWindowDimensions from '../../hooks/UseWindowDimensions';
 interface IHeaderSearch {
    whiteLine?: Boolean;
 }
@@ -10,7 +11,7 @@ interface IHeaderSearch {
 export default function HeaderSearch({whiteLine = false}: IHeaderSearch) {
    const [isOnInput, setOnInput] = useState(false);
    const [searchStr, setSearchStr] = useState('');
-
+   const {width} = useWindowDimensions();
    const [searchStrDebounced] = useDebounce(searchStr, 500);
 
    const router = useRouter();
@@ -30,7 +31,8 @@ export default function HeaderSearch({whiteLine = false}: IHeaderSearch) {
          <DivSC isOnInput={isOnInput} hasSearchStr={searchStr.length > 0} whiteLine={whiteLine}>
             <input
                type='text'
-               className='lg:block p-0 outline-none relative bg-transparent w-full'
+               className={`lg:block p-0 outline-none relative bg-transparent w-full`}
+               style={{textAlign: `${width > 600 ? 'left' : 'center'}`}}
                onBlur={() => setOnInput(false)}
                onFocus={() => setOnInput(true)}
                onChange={(e) => setSearchStr(e.target.value)}

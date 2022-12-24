@@ -1,8 +1,26 @@
+import {useRouter} from 'next/router';
+import Cookies from 'js-cookie';
+import {useEffect} from 'react';
+import {toast} from 'react-toastify';
+
 import PaymentAddress from './PaymentAddress';
 import PaymentMethod from './PaymentMethod';
 import PaymentUserInfo from './PaymentUserInfo';
 
 export default function Payment() {
+   const router = useRouter();
+   const product = router.query;
+
+   // const dataPayment = {};
+   console.log('product co gi trong payment', product);
+
+   const accessToken = Cookies.get('accessToken');
+   useEffect(() => {
+      if (!accessToken) {
+         router.push('/membership');
+         toast.warning('Vui lòng đăng nhập để tiế hành thanh toán đơn hàng');
+      }
+   }, []);
    return (
       <div className='flex flex-col md:flex-row w-full md:w-2/3 my-4 md:my-10 mx-[auto] gap-5 '>
          {/* Cart */}

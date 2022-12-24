@@ -81,14 +81,15 @@ export default function AdminStoryPage({storyList}) {
          formData.append('pictures', picture);
 
          dispatch(createPanelAsyns({accessToken, formData})).then((res) => {
-            setIsShowLoading(false);
             if (res.payload.ok) {
-               dispatch(getAllPanelAsync());
                setIsShowModalForStory(false);
+               dispatch(getAllPanelAsync());
             } else {
                toast.error(res.payload.message);
             }
          });
+
+         setIsShowLoading(false);
       }
    }
 
@@ -164,7 +165,7 @@ export const getServerSideProps = async () => {
 
    return {
       props: {
-         storyList: storyList || [],
+         storyList: sortDataByUpdatedTime(storyList) || [],
       },
    };
 };

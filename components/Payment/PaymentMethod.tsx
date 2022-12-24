@@ -113,7 +113,7 @@ export default function PaymentMethod() {
                      </p>
                   </div>
 
-                  <p className='flex'>
+                  <div className='flex'>
                      <span className='min-w-[220px] inline-block'>Số tiền thanh toán:</span>
                      <p className='flex flex-col'>
                         <span className=' font-semibold text-[#891a1c]'> 482738943 </span>
@@ -123,7 +123,7 @@ export default function PaymentMethod() {
                      </p>
 
                      <div></div>
-                  </p>
+                  </div>
 
                   <div className='flex'>
                      <span className='min-w-[220px] inline-block'>Nội dung chuyển khoản:</span>

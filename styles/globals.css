@@ -71,3 +71,35 @@ thead th {
 .zalo-chat-widget {
   z-index: 100 !important;
 }
+
+/* shop page */
+/* scroll in shop page */
+.shop-container {
+  max-height: 91vh;
+  /* scroll-padding-top: 15vh; */
+  /* width: 100%; */
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+  overflow-y: overlay;
+}
+
+.shop-item {
+  scroll-snap-align: start;
+}
+
+@media (max-width: 601px) {
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+    transition: all 0.2s ease;
+  }
+}
+
+.my-masonry-grid {
+  margin-left: 0px !important;
+}
+
+.toastify-font-dth {
+  font-family: "Gilroy";
+  color: red;
+}

@@ -5,7 +5,7 @@ const authApi = {
       return api.call().post('/auth/login', loginData);
    },
    register: (registerData) => {
-      return api.call().post('/auth/login', registerData);
+      return api.call().post('/auth/register', registerData);
    },
 };
 

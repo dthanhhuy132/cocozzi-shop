@@ -4,80 +4,100 @@ import Cookies from 'js-cookie';
 import {GetServerSideProps} from 'next';
 import homeApi from '../../service/panelApi';
 
-import {AdminLayout} from '../../components/Admin';
+import {AdminLayout, AdminModal} from '../../components/Admin';
 import {AdminButton} from '../../components/Admin/common';
 import {AiOutlinePlusCircle} from 'react-icons/ai';
 import panelApi from '../../service/panelApi';
 import {PANEL_FOR_BANNER, PANEL_FOR_HOME} from '../../store/panel/panelSlice';
 import sortDataByUpdatedTime from '../../components/Admin/common/sortDataByUpdatedTime';
 import {useAppDispatch, useAppSelector} from '../../store';
-import {createPanelAsyns, getAllPanelAsync} from '../../store/panel/panelAsyncAction';
-import {create} from 'yup/lib/array';
+import {
+   createPanelAsyns,
+   getAllPanelAsync,
+   udpatePanelAsync,
+} from '../../store/panel/panelAsyncAction';
 import LoadingActionPage from '../../components/common/LoadingPage';
 import {toast} from 'react-toastify';
+import HomeAdminModalCreateUpdate from '../../components/Admin/Home/HomeAdminModalCreateUpdate';
+import HomePanaleItem from '../../components/Admin/Home/HomePanelItem';
 
 const accessToken = Cookies.get('accessToken');
+
 export default function AdminHomePage({homePanelList}) {
    const dispatch = useAppDispatch();
    const [isShowLoading, setIsShowLoading] = useState(false);
+   const [isShowModalHomePanel, setIsShowModalHomePanel] = useState(false);
 
-   const [imageFiles, setImageFiles] = useState<any>([]);
-   const [imgesURL, setImagesURL] = useState([]);
    const [renderHomePanelList, setRenderHomePanelList] = useState(
       homePanelList?.filter((item) => item?.description?.indexOf(PANEL_FOR_HOME) >= 0)
    );
 
    // get data from redux
    const {panelForHomeState} = useAppSelector((state) => state.panel);
-
-   const inputFilesRef = useRef(null);
-
-   // function click upload file
-   function handleClickUploadImage(e) {
-      e.preventDefault();
-      inputFilesRef.current.click();
-   }
-
+   const [editingHome, setEditingHome] = useState(null);
    // function add new panel
-   function handleCreateNewPanel(e) {
+   function handleCreateUpdateHome(homePanel) {
       setIsShowLoading(true);
-      e.preventDefault();
 
-      const formData = new FormData();
-      formData.append('description', PANEL_FOR_HOME);
+      const {description, pictures, homPanelId, isChangeImage} = homePanel;
+      console.log('homPanelId la gi', homPanelId);
+      console.log('isChangeImage la gi', isChangeImage);
+      if (homPanelId) {
+         // edit panel for home
+         const panelId = homPanelId;
+         if (isChangeImage === true) {
+            // change picture
+            const data = new FormData();
+            data.append('description', description);
+            pictures.forEach((pic) => data.append('pictures', pic));
 
-      imageFiles.forEach((imageFile) => {
-         formData.append('pictures', imageFile);
-      });
-
-      dispatch(createPanelAsyns({accessToken, formData})).then((res) => {
-         setIsShowLoading(false);
-
-         if (res.payload.ok) {
-            dispatch(getAllPanelAsync());
-            // reset img
-            setImageFiles([]);
-            setImagesURL([]);
+            // change variable name
+            dispatch(udpatePanelAsync({accessToken, panelId, data})).then((res) => {
+               if (res.payload.ok) {
+                  dispatch(getAllPanelAsync());
+                  setIsShowModalHomePanel(false);
+               } else {
+                  toast.error(res.payload.message);
+               }
+               setIsShowLoading(false);
+            });
          } else {
-            toast.error(res.payload.message);
+            const data = {description};
+            console.log('description la gi', description);
+            dispatch(udpatePanelAsync({accessToken, panelId, data})).then((res) => {
+               if (res.payload.ok) {
+                  dispatch(getAllPanelAsync());
+                  setIsShowModalHomePanel(false);
+               } else {
+                  toast.error(res.payload.messsage);
+               }
+               setIsShowLoading(false);
+            });
          }
-         setIsShowLoading(false);
-      });
+      } else {
+         // create panel for home
+         setIsShowLoading(true);
+         const formData = new FormData();
+         formData.append('description', description);
+         pictures.forEach((pic) => formData.append('pictures', pic));
+         dispatch(createPanelAsyns({accessToken, formData})).then((res) => {
+            setIsShowLoading(false);
+            if (res.payload.ok) {
+               dispatch(getAllPanelAsync());
+            } else {
+               toast.error(res.payload.message);
+            }
+            setIsShowLoading(false);
+         });
+      }
    }
 
-   function handleUploadImages(e: any) {
-      const tempImgFiles = [];
-      const tempImgURL = [];
-
-      [...e.target.files].forEach((file) => {
-         tempImgFiles.push(file);
-         tempImgURL.push(URL.createObjectURL(file));
-      });
-
-      setImageFiles(tempImgFiles);
-      setImagesURL(tempImgURL);
+   function handleClickEditHomePanel(homePanel) {
+      setIsShowModalHomePanel(true);
+      setEditingHome(homePanel);
    }
 
+   // update home after create/update new home panel
    useEffect(() => {
       if (panelForHomeState || panelForHomeState?.length > 0) {
          const sortHomePanelState = sortDataByUpdatedTime(panelForHomeState);
@@ -85,50 +105,26 @@ export default function AdminHomePage({homePanelList}) {
       }
    }, [panelForHomeState]);
 
+   // reset editing story
+   useEffect(() => {
+      if (!isShowModalHomePanel) {
+         setEditingHome(null);
+      }
+   }, [isShowModalHomePanel]);
+
    return (
       <AdminLayout>
-         <div>
-            <form>
-               <div className='mb-2'>Upload images for home page</div>
-               <span className='mb-2 italic'>
-                  Hình nằm ngang, kích kích các hình nên giống nhau, dung lượng &lt; 300kb, &#40;Bộ
-                  hình ảnh đầu tiên được sử dụng để hiện thị trên trang home&#41;
-               </span>
-
-               <input
-                  type='file'
-                  accept='image/*'
-                  multiple
-                  hidden
-                  onChange={handleUploadImages}
-                  ref={inputFilesRef}
-               />
-               <div className='flex justify-between'>
-                  <div>
-                     <AdminButton click={(e) => handleClickUploadImage(e)}>
-                        <AiOutlinePlusCircle /> Upload image to create panel
-                     </AdminButton>
-                     <span className='text-[0.9rem] italic'>(Tỉ lệ hình ảnh 16:9)</span>
-                  </div>
-                  {imageFiles.length > 0 && (
-                     <AdminButton className='bg-green-700' click={(e) => handleCreateNewPanel(e)}>
-                        <AiOutlinePlusCircle /> Create new Panel
-                     </AdminButton>
-                  )}
-               </div>
-            </form>
-
-            {/* preview upload file */}
-            {imgesURL.length > 0 && (
-               <div className='mt-2 p-2 border-2'>
-                  <p className='mb-2 font-bold'>Preview images upload:</p>
-                  <div className='grid grid-cols-3 gap-2'>
-                     {imgesURL.map((imgURL, index) => (
-                        <img src={imgURL} alt='image' key={index} />
-                     ))}
-                  </div>
-               </div>
-            )}
+         <div className='mb-2'>Upload images for home page</div>
+         <span className='mb-2 italic'>
+            Hình nằm ngang, kích kích các hình nên giống nhau, dung lượng &lt; 300kb, &#40;Bộ hình
+            ảnh đầu tiên được sử dụng để hiện thị trên trang home&#41;
+         </span>
+         <div className='flex justify-between'>
+            <div>
+               <AdminButton click={(e) => setIsShowModalHomePanel(true)}>
+                  <AiOutlinePlusCircle /> Upload image to create panel
+               </AdminButton>
+            </div>
          </div>
 
          {/* pannel list */}
@@ -137,19 +133,29 @@ export default function AdminHomePage({homePanelList}) {
 
             {renderHomePanelList.map((item, index) => (
                // list image of each pannel
-               <div className='' key={index}>
-                  <p className='mb-1'>
-                     {index + 1}. {item.description}
-                  </p>
-                  <div key={item._id} className='grid grid-cols-3 gap-y-2'>
-                     {item?.pictures?.length > 0 &&
-                        item.pictures.map((pic) => (
-                           <img src={pic} alt='Hình ảnh panel' key={pic}></img>
-                        ))}
-                  </div>
+               <div key={index}>
+                  <HomePanaleItem
+                     index={index}
+                     homePanel={item}
+                     handleClickEditHomePanel={handleClickEditHomePanel}
+                  />
                </div>
             ))}
          </div>
+         {/* modal create */}
+         {isShowModalHomePanel && (
+            <AdminModal
+               className='w-[80%]'
+               showFooter={false}
+               cancel={() => setIsShowModalHomePanel(false)}
+               title='Create new home image'>
+               <HomeAdminModalCreateUpdate
+                  editingHome={editingHome}
+                  cancel={() => setIsShowModalHomePanel(false)}
+                  handleCreateUpdateHome={handleCreateUpdateHome}></HomeAdminModalCreateUpdate>
+            </AdminModal>
+         )}
+
          {isShowLoading && <LoadingActionPage />}
       </AdminLayout>
    );
@@ -169,7 +175,7 @@ export const getServerSideProps: GetServerSideProps<any> = async () => {
    console.log('homeImageList', homeImageList);
    return {
       props: {
-         homePanelList: homeImageList || [],
+         homePanelList: sortDataByUpdatedTime(homeImageList) || [],
       },
    };
 };

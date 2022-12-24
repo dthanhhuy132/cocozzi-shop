@@ -1,12 +1,12 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import sortDataByUpdatedTime from '../components/Admin/common/sortDataByUpdatedTime';
 import {Home} from '../components/Home';
 import panelApi from '../service/panelApi';
-import {PANEL_FOR_HOME} from '../store/panel/panelSlice';
+import {useAppDispatch} from '../store';
+import {PANEL_FOR_HOME, updateHomePanelUser} from '../store/panel/panelSlice';
+
 export default function HomePage({homePanelList}) {
    const [homeImagePanel, setHomeImagePanel] = useState(sortDataByUpdatedTime(homePanelList));
-
-   console.log('homeImagePanel', homeImagePanel);
 
    return <Home homeImage={homeImagePanel[0]}></Home>;
 }

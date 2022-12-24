@@ -59,7 +59,6 @@ export default function HeaderNavResponsive({handleCloseMenu, isShowMenuRps}: IH
 
    // animate__animated animate__faster
    // isShowMenuRps ? 'animate__fadeInLeft' : 'animate__fadeOutLeft'
-   const categoryList = ['category 1', 'category 2', 'category 3'];
    return (
       <>
          <div

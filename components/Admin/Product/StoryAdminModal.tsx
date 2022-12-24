@@ -18,8 +18,6 @@ export default function StoryAdminModal({
    handleCreateUpdateStory,
    editingStory,
 }: any) {
-   console.log('editingStory la gi', editingStory);
-
    // check user change images or not -> to send formData or just body
    const [isChangeImage, setIsChangeImage] = useState(false);
    //create image
@@ -135,7 +133,7 @@ export default function StoryAdminModal({
                      <label htmlFor=''>Link sản phẩm</label>
                      <textarea
                         name='description'
-                        placeholder='/product/ao-quan'
+                        placeholder='/product/ao-quan-1368174988493'
                         className='w-full border-2 px-2 py-1 rounded-md'
                         value={formik.values.description}
                         onChange={formik.handleChange}

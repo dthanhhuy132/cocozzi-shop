@@ -67,7 +67,7 @@ export default function ShopSliderProductStory({storyList}) {
       slidesToShow: width < 600 ? 1 : 3,
       swipeToSlide: true,
       autoplay: true,
-      autoplaySpeed: runStoryModalFirstTime ? 4000 : 5500,
+      autoplaySpeed: !runStoryModalFirstTime ? 5500 : 6000,
       pauseOnHover: false,
 
       centerMode: true,
@@ -93,8 +93,6 @@ export default function ShopSliderProductStory({storyList}) {
          setRunStoryModalFirstTime(true);
       }
    }, [isShowCenterMode]);
-
-   console.log('isShowProductButton', isShowProductButton);
 
    return (
       <>

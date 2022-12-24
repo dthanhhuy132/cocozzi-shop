@@ -102,6 +102,8 @@ export default function AdminEventPage({eventList}) {
          images.forEach((imageFile) => {
             formData.append('images', imageFile);
          });
+
+         // ---------------------------->
          dispatch(createEventAsyns({accessToken, formData})).then((res) => {
             if (res.payload.ok) {
                dispatch(getAllEventAsync());

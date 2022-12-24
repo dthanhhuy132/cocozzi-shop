@@ -15,14 +15,13 @@ export default function SocialLogin() {
 
    return (
       <div className='flex flex-col gap-2 mt-10'>
-         <p className='uppercase text-center font-bold text-white '>
-            Tiếp tục với{' '}
-         </p>
+         <p className='uppercase text-center font-bold text-white '>Tiếp tục với </p>
 
          {/* login with google */}
          <button
             className='relative p-2 text-center bg-white cursor-pointer rounded-sm hover:bg-slate-300'
-            onClick={handleSignInWithGoogle}>
+            // onClick={handleSignInWithGoogle}
+         >
             <img
                src='https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png'
                className='absolute top-[50%] left-2 translate-y-[-50%] w-[18px] h-[18px]'

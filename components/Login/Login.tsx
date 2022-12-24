@@ -11,11 +11,12 @@ import {LoginValidateText} from '.';
 import {Loading} from '../common';
 
 import {SocialLogin} from './index';
+import {AiOutlineEye, AiOutlineEyeInvisible} from 'react-icons/ai';
 
 interface ILogin {
    formValue: {
       email: string;
-      phone?: string;
+      userNumber?: string;
       password: string;
       repassword?: string;
    };
@@ -32,6 +33,8 @@ export default function Login({
    errorText = '',
 }: ILogin) {
    const router = useRouter();
+
+   const [isShowPassword, setIsShowPassword] = useState(false);
 
    const yupFormValidateSchema =
       router.pathname === '/register' ? validateRegisterSchema : validateLoginSchema;
@@ -50,15 +53,16 @@ export default function Login({
       <div className='relattive w-[350px] mt-10 p-10 border-1 bg-[#891a1c] rounded-md md:w-[400px] md:rounded-lg  md:p-5 lg:w-[450px] lg:p-10 '>
          <div className='flex flex-col '>
             <form
-               autoComplete='off'
+               autoComplete='new-password'
                onSubmit={formik.handleSubmit}
-               className='w-full flex flex-col gap-2'>
+               className='w-full flex flex-col gap-y-5'>
                <div>
                   <input
-                     type='text'
+                     type='search'
                      name='email'
+                     autoComplete='new-password'
                      placeholder='Email/Phone number'
-                     className='w-full text-white outline-none bg-transparent border-b-[1px] border-black pb-[4px] mb-2 placeholder-gray-400'
+                     className='w-full text-white outline-none bg-transparent border-b-[1px] border-black pb-[4px] placeholder-gray-400'
                      value={formik.values.email}
                      onChange={formik.handleChange}
                   />
@@ -70,41 +74,60 @@ export default function Login({
                {isRegisterPage && (
                   <div>
                      <input
-                        type='text'
-                        name='phone'
-                        placeholder='Số điện thoại'
-                        className='w-full text-white bg-[none] outline-none bg-transparent border-b-[1px] border-black pb-[4px] mb-2 placeholder-gray-400'
-                        value={formik.values.phone}
+                        type='search'
+                        name='userNumber'
+                        autoComplete='new-password'
+                        placeholder='Phone'
+                        className='w-full text-white bg-[none] outline-none bg-transparent border-b-[1px] border-black pb-[4px] placeholder-gray-400 placeholder:font-thin'
+                        value={formik.values.userNumber}
                         onChange={formik.handleChange}
                      />
-                     {formik.errors.phone && formik.touched.phone && (
-                        <LoginValidateText warningText={formik.errors.phone} />
+                     {formik.errors.userNumber && formik.touched.userNumber && (
+                        <LoginValidateText warningText={formik.errors.userNumber} />
                      )}
                   </div>
                )}
                <div>
-                  <input
-                     type='password'
-                     name='password'
-                     placeholder='Password'
-                     className='w-full text-white bg-[none] outline-none bg-transparent border-b-[1px] border-black pb-[4px] mb-2 placeholder-gray-400'
-                     value={formik.values.password}
-                     onChange={formik.handleChange}
-                  />
+                  <div className='relative'>
+                     <input
+                        type={isShowPassword ? 'text' : 'password'}
+                        name='password'
+                        autoComplete='new-password'
+                        placeholder='Password'
+                        className='w-full text-white bg-[none] outline-none bg-transparent border-b-[1px] border-black pb-[4px] placeholder-gray-400'
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                     />
+                     <div
+                        className='absolute top-[50%] right-[2px] translate-y-[-50%] text-white font-thin cursor-pointer'
+                        onClick={() => setIsShowPassword(!isShowPassword)}>
+                        {isShowPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
+                     </div>
+                  </div>
                   {formik.errors.password && formik.touched.password && (
                      <LoginValidateText warningText={formik.errors.password} />
                   )}
                </div>
                {isRegisterPage && (
                   <div>
-                     <input
-                        type='password'
-                        name='repassword'
-                        placeholder='Re-password'
-                        className='w-full text-white bg-[none] outline-none bg-transparent border-b-[1px] border-black pb-[4px] mb-2 placeholder-gray-400'
-                        value={formik.values.repassword}
-                        onChange={formik.handleChange}
-                     />
+                     <div className='relative'>
+                        <input
+                           type={isShowPassword ? 'text' : 'password'}
+                           name='repassword'
+                           autoComplete='new-password'
+                           placeholder='Re-password'
+                           className='w-full text-white bg-[none] outline-none bg-transparent border-b-[1px] border-black pb-[4px] placeholder-gray-400'
+                           value={formik.values.repassword}
+                           onChange={formik.handleChange}
+                        />
+
+                        <div
+                           className='absolute top-[50%] right-[2px] translate-y-[-50%] text-white font-thin cursor-pointer'
+                           onClick={() => setIsShowPassword(!isShowPassword)}>
+                           {isShowPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
+                        </div>
+                     </div>
+
                      {formik.errors.repassword && formik.touched.repassword && (
                         <LoginValidateText warningText={formik.errors.repassword} />
                      )}
@@ -120,7 +143,7 @@ export default function Login({
                         <Loading />
                      </span>
                   )}
-                  <span>{isRegisterPage ? 'Register' : 'Login'}</span>
+                  <span className='font-bold'>{isRegisterPage ? 'Register' : 'Login'}</span>
                </button>
 
                <div className='text-center'>
@@ -137,7 +160,7 @@ export default function Login({
             <button
                type='submit'
                disabled={isShowLoading}
-               className={`flex justify-center border-[1px] border-gray-900 rounded-lg uppercase text-[0.9rem] font-[400] text-gray-900 py-2 mt-3 mb-2 hover:text-white`}
+               className={`flex justify-center border-[1px] border-gray-900 rounded-lg uppercase text-[0.9rem] font-bold text-gray-900 py-2 mb-2 hover:text-white`}
                onClick={() => router.push(`${isRegisterPage ? '/membership' : '/register'}`)}>
                {isRegisterPage ? 'Login' : 'Register'}
             </button>
