@@ -3,16 +3,21 @@ import {useRouter} from 'next/router';
 import {useDispatch} from 'react-redux';
 import {BagHeader, BagItem} from './index';
 import {updateCart} from '../../store/cart/cartSlice';
-import {ProductItem} from '../ProductItem';
-
-import img1 from '../../public/images/shop/1.webp';
-import img2 from '../../public/images/shop/2.webp';
-
-const imgArr = [img2];
+import {toast} from 'react-toastify';
+import Cookies from 'js-cookie';
 
 export default function Bag({carts}) {
    const router = useRouter();
    const dispatch = useDispatch();
+   console.log('trong cart co gi', carts);
+   const accessToken = Cookies.get('accessToken');
+
+   useEffect(() => {
+      if (!accessToken) {
+         router.push('/membership');
+         toast.warning('Vui lòng đăng nhập để xem giỏ hàng!');
+      }
+   }, []);
 
    useEffect(() => {
       dispatch(updateCart(carts));
@@ -27,17 +32,13 @@ export default function Bag({carts}) {
                   <BagHeader />
                </thead>
                <tbody className='p-2'>
-                  <BagItem />
-                  <BagItem />
-                  <BagItem />
-                  <BagItem />
-                  <BagItem />
-                  <BagItem />
-                  {/* <BagItem />
-                  <BagItem />
-                  <BagItem />
-               <BagItem />
-                  <BagItem /> */}
+                  {carts?.cartItems?.length > 0 ? (
+                     carts?.cartItems?.map((productCart, index) => (
+                        <BagItem productCart={productCart} />
+                     ))
+                  ) : (
+                     <p>Giỏ hàng trống!</p>
+                  )}
                </tbody>
             </table>
          </div>

@@ -10,6 +10,11 @@ import {BsFillCartPlusFill, BsFillCartXFill} from 'react-icons/bs';
 import {useAuthen} from '../../helper/useAuthen';
 import Cookies from 'js-cookie';
 import {toast} from 'react-toastify';
+import {parseJwt} from '../../helper';
+import {useAppDispatch} from '../../store';
+import {addCartItem, getCartByUserId} from '../../store/cart/cartAsynAction';
+
+// import imageSuccess from '../../public/icon/';
 
 interface IProductItem {
    product: any;
@@ -25,9 +30,13 @@ export default function ProductItem({
    showPrice = true,
 }: IProductItem) {
    const router = useRouter();
+   const dispatch = useAppDispatch();
    const {width} = useWindowDimensions();
 
    const [isShowProductSelect, setIsShowProductSelect] = useState(false);
+   const [productIsSelecting, setProductIsSelecting] = useState(null);
+   // add to cart success icon
+   const [isShowAddToCartSuccess, setIsShowAddToCartSuccess] = useState(false);
 
    // size selection
    const [sizeSelect, setSizeSelect] = useState(null);
@@ -35,11 +44,15 @@ export default function ProductItem({
 
    // check user -------> click add to cart
    const accessToken = Cookies.get('accessToken');
+
+   const userInfo = parseJwt(accessToken)?.data;
    function handleClickAddToCart() {
       if (!accessToken) {
-         toast.warning('Vui lòng đăng nhập/đăng kí để thêm sản phẩm vào giỏ hàng');
+         toast.warning('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
          router.push('/membership');
       } else {
+         setProductIsSelecting(product);
+         console.log('product la gi', product);
          setIsShowProductSelect(true);
       }
    }
@@ -47,12 +60,8 @@ export default function ProductItem({
    // -----------> Click buy now
    function clickBuyNow() {
       if (!colorSelect || !sizeSelect) {
-         toast.warning('Vui lòng chọn màu sắc và size sản phẩm');
+         toast.warning('Vui lòng chọn "MÀU SẮC" và "SIZE" sản phẩm');
       } else {
-         console.log('product la gi', product);
-         console.log('size la gi', sizeSelect);
-         console.log('color la gi', colorSelect);
-
          // name, picture, productId,
          // const {name, pictures, price, productId} = product;
          const productPayment = {
@@ -60,9 +69,39 @@ export default function ProductItem({
             pictures: product.pictures,
             price: product.price,
             colorSelect: colorSelect,
-            sizeAndId: sizeSelect,
+            size: sizeSelect.size,
+            prodcutId: sizeSelect.sizeProductID,
          };
+
          router.push({pathname: '/payment', query: productPayment});
+         setIsShowProductSelect(false);
+      }
+   }
+
+   function clickAddToCart() {
+      if (!colorSelect || !sizeSelect) {
+         toast.warning('Vui lòng chọn "MÀU SẮC" và "SIZE" sản phẩm');
+      } else {
+         const userId = userInfo._id;
+         const cartItems = {
+            productId: sizeSelect?.sizeProductID,
+            quantity: 1,
+            productSelectColor: colorSelect,
+         };
+         const cartData = {userId, cartItems};
+         console.log('cartData la gi', cartData);
+         dispatch(addCartItem({accessToken, cartData})).then((res) => {
+            if (res.payload.ok) {
+               dispatch(getCartByUserId({accessToken, userId}));
+               setIsShowProductSelect(false);
+            } else {
+               const message = res.payload.message;
+               if (message == 'amount < quantity') {
+                  toast.error('sản phẩm đã hết hàng');
+               }
+               toast.error('Thêm sản phẩm thât bại, vui lòng thử lại sau!!!');
+            }
+         });
       }
    }
 
@@ -73,6 +112,12 @@ export default function ProductItem({
          setSizeSelect(null);
       }
    }, [isShowProductSelect]);
+
+   useEffect(() => {
+      if (productIsSelecting?.name !== product.name) {
+         setIsShowProductSelect(false);
+      }
+   }, [productIsSelecting]);
 
    return (
       <div className='relative flex flex-col justify-between p-[2px] md:px-2 transition'>
@@ -87,7 +132,19 @@ export default function ProductItem({
 
             {/* product select size and color in pc mode */}
             {isShowProductSelect && (
-               <div className='absolute top-0 right-0 left-0 bottom-0 bg-black bg-opacity-80 px-2 rounded-md'>
+               <div
+                  className='fixed bottom-0 left-0 right-0 z-[500] 
+                              md:absolute md:top-0 md:right-0 md:left-0 md:bottom-0 bg-black md:bg-opacity-80 md:px-2 md:rounded-md md:z-[1]'>
+                  {/* product name for mobile display */}
+                  {width < 600 && (
+                     <div className='p-2 text-white border-b-[1px] flex justify-between'>
+                        <p className=''>{uppercaseFirstLetter(productIsSelecting.name)}</p>
+                        <p className='cursor-pointer' onClick={() => setIsShowProductSelect(false)}>
+                           x
+                        </p>
+                     </div>
+                  )}
+
                   <ProductDetailSizeSelect
                      sizeID={product.sizeID}
                      sizeList={product.size}
@@ -103,14 +160,18 @@ export default function ProductItem({
                      smallSize={true}
                   />
 
-                  <div className='flex mt-3 gap-1 z-[120] '>
+                  <div className='flex mt-3 gap-1 z-[120]'>
                      <button
-                        className='w-[50%] py-1 text-white uppercase border-[1px] border-[#fff] hover:bg-black'
+                        className='w-[50%] text-white uppercase border-[1px] border-[#fff] hover:bg-black'
+                        style={{paddingBottom: `${width < 600 ? '10px 0px' : '4px 0'}`}}
                         onClick={clickBuyNow}>
                         Buy now
                      </button>
 
-                     <button className='w-[50%] py-1 text-white uppercase border-[1px] border-[#fff] hover:bg-black'>
+                     <button
+                        className='w-[50%] text-white uppercase border-[1px] border-[#fff] hover:bg-black'
+                        style={{padding: `${width < 600 ? '10px 0px' : '4px 0'}`}}
+                        onClick={clickAddToCart}>
                         Add to cart
                      </button>
                   </div>

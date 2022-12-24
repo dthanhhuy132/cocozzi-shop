@@ -2,7 +2,8 @@ import api from './api';
 
 const cartApi = {
    addToCart(token, cartData) {
-      return api.callWithToken(token).get('cart/add', cartData);
+      console.log('token và cartData trpmg cart API', token, cartData);
+      return api.callWithToken(token).post('/cart/add', cartData);
    },
 
    removeCartItem(token, cartRemoveData) {

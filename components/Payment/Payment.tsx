@@ -1,20 +1,34 @@
 import {useRouter} from 'next/router';
 import Cookies from 'js-cookie';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {toast} from 'react-toastify';
 
 import PaymentAddress from './PaymentAddress';
 import PaymentMethod from './PaymentMethod';
 import PaymentUserInfo from './PaymentUserInfo';
 
+import {parseJwt} from '../../helper';
+import useGlobalState from '../../state';
+import FormatPrice from '../../helper/FormatPrice';
+import uppercaseFirstLetter from '../../helper/uppercaseFirstLetter';
+import PaymentTableHeader from './PaymentHeader';
+
 export default function Payment() {
+   const accessToken = Cookies.get('accessToken');
+   const userInfo = parseJwt(accessToken)?.data;
+
    const router = useRouter();
-   const product = router.query;
+   const productBuyNow = router.query;
+
+   const [paymentProduct, setPaymentProduct] = useState(
+      Object.keys(productBuyNow).length > 0 ? [productBuyNow] : null
+   );
 
    // const dataPayment = {};
-   console.log('product co gi trong payment', product);
 
-   const accessToken = Cookies.get('accessToken');
+   console.log('paymentProduct co gi trong payment', paymentProduct);
+   console.log('userInfo co gi trong payment', userInfo);
+
    useEffect(() => {
       if (!accessToken) {
          router.push('/membership');
@@ -27,8 +41,8 @@ export default function Payment() {
          <div className='md:w-2/3 p-2 md:p-4 bg-gray-100 rounded-lg  '>
             <p className='font-bold mb-3'>VUI LÒNG HOÀN THÀNH THÔNG TIN ĐẶT HÀNG </p>
 
-            <PaymentUserInfo />
-            <PaymentMethod />
+            <PaymentUserInfo userInfo={userInfo} />
+            <PaymentMethod userInfo={userInfo} />
          </div>
 
          <div className='md:w-1/3'>
@@ -37,53 +51,44 @@ export default function Payment() {
 
                {/* payment bag item */}
                <table className='w-full mt-5'>
-                  <thead>
-                     <tr className='uppercase text-left border-b-2 border-slate-400'>
-                        <th colSpan={2}>
-                           <span className='font-[900]'>Sản phẩm</span>
-                        </th>
-                        <th className='text-right'>
-                           <span className='font-[900]'>Tạm tính</span>
-                        </th>
-                     </tr>
-                  </thead>
-
+                  <PaymentTableHeader />
+                  {/* payment body */}
                   <tbody>
-                     <tr className='border-b-[1px] border-slate-300 '>
-                        <td colSpan={2} className='py-1'>
-                           <span>Tên sản phẩm</span>
-                           <span> x 3</span>
-                        </td>
+                     {paymentProduct && paymentProduct.length > 0 ? (
+                        paymentProduct.map((product, index) => (
+                           <tr className='border-b-[1px] border-slate-300' key={index}>
+                              <td colSpan={2} className='py-1'>
+                                 <div>
+                                    <div>
+                                       <span className='font-bold'>
+                                          {uppercaseFirstLetter(product?.name)}
+                                       </span>
+                                       <span> {product ? 'x 1' : 'so khac'}</span>
+                                    </div>
+                                    <div className='flex gap-5'>
+                                       <span>
+                                          <span className='font-bold'>Size:</span> {product?.size}
+                                       </span>
+                                       <div className='flex gap-2'>
+                                          <span className='font-bold'>Color:</span>
+                                          <div
+                                             className='w-[40px] h-[20px]'
+                                             style={{
+                                                backgroundColor: `${product?.colorSelect}`,
+                                             }}></div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </td>
 
-                        <td className='text-right'>
-                           <span className='text-[0.8rem] font-bold'>₫</span>
-                           {(901234).toLocaleString('en-US')}
-                        </td>
-                     </tr>
-
-                     <tr className='border-b-[1px] border-slate-300 '>
-                        <td colSpan={2} className='py-1'>
-                           <span>Tên sản phẩm</span>
-                           <span> x 3</span>
-                        </td>
-
-                        <td className='text-right'>
-                           <span className='text-[0.8rem] font-bold'>₫</span>
-                           {(901234).toLocaleString('en-US')}
-                        </td>
-                     </tr>
-
-                     <tr className='border-b-[1px] border-slate-300 '>
-                        <td colSpan={2} className='py-1'>
-                           <span>Tên sản phẩm</span>
-                           <span> x 3</span>
-                        </td>
-
-                        <td className='text-right'>
-                           <span className='text-[0.8rem] font-bold'>₫</span>
-                           {(901234).toLocaleString('en-US')}
-                        </td>
-                     </tr>
+                              <td className='text-right flex items-end justify-end mt-[4px]'>
+                                 <FormatPrice price={Number(productBuyNow.price)} />
+                              </td>
+                           </tr>
+                        ))
+                     ) : (
+                        <p>Không có sản phẩm nào</p>
+                     )}
                   </tbody>
                </table>
 

@@ -2,22 +2,8 @@ import {useState, useRef, useEffect} from 'react';
 import {BiCopyAlt} from 'react-icons/bi';
 import to_string_vn_money from './common/convertMoneyToString';
 import PaymentCopy from './common/PaymentCopy';
-export default function PaymentMethod() {
+export default function PaymentMethod({userInfo}) {
    const [paymentWay, setPaymentWay] = useState('cod');
-
-   // const [imgBank, setImgBank] = useState<any>('');
-   // const inputRef = useRef(null);
-   // useEffect(() => URL.revokeObjectURL(imgBank.preview), []);
-   // function handleClickUploadEvidenceBank() {
-   //    inputRef.current.click();
-   // }
-
-   // function handleUploadImgBank(e) {
-   //    const file = e.target.files[0];
-   //    file.preview = URL.createObjectURL(file);
-   //    setImgBank(file);
-   //    e.target.value = '';
-   // }
 
    return (
       <div className='transition'>
@@ -129,10 +115,9 @@ export default function PaymentMethod() {
                      <span className='min-w-[220px] inline-block'>Nội dung chuyển khoản:</span>
                      <p className=''>
                         <span className='font-semibold'>
-                           Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio, quibusdam
-                           ratione? Veniam et alias culpa sim
+                           {userInfo.userNumber} - {userInfo.email}
                            <span>
-                              <PaymentCopy text='Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam et alias culpa similique tempore sed fuga iusto.' />
+                              <PaymentCopy text={`${userInfo.userNumber} - ${userInfo.email}`} />
                            </span>
                         </span>
                      </p>

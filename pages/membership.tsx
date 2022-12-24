@@ -37,7 +37,7 @@ export default function MembershipPage({homePanelList}) {
       }
 
       dispatch(loginAsyncAction(loginData)).then((res) => {
-         if (res.payload.ok) {
+         if (res.payload?.ok) {
             const userId = res.payload.user.user._id;
             const accessToken = res.payload.user.accessToken;
 
@@ -45,11 +45,11 @@ export default function MembershipPage({homePanelList}) {
             dispatch(getCartByUserId({accessToken, userId}));
 
             const expireAccessTokenDay = getTokenExpireTime(accessToken);
-
             Cookies.set('accessToken', accessToken, {expires: expireAccessTokenDay});
+
             router.push('/shop');
          } else {
-            toast.error(res.payload.message);
+            toast.error(res.payload?.message);
          }
          setIsShowLoading(false);
       });

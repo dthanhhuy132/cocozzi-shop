@@ -11,7 +11,7 @@ export default function ShopProduct({productListByName}: any) {
 
    return (
       <>
-         <ResponsiveMasonry columnsCountBreakPoints={{350: 2, 750: 4, 900: 5}}>
+         <ResponsiveMasonry columnsCountBreakPoints={{200: 2, 700: 3, 1000: 5}}>
             <Masonry
                className='my-masonry-grid'
                columnClassName='my-masonry-grid_column'

@@ -3,11 +3,12 @@ import React, {useState} from 'react';
 export type CounterProps = {
    min?: number;
    max?: number;
+   value: number;
    onCountChange?: (count: number) => void;
 } & React.HTMLAttributes<HTMLDivElement>;
 
-export default function InputQuantity({min = 1, max = 20}: CounterProps) {
-   const [count, setCount] = useState(min);
+export default function InputQuantity({min = 1, max = 10, value}: CounterProps) {
+   const [count, setCount] = useState(value);
 
    function handleClickAdd() {
       if (count < max) {

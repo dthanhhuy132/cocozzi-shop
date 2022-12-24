@@ -8,7 +8,7 @@ export default function ProductDetailColorSelect({
 }) {
    useEffect(() => {}, []);
    return (
-      <div className='flex items-center gap-1 mx-3 md:mx-0 mt-2 md:mt-5 pb-2 border-b-[1px] md:pb-5'>
+      <div className='flex items-center gap-1 px-3 md:px-0 mt-2 md:mt-5 pb-2 border-b-[1px] md:pb-5'>
          <p className={`${smallSize ? 'min-w-[50px] text-white' : 'min-w-[70px]'} `}>Color: </p>
          <div className={`flex flex-row items-center w-full ${smallSize ? 'gap-2' : 'gap-4'}`}>
             {colorList
@@ -22,10 +22,7 @@ export default function ProductDetailColorSelect({
                      }`}
                      style={{
                         backgroundColor: `${colorItem}`,
-                        border:
-                           colorSelect === colorItem
-                              ? '2px solid red'
-                              : `${smallSize ? ' `2px solid white' : 'none'}`,
+                        border: colorSelect === colorItem ? '2px solid red' : 'none',
                         padding: colorSelect === colorItem ? '5px' : 'none',
                      }}
                      onClick={() => setColorSelect(colorItem)}

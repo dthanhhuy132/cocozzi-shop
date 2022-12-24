@@ -172,7 +172,7 @@ export default function Header({categoryList, eventList, productGroupByNameList}
                         onClick={() => router.push('/bag')}
                      />
                      <span
-                        className='absolute left-[50%] translate-x-[-50%] bottom-0 md:bottom-[1px] font-bold text-[#891a1c] text-[0.6rem] md:text-[0.7rem]'
+                        className='absolute left-[50%] translate-x-[-50%] bottom-[-1px] md:bottom-[1px] font-bold text-[#891a1c] text-[0.6rem] md:text-[0.7rem]'
                         onClick={() => router.push('/bag')}>
                         0
                      </span>

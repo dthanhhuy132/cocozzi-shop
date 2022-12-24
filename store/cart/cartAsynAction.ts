@@ -26,39 +26,33 @@ export const getCartByUserId: any = createAsyncThunk(
 export const removeCartItem: any = createAsyncThunk(
    'cart/removeCartItem',
    async ({accessToken, cartRemoveData}: any) => {
-      async () => {
-         try {
-            // const res = await categoryApi.getAllCategory();
-
-            // const res = await cartApi.removeCartItem(accessToken, removeCartItem);
-            return {
-               ok: true,
-               // data: res.data.res,
-            };
-         } catch (error) {
-            return {
-               ok: false,
-            };
-         }
-      };
+      try {
+         // const res = await cartApi.removeCartItem(accessToken, removeCartItem);
+         return {
+            ok: true,
+            // data: res.data.res,
+         };
+      } catch (error) {
+         return {
+            ok: false,
+         };
+      }
    }
 );
 
 export const addCartItem: any = createAsyncThunk(
    'cart/addCartItem',
    async ({accessToken, cartData}: any) => {
-      async () => {
-         try {
-            // const res = await cartApi.removeCartItem(accessToken, cartData);
-            return {
-               ok: true,
-               // data: res.data.res,
-            };
-         } catch (error) {
-            return {
-               ok: false,
-            };
-         }
-      };
+      console.log('cartData la gi', cartData);
+      try {
+         const res = await cartApi.addToCart(accessToken, cartData);
+         return {
+            ok: true,
+         };
+      } catch (error) {
+         return {
+            ok: false,
+         };
+      }
    }
 );

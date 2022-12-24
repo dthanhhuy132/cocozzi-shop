@@ -1,7 +1,7 @@
 import PaymentAddress from './PaymentAddress';
 import PaymetnInputForm from './PaymentInputForm';
 
-export default function PaymentUserInfo() {
+export default function PaymentUserInfo({userInfo}) {
    return (
       <>
          <div className='grid grid-cols-1 md:grid-cols-2 md:gap-5'>

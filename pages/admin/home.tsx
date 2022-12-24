@@ -40,8 +40,7 @@ export default function AdminHomePage({homePanelList}) {
       setIsShowLoading(true);
 
       const {description, pictures, homPanelId, isChangeImage} = homePanel;
-      console.log('homPanelId la gi', homPanelId);
-      console.log('isChangeImage la gi', isChangeImage);
+
       if (homPanelId) {
          // edit panel for home
          const panelId = homPanelId;

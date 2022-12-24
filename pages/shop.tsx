@@ -23,9 +23,9 @@ export default function ShopPage({productListByName, storyList}) {
 
    return (
       <div className='shop-container'>
-         <div className='shop-item min-h-[100vh]'>
+         {/* <div className='shop-item min-h-[100vh]'>
             <ShopSliderBanner />
-         </div>
+         </div> */}
 
          {/* story product */}
          <div className='flex items-center mt-[50px] mx-0 py-5 md:py-0 md:mx-20 md:min-h-[91vh] shop-item'>
@@ -34,7 +34,7 @@ export default function ShopPage({productListByName, storyList}) {
 
          {/* shop category */}
          <div className='mx-0 md:mx-20 active-2 border-t-2 shop-item'>
-            <div className='sticky top-[-1px] md:top-[0px] pb-3 md:pb-5 bg-white z-[50] flex justify-center border-b-[1px]'>
+            <div className='sticky top-[-2px] md:top-[0px] pb-3 md:pb-5 bg-white z-[10] flex justify-center border-b-[1px]'>
                <div className='flex gap-5 md:gap-x-10 mt-5 font-bold flex-wrap justify-center'>
                   {categoryProductState?.map((category, index) => (
                      <p

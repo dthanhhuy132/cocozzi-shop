@@ -1,12 +1,5 @@
 import Link from 'next/link';
 import styled from 'styled-components';
-import img1 from '../../public/images/shop/1.webp';
-import img2 from '../../public/images/shop/2.webp';
-import img3 from '../../public/images/shop/3.webp';
-import img4 from '../../public/images/shop/4.webp';
-import BagItemHover from './BagItemHover';
-
-const imgArr = [img1, img2, img3, img4];
 
 export default function BagHover() {
    return (
@@ -15,10 +8,10 @@ export default function BagHover() {
             <p className='border-b-2 lowercase mb-2 font-thin pb-2'>shopping bag</p>
             {/* cart */}
             <div className='flex flex-col gap-4 my-2 max-h-[170px] overflow-auto'>
-               {imgArr.map((img, index) => (
+               {/* {imgArr.map((img, index) => (
                   // add img here
                   <BagItemHover key={index} />
-               ))}
+               ))} */}
             </div>
 
             <div className='border-t-2 mt-2 lowercase text-center'>

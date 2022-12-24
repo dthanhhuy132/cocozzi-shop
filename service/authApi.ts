@@ -7,6 +7,10 @@ const authApi = {
    register: (registerData) => {
       return api.call().post('/auth/register', registerData);
    },
+
+   logout: () => {
+      return api.call().delete('auth/logout');
+   },
 };
 
 export default authApi;

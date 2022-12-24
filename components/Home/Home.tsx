@@ -2,11 +2,14 @@ import Image from 'next/image';
 import {useRouter} from 'next/router';
 import {useEffect, useState} from 'react';
 import styled, {keyframes, css} from 'styled-components';
+import getLinkHomePanel from '../Admin/Home/getLinkHomePanel';
 
 export default function Home({homeImage}) {
    const [isActiveAnimation, setIsActiveAnimation] = useState(0);
    const router = useRouter();
 
+   // get home links
+   const homeLinks = getLinkHomePanel(homeImage.description);
    const changeImageActiveAnimate = () => {
       if (isActiveAnimation < homeImage.length - 1) {
          setIsActiveAnimation((pre) => pre + 1);
@@ -15,13 +18,11 @@ export default function Home({homeImage}) {
       }
    };
 
-   const handleClickImage = () => {
-      if (router.pathname === '/') {
-         // router.push('/product/124');
-      } else {
-         return;
+   function handleClickImage(homeLinkIndex) {
+      if (homeLinks[homeLinkIndex]) {
+         router.push(`/${homeLinks[homeLinkIndex]}`);
       }
-   };
+   }
 
    useEffect(() => {
       const intervalId = setInterval(changeImageActiveAnimate, 4000);
@@ -32,7 +33,7 @@ export default function Home({homeImage}) {
       <div className='grid grid-cols-1 md:grid-cols-2 gap-0 '>
          {homeImage?.pictures?.map((imgSRC, index) => (
             <div className='overflow-hidden' key={index}>
-               <a onClick={() => handleClickImage()}>
+               <a onClick={() => handleClickImage(index)}>
                   <ImageSC
                      src={imgSRC}
                      active={isActiveAnimation === index ? '1' : ''}
