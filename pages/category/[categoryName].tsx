@@ -15,7 +15,7 @@ export default function CategoryProductPage({categoryList}) {
    const categroyNameSlug = categroyName.split('-').slice(0, -1).join('-');
 
    // find category by slug name => get product by this category
-   const matchCategory = categoryList.filter(
+   const matchCategory = categoryList?.filter(
       (product) => stringToSlug(product.name).split('-').slice(0, -1).join('-') == categroyNameSlug
    )[0];
    const categoryId = matchCategory._id;
@@ -29,10 +29,12 @@ export default function CategoryProductPage({categoryList}) {
    }, [router.pathname, categroyNameSlug]);
 
    useEffect(() => {
-      const productByCategory = productListState.filter((product) => {
-         return product.categoryId === categoryId;
-      });
-      setRenderProductByCategory(productByCategory);
+      if (productListState) {
+         const productByCategory = productListState?.filter((product) => {
+            return product.categoryId === categoryId;
+         });
+         setRenderProductByCategory(productByCategory);
+      }
    }, [productListState, router.pathname, categroyNameSlug]);
    return (
       <div className='w-full px-2 md:w-3/4 md:mx-auto my-10'>
