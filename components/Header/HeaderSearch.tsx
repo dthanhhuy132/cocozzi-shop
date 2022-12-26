@@ -9,12 +9,14 @@ interface IHeaderSearch {
 }
 
 export default function HeaderSearch({whiteLine = false}: IHeaderSearch) {
+   const router = useRouter();
+
    const [isOnInput, setOnInput] = useState(false);
    const [searchStr, setSearchStr] = useState('');
    const {width} = useWindowDimensions();
    const [searchStrDebounced] = useDebounce(searchStr, 500);
 
-   const router = useRouter();
+   const [isMobileScreen, setIsMobileScreen] = useState(false);
 
    const inputRef = useRef(null);
 
@@ -26,13 +28,23 @@ export default function HeaderSearch({whiteLine = false}: IHeaderSearch) {
       }
    }, [searchStrDebounced]);
 
+   useEffect(() => {
+      if (width > 600) {
+         setIsMobileScreen(false);
+      }
+      if (width < 600) {
+         setIsMobileScreen(true);
+      }
+   }, [width]);
+
    return (
       <div className='flex items-end'>
          <DivSC isOnInput={isOnInput} hasSearchStr={searchStr.length > 0} whiteLine={whiteLine}>
             <input
                type='text'
-               className={`lg:block p-0 outline-none relative bg-transparent w-full`}
-               style={{textAlign: `${width > 600 ? 'left' : 'center'}`}}
+               className={`lg:block p-0 outline-none relative bg-transparent w-full text-${
+                  isMobileScreen ? 'center' : 'left'
+               }`}
                onBlur={() => setOnInput(false)}
                onFocus={() => setOnInput(true)}
                onChange={(e) => setSearchStr(e.target.value)}

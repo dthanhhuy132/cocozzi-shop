@@ -50,8 +50,8 @@ export default function MembershipPage({homePanelList}) {
             router.push('/shop');
          } else {
             toast.error(res.payload?.message);
+            setIsShowLoading(false);
          }
-         setIsShowLoading(false);
       });
    }
 

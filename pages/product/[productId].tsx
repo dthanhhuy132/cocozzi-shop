@@ -12,14 +12,24 @@ import SliderSlick from 'react-slick';
 import useWindowDimensions from '../../hooks/UseWindowDimensions';
 import slickSliderMobile from '../../helper/slickSliderMobile';
 import {useRouter} from 'next/router';
-import {useAppSelector} from '../../store';
+import Cookies from 'js-cookie';
+
+import {useAppDispatch, useAppSelector} from '../../store';
 import stringToSlug from '../../helper/stringToSlug';
 import filterProductActive from '../../helper/filterProductActive';
 import productApi from '../../service/productApi';
 import FormatPrice from '../../helper/FormatPrice';
 import converFirstLetterToUpperCase from '../../helper/converFirstLetterToUpperCase';
+import {toast} from 'react-toastify';
+import {parseJwt} from '../../helper';
+import {addCartItem, getCartByUserId} from '../../store/cart/cartAsynAction';
+import LoadingCocozzi from '../../components/common/LoadingCocozzi';
 
 export default function ProductDetailPage({productListByName}: any) {
+   const accessToken = Cookies.get('accessToken');
+   const userInfo = parseJwt(accessToken)?.data;
+
+   const dispatch = useAppDispatch();
    const router = useRouter();
 
    const productName = router.query.productId as string;
@@ -35,10 +45,65 @@ export default function ProductDetailPage({productListByName}: any) {
    const [isMobileScreen, setIsMobileScreen] = useState(false);
 
    // size and color selection
-   const [sizeSelect, setSizeSelect] = useState('');
-   const [colorSelect, setColorSelect] = useState(0);
+   const [sizeSelect, setSizeSelect] = useState(null);
+   const [colorSelect, setColorSelect] = useState(null);
+
+   const [isShowLoading, setIsShowLoading] = useState(false);
 
    const [isShowSizeAndColor, setIsShowSizeAndColor] = useState(false);
+   const [isShowProductSelect, setIsShowProductSelect] = useState(false);
+   // -------------------------------------------> BUY NOW
+   function clickBuyNow() {
+      if (!colorSelect || !sizeSelect) {
+         toast.warning('Vui lòng chọn "MÀU SẮC" và "SIZE" sản phẩm');
+      } else {
+         // name, picture, productId,
+         // const {name, pictures, price, productId} = product;
+         const productPayment = {
+            name: productDetail.name,
+            pictures: productDetail.pictures,
+            price: productDetail.price,
+            colorSelect: colorSelect,
+            size: sizeSelect.size,
+            prodcutId: sizeSelect.sizeProductID,
+            quantity: 1,
+         };
+
+         router.push({pathname: '/payment', query: productPayment});
+         setIsShowProductSelect(false);
+      }
+   }
+   // -------------------------------------------> ADD TO CART
+
+   function clickAddToCart() {
+      if (!colorSelect || !sizeSelect) {
+         toast.warning('Vui lòng chọn "MÀU SẮC" và "SIZE" sản phẩm');
+      } else {
+         setIsShowLoading(true);
+
+         const userId = userInfo._id;
+         const cartItems = {
+            productId: sizeSelect?.sizeProductID,
+            quantity: 1,
+            productSelectColor: colorSelect,
+         };
+         const cartData = {userId, cartItems};
+         dispatch(addCartItem({accessToken, cartData})).then((res) => {
+            if (res.payload.ok) {
+               dispatch(getCartByUserId({accessToken, userId}));
+               setIsShowProductSelect(false);
+               toast.success('Đã thêm sản phẩm vào giỏ hàng');
+            } else {
+               const message = res.payload.message;
+               if (message == 'amount < quantity') {
+                  toast.error('Sản phẩm đã hết hàng');
+               }
+               toast.error('Thêm sản phẩm thât bại, vui lòng thử lại sau!!!');
+            }
+            setIsShowLoading(false);
+         });
+      }
+   }
 
    //   product slide setting in mobile mode
    const settings = {
@@ -80,7 +145,6 @@ export default function ProductDetailPage({productListByName}: any) {
                {/* <video autoPlay muted loop className='w-full'>
                   <source src='/videos/product.mp4' type='video/mp4' />
                </video> */}
-               {/* image slider */}
 
                {imagesArr?.map((img, index) => (
                   <div className='relative' key={index}>
@@ -154,6 +218,7 @@ export default function ProductDetailPage({productListByName}: any) {
                         <button
                            className='w-[50%] py-2 uppercase bg-black md:bg-[transparent] md:border-[1px] hover:text-white md:hover:bg-black border-r-[1px] border-[#fff] md:border-black'
                            onClick={() => {
+                              clickBuyNow();
                               isMobile && setIsShowSizeAndColor(!isShowSizeAndColor);
                            }}>
                            Buy now
@@ -162,6 +227,7 @@ export default function ProductDetailPage({productListByName}: any) {
                         <button
                            className='w-[50%] py-2 uppercase bg-black md:bg-[transparent] md:border-[1px] border-black md:hover:text-white md:hover:bg-black'
                            onClick={() => {
+                              clickAddToCart();
                               isMobile && setIsShowSizeAndColor(!isShowSizeAndColor);
                            }}>
                            Add to cart
@@ -177,6 +243,8 @@ export default function ProductDetailPage({productListByName}: any) {
                <ProductDescription description={productDetail.description}></ProductDescription>
             )}
          </div>
+
+         {isShowLoading && <LoadingCocozzi />}
       </div>
    );
 }

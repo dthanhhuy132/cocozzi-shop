@@ -9,7 +9,7 @@ export default function Home({homeImage}) {
    const router = useRouter();
 
    // get home links
-   const homeLinks = getLinkHomePanel(homeImage.description);
+   const homeLinks = homeImage?.description && getLinkHomePanel(homeImage?.description);
    const changeImageActiveAnimate = () => {
       if (isActiveAnimation < homeImage.length - 1) {
          setIsActiveAnimation((pre) => pre + 1);

@@ -6,7 +6,7 @@ interface IProductSlice {
    productList: any;
 }
 const initialState = {
-   productListByGroupNameState: undefined,
+   productByGroupNameForUser: undefined,
    productListState: undefined,
 };
 
@@ -14,8 +14,8 @@ const productSlice = createSlice({
    name: 'productSlice',
    initialState,
    reducers: {
-      updateProductListByGroupName: (state, action) => {
-         state.productListByGroupNameState = action.payload;
+      updateProductByGroupNameForUser: (state, action) => {
+         state.productByGroupNameForUser = action.payload;
       },
    },
 
@@ -23,11 +23,10 @@ const productSlice = createSlice({
       builder.addCase(getProductByNameAsync.fulfilled, (state, action) => {
          const data = action.payload;
 
-         console.log('data trong fulfill la gi', data);
          state.productListState = data.data;
       });
    },
 });
 
-export const {updateProductListByGroupName} = productSlice.actions;
+export const {updateProductByGroupNameForUser} = productSlice.actions;
 export default productSlice.reducer;

@@ -2,7 +2,6 @@ import {useEffect, useMemo, useRef, useState} from 'react';
 import Link from 'next/link';
 import {useRouter} from 'next/router';
 import Cookies from 'js-cookie';
-import cookie from 'cookie';
 
 import HeaderSearch from './HeaderSearch';
 import {HeaderMarquee} from '../HeaderMarquee';
@@ -20,26 +19,29 @@ import SubMenu from './SubMenu';
 import useGlobalState from '../../state';
 import {useAppDispatch, useAppSelector} from '../../store';
 import {updateCategoryProduct} from '../../store/categoryPromo/categoryPromoSlice';
-import {updateCart} from '../../store/cart/cartSlice';
 import {updateEvent} from '../../store/event/eventSlice';
-import {updateProductListByGroupName} from '../../store/product/productSlice';
-
-interface IHeader {}
+import {parseJwt} from '../../helper';
+import {getCartByUserId} from '../../store/cart/cartAsynAction';
 
 const navbarHeader = ['shop', 'promo', 'event', 'info', 'membership'];
 const submenuArr = ['shop', 'event'];
 
 export default function Header({categoryList, eventList, productGroupByNameList}) {
+   // /hook
    const router = useRouter();
    const dispatch = useAppDispatch();
+
+   // commom
+   const accessToken = Cookies.get('accessToken');
+
+   // useState
    const [, setHeaderHeight] = useGlobalState('headerHeight');
 
    // get category, get cart item in redux
    const {categoryProductState} = useAppSelector((state: any) => state.category);
-   const {cartState} = useAppSelector((state) => state.cart);
+   const {cartUserState} = useAppSelector((state) => state.cart);
    const {eventState} = useAppSelector((state) => state.event);
    // get product list by group Name
-   const {productListByGroupNameState} = useAppSelector((state) => state.product);
 
    const {isMobile} = useWindowDimensions();
    // menu responsive + bag
@@ -51,14 +53,11 @@ export default function Header({categoryList, eventList, productGroupByNameList}
    const [submenuName, setSubmenuName] = useState('');
 
    const [isShowUserControl, setIsShowUserControl] = useState(false);
-   const [hasToken, setHasToken] = useState(false);
+   // check Has token or not
+   const [hasToken, setHasToken] = useState(true);
 
-   const {accessToken} = useSelector((state: any) => state.auth);
-
-   // check token to create submenu
-   useEffect(() => {
-      setHasToken(accessToken ? true : false);
-   }, [accessToken]);
+   // get user infor form Cookies string -> dispatch function to get cart
+   const userInfo = parseJwt(accessToken)?.data;
 
    // header marquee
    const hideHeaderMarquee = useMemo(() => {
@@ -75,9 +74,7 @@ export default function Header({categoryList, eventList, productGroupByNameList}
          setIsShowSubMenu(false);
       }
    }
-
    const headerRef = useRef(null);
-
    useEffect(() => {
       const headerHeight = headerRef.current.getBoundingClientRect()?.height;
       setHeaderHeight(headerHeight);
@@ -94,14 +91,19 @@ export default function Header({categoryList, eventList, productGroupByNameList}
       }
    }, []);
 
-   const eventArr = eventState ? eventState : eventList;
-
-   // using header to update productListbyGroupProductName
+   const userId = userInfo?._id;
    useEffect(() => {
-      if (!productListByGroupNameState) {
-         dispatch(updateProductListByGroupName(productGroupByNameList));
+      dispatch(getCartByUserId({accessToken, userId}));
+   }, []);
+
+   useEffect(() => {
+      if (accessToken) {
+         setHasToken(true);
+      } else {
+         setHasToken(false);
       }
-   }, [productListByGroupNameState]);
+   }, [accessToken]);
+   const eventArr = eventState ? eventState : eventList;
 
    return (
       <>
@@ -131,7 +133,10 @@ export default function Header({categoryList, eventList, productGroupByNameList}
                            {item}
                         </a>
                      </Link>
+
+                     {/* sub menu for header (hover item for showing) */}
                      <SubMenu
+                        // item here -> item name of header
                         productGroupByNameList={productGroupByNameList}
                         isShowSubMenu={isShowSubMenu}
                         name={submenuName}
@@ -146,23 +151,23 @@ export default function Header({categoryList, eventList, productGroupByNameList}
                   <HeaderSearch></HeaderSearch>
                </div>
                <div
-                  className='relative before:absolute before:top-0 before:right-0
-                  before:w-[50px] before:h-[40px] group cursor-pointer'
+                  className='relative before:select-none before:w-0 before:h-0 before:absolute before:top-0 before:right-0
+                  before:md:w-[50px] before:md:h-[40px] group cursor-pointer'
                   onMouseEnter={() => !isMobile && setIsShowUserControl(true)}
                   onMouseLeave={() => !isMobile && setIsShowUserControl(false)}>
+                  {/* user icon */}
                   <BiUser
-                     className='relative hover:text-[#891a1c] group-hover:text-[#891a1c] cursor-pointer text-[1.3rem] md:text-[1.6rem]'
+                     className='relative select-none md:select-all hover:text-[#891a1c] group-hover:text-[#891a1c] cursor-pointer text-[1.3rem] md:text-[1.6rem]'
                      onClick={() => {
-                        !hasToken && router.push('/membership');
-                        // isMobile && router.push('/my-order');
+                        !accessToken && router.push('/membership');
                      }}
                   />
 
                   {isShowUserControl && (
-                     <HeaderUserControl hasToken={hasToken} isMobile={isMobile} />
+                     <HeaderUserControl hasToken={accessToken ? true : false} isMobile={isMobile} />
                   )}
                </div>
-               {hasToken && (
+               {hasToken ? (
                   <div
                      className='order-3 relative font-[500] hover:cursor-pointer hover:text-[#891a1c]'
                      onMouseEnter={() => !isMobile && setIsShowBag(true)}
@@ -174,11 +179,13 @@ export default function Header({categoryList, eventList, productGroupByNameList}
                      <span
                         className='absolute left-[50%] translate-x-[-50%] bottom-[-1px] md:bottom-[1px] font-bold text-[#891a1c] text-[0.6rem] md:text-[0.7rem]'
                         onClick={() => router.push('/bag')}>
-                        0
+                        {cartUserState ? cartUserState?.length : 0}
                      </span>
 
-                     {/* {isShowBag && <BagHover />} */}
+                     {isShowBag && <BagHover cartUserState={cartUserState} />}
                   </div>
+               ) : (
+                  <div></div>
                )}
             </div>
             <div className='order-1 lg:hidden'>
@@ -189,6 +196,7 @@ export default function Header({categoryList, eventList, productGroupByNameList}
             </div>
          </div>
 
+         {/* hide and display menu */}
          {hideHeaderMarquee && <HeaderMarquee eventArr={eventArr}></HeaderMarquee>}
          <HeaderNavResponsive
             handleCloseMenu={() => setShowMenuRps(false)}

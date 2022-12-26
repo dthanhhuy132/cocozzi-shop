@@ -10,7 +10,6 @@ export const getCartByUserId: any = createAsyncThunk(
          const res = await cartApi.getCartByUserId(accessToken, userId);
 
          const cartItem = res.data.data.cartItems;
-
          return {
             ok: true,
             data: cartItem,
@@ -23,11 +22,11 @@ export const getCartByUserId: any = createAsyncThunk(
    }
 );
 
-export const removeCartItem: any = createAsyncThunk(
+export const removeCartItemAsync: any = createAsyncThunk(
    'cart/removeCartItem',
    async ({accessToken, cartRemoveData}: any) => {
       try {
-         // const res = await cartApi.removeCartItem(accessToken, removeCartItem);
+         const res = await cartApi.removeCartItem(accessToken, cartRemoveData);
          return {
             ok: true,
             // data: res.data.res,
@@ -43,7 +42,6 @@ export const removeCartItem: any = createAsyncThunk(
 export const addCartItem: any = createAsyncThunk(
    'cart/addCartItem',
    async ({accessToken, cartData}: any) => {
-      console.log('cartData la gi', cartData);
       try {
          const res = await cartApi.addToCart(accessToken, cartData);
          return {

@@ -103,3 +103,8 @@ thead th {
   font-family: "Gilroy";
   color: red;
 }
+
+/* drop-down */
+.Dropdown-control {
+  border-radius: 4px;
+}

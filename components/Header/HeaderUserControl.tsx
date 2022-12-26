@@ -17,14 +17,16 @@ export default function HeaderUserControl({hasToken, isMobile}) {
       router.push('/');
    }
    return (
-      <div className='absolute top-7 right-[-10px] min-w-[190px] bg-white border rounded-lg shadow-[0_3px_8px_rgba(0,0,0,0.3)] z-[99990]'>
+      <div className='absolute select-none top-7 right-[-10px] min-w-[190px] bg-white border rounded-lg shadow-[0_3px_8px_rgba(0,0,0,0.3)] z-[99990]'>
          <ul className='capitalize py-1'>
             {hasToken && (
                <>
                   <li className='py-1 px-2 hover:bg-[#891a1c] hover:text-white cursor-pointer'>
                      Thông tin
                   </li>
-                  <li className='py-1 px-2 hover:bg-[#891a1c] hover:text-white cursor-pointer'>
+                  <li
+                     className='py-1 px-2 hover:bg-[#891a1c] hover:text-white cursor-pointer'
+                     onClick={() => router.push('/order')}>
                      Đơn hàng của tôi
                   </li>
 
@@ -44,7 +46,9 @@ export default function HeaderUserControl({hasToken, isMobile}) {
             )}
 
             {!hasToken && (
-               <li className='py-1 px-2 hover:bg-[#891a1c] hover:text-white cursor-pointer'>
+               <li
+                  className='py-1 px-2 hover:bg-[#891a1c] hover:text-white cursor-pointer'
+                  onClick={() => router.push('/membership')}>
                   Đăng nhập
                </li>
             )}

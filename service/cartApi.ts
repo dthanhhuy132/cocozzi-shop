@@ -7,7 +7,7 @@ const cartApi = {
    },
 
    removeCartItem(token, cartRemoveData) {
-      return api.callWithToken(token).delete(`/cart/delete/`, cartRemoveData);
+      return api.callWithToken(token).put(`/cart/delete`, cartRemoveData);
    },
 
    getCartByUserId(token, userId) {

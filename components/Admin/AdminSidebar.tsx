@@ -10,6 +10,7 @@ const adminRouter = [
    'event',
    'product',
    'story',
+   'banner',
    'voucher',
    'user',
    'info',

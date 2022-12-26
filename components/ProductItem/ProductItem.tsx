@@ -13,6 +13,7 @@ import {toast} from 'react-toastify';
 import {parseJwt} from '../../helper';
 import {useAppDispatch} from '../../store';
 import {addCartItem, getCartByUserId} from '../../store/cart/cartAsynAction';
+import LoadingCocozzi from '../common/LoadingCocozzi';
 
 // import imageSuccess from '../../public/icon/';
 
@@ -37,6 +38,7 @@ export default function ProductItem({
    const [productIsSelecting, setProductIsSelecting] = useState(null);
    // add to cart success icon
    const [isShowAddToCartSuccess, setIsShowAddToCartSuccess] = useState(false);
+   const [isShowLoading, setIsShowLoading] = useState(false);
 
    // size selection
    const [sizeSelect, setSizeSelect] = useState(null);
@@ -44,8 +46,8 @@ export default function ProductItem({
 
    // check user -------> click add to cart
    const accessToken = Cookies.get('accessToken');
-
    const userInfo = parseJwt(accessToken)?.data;
+
    function handleClickAddToCart() {
       if (!accessToken) {
          toast.warning('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng');
@@ -71,6 +73,7 @@ export default function ProductItem({
             colorSelect: colorSelect,
             size: sizeSelect.size,
             prodcutId: sizeSelect.sizeProductID,
+            quantity: 1,
          };
 
          router.push({pathname: '/payment', query: productPayment});
@@ -82,6 +85,8 @@ export default function ProductItem({
       if (!colorSelect || !sizeSelect) {
          toast.warning('Vui lòng chọn "MÀU SẮC" và "SIZE" sản phẩm');
       } else {
+         setIsShowLoading(true);
+
          const userId = userInfo._id;
          const cartItems = {
             productId: sizeSelect?.sizeProductID,
@@ -89,18 +94,19 @@ export default function ProductItem({
             productSelectColor: colorSelect,
          };
          const cartData = {userId, cartItems};
-         console.log('cartData la gi', cartData);
          dispatch(addCartItem({accessToken, cartData})).then((res) => {
             if (res.payload.ok) {
                dispatch(getCartByUserId({accessToken, userId}));
                setIsShowProductSelect(false);
+               toast.success('Đã thêm sản phẩm vào giỏ hàng');
             } else {
                const message = res.payload.message;
                if (message == 'amount < quantity') {
-                  toast.error('sản phẩm đã hết hàng');
+                  toast.error('Sản phẩm đã hết hàng');
                }
                toast.error('Thêm sản phẩm thât bại, vui lòng thử lại sau!!!');
             }
+            setIsShowLoading(false);
          });
       }
    }
@@ -207,6 +213,8 @@ export default function ProductItem({
                </>
             )}
          </div>
+
+         {isShowLoading && <LoadingCocozzi color='grey' />}
       </div>
    );
 }

@@ -1,27 +1,48 @@
+import {useMemo} from 'react';
+
 import Link from 'next/link';
 import styled from 'styled-components';
 
-export default function BagHover() {
+import Cookies from 'js-cookie';
+import {parseJwt} from '../../helper';
+import BagItemHover from './BagItemHover';
+import FormatPrice from '../../helper/FormatPrice';
+
+export default function BagHover({cartUserState}) {
+   const totalPrice = useMemo(
+      () =>
+         cartUserState.reduce(
+            (acc, cur) => (acc += cur?.product?.price * cur?.product?.quantity),
+            0
+         ),
+      [cartUserState]
+   );
    return (
       <DivSC>
          <div className='relative flex flex-col justify-end z-10 p-4'>
-            <p className='border-b-2 lowercase mb-2 font-thin pb-2'>shopping bag</p>
+            <p className='border-b-2 mb-2 font-thin pb-2'>Shopping bag</p>
             {/* cart */}
-            <div className='flex flex-col gap-4 my-2 max-h-[170px] overflow-auto'>
-               {/* {imgArr.map((img, index) => (
-                  // add img here
-                  <BagItemHover key={index} />
-               ))} */}
+            <div className='flex flex-col gap-4 my-2 min-h-[40px] max-h-[170px] overflow-auto'>
+               {cartUserState.length > 0 ? (
+                  cartUserState?.map((productCart, index) => (
+                     // add img here
+                     <BagItemHover key={index} productCart={productCart} />
+                  ))
+               ) : (
+                  <p>Giỏ hàng trống</p>
+               )}
             </div>
 
             <div className='border-t-2 mt-2 lowercase text-center'>
                <div className='flex justify-between font-thin mt-1'>
-                  <p>Total</p>
-                  <p>3 000 000</p>
+                  <p className='capitalize'>Total</p>
+                  <p className='flex items-end gap-1 font-bold text-[1.1rem]'>
+                     <FormatPrice price={totalPrice} />
+                  </p>
                </div>
                <Link href={'/payment'}>
                   <p className='w-[50%] font-bold bg-[white] text-black rounded-[30px] pb-1 mx-[auto] mt-2 cursor-pointer'>
-                     pay
+                     PAY
                   </p>
                </Link>
             </div>

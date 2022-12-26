@@ -9,8 +9,9 @@ const voucherApi = {
       return {};
    },
 
-   getVoucherByCode: (token, voucherCode) => {
-      return api.callWithToken(token).get(`/promotion/code/${voucherCode}`);
+   getVoucherByCode: (voucherCode) => {
+      console.log('chay vao api goc', voucherCode);
+      return api.call().get(`/promotion/code/${voucherCode}`);
    },
 
    createVoucher: (token, data) => {

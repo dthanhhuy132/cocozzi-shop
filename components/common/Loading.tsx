@@ -1,4 +1,4 @@
-export default function Loading({width = '20px', height = '20px'}) {
+export default function Loading({width = '20px', height = '20px', color = '#eff2f3'}) {
    return (
       <svg
          xmlns='http://www.w3.org/2000/svg'
@@ -16,7 +16,7 @@ export default function Loading({width = '20px', height = '20px'}) {
             cx={50}
             cy={50}
             fill='none'
-            stroke='#eff2f3'
+            stroke={color}
             strokeWidth={10}
             r={35}
             strokeDasharray='164.93361431346415 56.97787143782138'>

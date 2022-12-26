@@ -29,6 +29,10 @@ const PanelSlice = createSlice({
       updateHomePanelUser: (state, action) => {
          state.panelForHomeState = action.payload;
       },
+
+      updatePanelForProductBanner: (state, action) => {
+         state.panelForBannerState = action.payload;
+      },
    },
 
    extraReducers: (builder) => {
@@ -52,5 +56,6 @@ const PanelSlice = createSlice({
    },
 });
 
-export const {udpatePanelForUser, updateHomePanelUser} = PanelSlice.actions;
+export const {udpatePanelForUser, updateHomePanelUser, updatePanelForProductBanner} =
+   PanelSlice.actions;
 export default PanelSlice.reducer;

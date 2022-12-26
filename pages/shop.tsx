@@ -12,20 +12,25 @@ import filterProductActive from '../helper/filterProductActive';
 import {useAppSelector} from '../store';
 import {Logo} from '../components/Logo';
 
-import animateScrollTo from 'animated-scroll-to';
-
-import {useIntersectionObserver} from 'usehooks-ts';
 import {Footer} from '../components/Footer';
+import {PANEL_FOR_BANNER} from '../store/panel/panelSlice';
+import {useRouter} from 'next/router';
+import stringToSlug from '../helper/stringToSlug';
 
-export default function ShopPage({productListByName, storyList}) {
+export default function ShopPage({productListByName, storyList, bannerList}) {
+   const router = useRouter();
    const {width} = useWindowDimensions();
    const {categoryProductState} = useAppSelector((state) => state.category);
 
+   function handleClickOnCategory(category) {
+      router.push(`/category/${stringToSlug(category)}`);
+   }
+
    return (
       <div className='shop-container'>
-         {/* <div className='shop-item min-h-[100vh]'>
-            <ShopSliderBanner />
-         </div> */}
+         <div className='shop-item min-h-[100vh]'>
+            <ShopSliderBanner bannerList={bannerList} />
+         </div>
 
          {/* story product */}
          <div className='flex items-center mt-[50px] mx-0 py-5 md:py-0 md:mx-20 md:min-h-[91vh] shop-item'>
@@ -39,7 +44,8 @@ export default function ShopPage({productListByName, storyList}) {
                   {categoryProductState?.map((category, index) => (
                      <p
                         key={index}
-                        className='uppercase text-[0.8rem] md:text-[0.9rem] whitespace-nowrap hover:underline cursor-pointer'>
+                        className='uppercase text-[0.8rem] md:text-[0.9rem] whitespace-nowrap hover:underline cursor-pointer'
+                        onClick={() => handleClickOnCategory(category.name)}>
                         {category.name}
                      </p>
                   ))}
@@ -62,6 +68,7 @@ export default function ShopPage({productListByName, storyList}) {
    );
 }
 export const getServerSideProps = async () => {
+   let bannerList;
    let activeProduct;
    let storyList;
    // let activeCategory;
@@ -69,6 +76,12 @@ export const getServerSideProps = async () => {
       const productRes = await productApi.getAllProductByName();
       const panelRes = await panelApi.getAllPanel();
       storyList = panelRes?.data?.data;
+
+      let panelResData = panelRes?.data?.data;
+
+      bannerList = panelResData
+         ?.filter((item) => item?.status !== 'cancel' && item?.pictures?.length > 0)
+         ?.filter((item) => item?.description?.indexOf(PANEL_FOR_BANNER) >= 0);
 
       // const categoryRes = await categoryApi.getAllCategory();
 
@@ -81,6 +94,7 @@ export const getServerSideProps = async () => {
       props: {
          productListByName: activeProduct || [],
          storyList: storyList || [],
+         bannerList: bannerList || [],
       },
    };
 };

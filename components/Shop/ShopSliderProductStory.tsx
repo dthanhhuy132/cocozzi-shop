@@ -7,9 +7,7 @@ import {AiOutlineCloseCircle} from 'react-icons/ai';
 import useWindowDimensions from '../../hooks/UseWindowDimensions';
 
 import {useCallback, useEffect, useState} from 'react';
-import Image from 'next/image';
 import ProgressBar from './Slick/ProgressBar';
-import {useAppSelector} from '../../store';
 import {PANEL_FOR_STORY} from '../../store/panel/panelSlice';
 import slicePanelLinkName from '../Admin/Product/slicePanelLinkName';
 
@@ -44,6 +42,10 @@ export default function ShopSliderProductStory({storyList}) {
    useEffect(() => {
       if (width < 600) {
          setSliderQuantity(1.5);
+      } else if (width >= 600 && width <= 800) {
+         setSliderQuantity(2);
+      } else if (width >= 900 && width <= 1000) {
+         setSliderQuantity(3);
       } else {
          setSliderQuantity(4);
       }

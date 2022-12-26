@@ -21,6 +21,7 @@ export const createVoucherAsync: any = createAsyncThunk(
    async ({accessToken, voucher}: any) => {
       try {
          const res = await voucherApi.createVoucher(accessToken, voucher);
+
          return {
             ok: true,
             // data: res.data.res,
@@ -55,12 +56,29 @@ export const deleteVoucherAsync: any = createAsyncThunk(
 export const updateVoucherAsync: any = createAsyncThunk(
    'voucher/updateVoucherAsync',
    async ({accessToken, voucherId, voucher}: any) => {
-      console.log('voucherId cho nay la gi', voucherId);
       try {
          const res = await voucherApi.updateVoucher(accessToken, voucherId, voucher);
 
          return {
             ok: true,
+         };
+      } catch (error) {
+         return {
+            ok: false,
+            messsage: error.response.data.message,
+         };
+      }
+   }
+);
+
+export const getVoucherByCode: any = createAsyncThunk(
+   'voucher/getVoucherByCODE',
+   async ({voucherCode}: any) => {
+      try {
+         const res = await voucherApi.getVoucherByCode(voucherCode);
+         return {
+            ok: true,
+            voucher: res?.data?.data,
          };
       } catch (error) {
          return {

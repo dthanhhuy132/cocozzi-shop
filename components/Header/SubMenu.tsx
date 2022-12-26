@@ -14,6 +14,7 @@ import uppercaseFirstLetter from '../../helper/uppercaseFirstLetter';
 import {useAppSelector} from '../../store';
 import {ProductItem} from '../ProductItem';
 import randomProductIndexForHeader from '../../helper/randomProductIndexForHeader';
+import stringToSlug from '../../helper/stringToSlug';
 
 export default function SubMenu({isShowSubMenu = false, name, hoverItem, productGroupByNameList}) {
    const [headerHeight] = useGlobalState('headerHeight');
@@ -24,7 +25,7 @@ export default function SubMenu({isShowSubMenu = false, name, hoverItem, product
    // random product for header
    const [renderListProductForSubMenu, setRenderListProductForSubMenu] = useState([]);
 
-   // sub menu content
+   // sub menu content (category and event)
    const content = {
       shop: categoryProductState?.map((item) => item.name) || [],
       event: eventState?.map((item) => item.title) || [],
@@ -37,11 +38,6 @@ export default function SubMenu({isShowSubMenu = false, name, hoverItem, product
    useEffect(() => {
       setSubmenuContent(content[name]);
    }, [name]);
-
-   // useEffect(() => {
-   //    const menuHeight = subMenuRef.current.getBoundingClientRect();
-   //    setSubMenuHeigth(menuHeight.height);
-   // }, [isShowSubMenu, name, submenuContent]);
 
    // test slider
    const router = useRouter();
@@ -63,6 +59,15 @@ export default function SubMenu({isShowSubMenu = false, name, hoverItem, product
       },
       [dragging]
    );
+
+   function handleClickOnSubMenuItem(item, name) {
+      const slugLink = stringToSlug(item);
+      if (name === 'shop') {
+         router.push(`/category/${slugLink}`);
+      } else {
+         router.push(`/event/${slugLink}`);
+      }
+   }
 
    useEffect(() => {
       setHeaderAppHeight(headerHeight);
@@ -121,6 +126,8 @@ export default function SubMenu({isShowSubMenu = false, name, hoverItem, product
                </SliderSlick>
             </div>
          </div>
+
+         {/* --------------------------------------------> click on submenu link */}
          <div
             className='absolute left-0 flex flex-col mb-3 overflow-hidden z-[20]'
             style={{
@@ -129,12 +136,16 @@ export default function SubMenu({isShowSubMenu = false, name, hoverItem, product
                fontFamily: 'Gilroy',
             }}
             ref={subMenuRef}>
+            {/* submenu content */}
             {submenuContent?.map((item, index) => (
                <div className='relative' key={index}>
                   <BsArrowRightSquare className='absolute top-0 left-[-20px]' />
                   <div
                      key={index}
-                     className='whitespace-nowrap font-[200] cursor-pointer hover:font-extrabold hover:underline'>
+                     className='whitespace-nowrap font-[200] cursor-pointer hover:font-extrabold hover:underline'
+                     onClick={() => {
+                        handleClickOnSubMenuItem(item, name);
+                     }}>
                      {item}
                   </div>
                </div>

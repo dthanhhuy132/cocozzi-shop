@@ -36,11 +36,10 @@ export default function RegisterPage({homePanelList}) {
             const expireAccessTokenDay = getTokenExpireTime(accessToken);
 
             Cookies.set('accessToken', accessToken, {expires: expireAccessTokenDay});
-            console.log('cartData', userData);
          } else {
             toast.error(res.payload.message);
+            setIsShowLoading(false);
          }
-         setIsShowLoading(false);
       });
    }
    return (

@@ -144,7 +144,7 @@ export default function AdminProductPage({productList, categoryList, storyList})
             });
          }
       }
-      // tạo mới sản phẩm
+      // ------------------------------------------------> TẠO MỚI SẢN PHẨM
       if (!productId) {
          const sizeQuantityMap = Object.keys(sizeQuantity)
             .map((item) => ({

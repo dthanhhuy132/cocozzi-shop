@@ -2,7 +2,6 @@ import {useState, useRef, useEffect} from 'react';
 import Cookies from 'js-cookie';
 
 import {GetServerSideProps} from 'next';
-import homeApi from '../../service/panelApi';
 
 import {AdminLayout, AdminModal} from '../../components/Admin';
 import {AdminButton} from '../../components/Admin/common';
@@ -20,26 +19,28 @@ import LoadingActionPage from '../../components/common/LoadingPage';
 import {toast} from 'react-toastify';
 import HomeAdminModalCreateUpdate from '../../components/Admin/Home/HomeAdminModalCreateUpdate';
 import HomePanaleItem from '../../components/Admin/Home/HomePanelItem';
+import BannerShopItem from '../../components/Admin/Product/BannerShopItem';
+import {ShopBannerCreateUpdateModal} from '../../components/Admin/Product';
 
 const accessToken = Cookies.get('accessToken');
 
-export default function AdminHomePage({homePanelList}) {
+export default function ProductBannerPage({homePanelList}) {
    const dispatch = useAppDispatch();
    const [isShowLoading, setIsShowLoading] = useState(false);
-   const [isShowModalHomePanel, setIsShowModalHomePanel] = useState(false);
+   const [isShowModalBannerPanel, setIsShowModalBannerPanel] = useState(false);
 
-   const [renderHomePanelList, setRenderHomePanelList] = useState(
-      homePanelList?.filter((item) => item?.description?.indexOf(PANEL_FOR_HOME) >= 0)
+   const [renderBannerPanelList, setBannerlList] = useState(
+      homePanelList?.filter((item) => item?.description?.indexOf(PANEL_FOR_BANNER) >= 0)
    );
 
    // get data from redux
-   const {panelForHomeState} = useAppSelector((state) => state.panel);
+   const {panelForBannerState} = useAppSelector((state) => state.panel);
    const [editingHome, setEditingHome] = useState(null);
    // function add new panel
-   function handleCreateUpdateHome(homePanel) {
+   function handleCreateUpdateHome(bannerPanel) {
       setIsShowLoading(true);
-
-      const {description, pictures, homPanelId, isChangeImage} = homePanel;
+      console.log(bannerPanel);
+      const {description, pictures, homPanelId, isChangeImage} = bannerPanel;
 
       if (homPanelId) {
          // edit panel for home
@@ -54,7 +55,7 @@ export default function AdminHomePage({homePanelList}) {
             dispatch(udpatePanelAsync({accessToken, panelId, data})).then((res) => {
                if (res.payload.ok) {
                   dispatch(getAllPanelAsync());
-                  setIsShowModalHomePanel(false);
+                  setIsShowModalBannerPanel(false);
                } else {
                   toast.error(res.payload.message);
                }
@@ -65,7 +66,7 @@ export default function AdminHomePage({homePanelList}) {
             dispatch(udpatePanelAsync({accessToken, panelId, data})).then((res) => {
                if (res.payload.ok) {
                   dispatch(getAllPanelAsync());
-                  setIsShowModalHomePanel(false);
+                  setIsShowModalBannerPanel(false);
                } else {
                   toast.error(res.payload.messsage);
                }
@@ -73,15 +74,17 @@ export default function AdminHomePage({homePanelList}) {
             });
          }
       } else {
-         // create panel for home
+         // create panel for banner
          setIsShowLoading(true);
          const formData = new FormData();
          formData.append('description', description);
+
          pictures.forEach((pic) => formData.append('pictures', pic));
          dispatch(createPanelAsyns({accessToken, formData})).then((res) => {
             setIsShowLoading(false);
             if (res.payload.ok) {
                dispatch(getAllPanelAsync());
+               setIsShowModalBannerPanel(false);
             } else {
                toast.error(res.payload.message);
             }
@@ -90,67 +93,84 @@ export default function AdminHomePage({homePanelList}) {
       }
    }
 
-   function handleClickEditHomePanel(homePanel) {
-      setIsShowModalHomePanel(true);
-      setEditingHome(homePanel);
+   // click to edit banner
+   function handleClickEditBannerPanel(bannerPanel) {
+      setIsShowModalBannerPanel(true);
+      console.log('bannerBanner la gi', bannerPanel);
+      setEditingHome(bannerPanel);
    }
 
    // update home after create/update new home panel
    useEffect(() => {
-      if (panelForHomeState || panelForHomeState?.length > 0) {
-         const sortHomePanelState = sortDataByUpdatedTime(panelForHomeState);
-         setRenderHomePanelList(sortHomePanelState);
+      if (panelForBannerState || panelForBannerState?.length > 0) {
+         const sortHomePanelState = sortDataByUpdatedTime(panelForBannerState);
+         setBannerlList(sortHomePanelState);
       }
-   }, [panelForHomeState]);
+   }, [panelForBannerState]);
 
    // reset editing story
    useEffect(() => {
-      if (!isShowModalHomePanel) {
+      if (!isShowModalBannerPanel) {
          setEditingHome(null);
       }
-   }, [isShowModalHomePanel]);
+   }, [isShowModalBannerPanel]);
 
    return (
       <AdminLayout>
-         <div className='mb-2'>Upload images for home page</div>
-         <span className='mb-2 italic'>
-            Hình nằm ngang, kích kích các hình nên giống nhau, dung lượng &lt; 300kb, &#40;Bộ hình
-            ảnh đầu tiên được sử dụng để hiện thị trên trang home&#41;
-         </span>
+         <div className='mb-3 italic'>
+            <p>
+               - Hình nằm ngang, kích kích các hình nên giống nhau, dung lượng &lt; 300kb, &#40;Bộ
+               hình ảnh đầu tiên được sử dụng để hiện thị trên trang home&#41;
+            </p>
+
+            <p>
+               - Số lượng hình ảnh Banner hiển thị trên Điện thoại phải bằng với số lượng hình ảnh
+               hiển thị trên PC
+            </p>
+
+            <p>- Tổng số lượng hình ảnh upload &quot;luôn&quot; là số chẵn</p>
+         </div>
          <div className='flex justify-between'>
             <div>
-               <AdminButton click={(e) => setIsShowModalHomePanel(true)}>
-                  <AiOutlinePlusCircle /> Upload image to create panel
+               <AdminButton click={(e) => setIsShowModalBannerPanel(true)}>
+                  <AiOutlinePlusCircle /> Create Banner Slider
                </AdminButton>
             </div>
          </div>
 
-         {/* pannel list */}
-         <div className='grid grid-cols-1 gap-5 mt-5'>
-            <p className='font-bold border-b-2'>Pannel list</p>
+         {/* slider list */}
+         {renderBannerPanelList && renderBannerPanelList.length > 0 ? (
+            <>
+               <div className='grid grid-cols-1 gap-5 mt-5'>
+                  <p className='font-bold border-b-2'>Slider mobile</p>
 
-            {renderHomePanelList.map((item, index) => (
-               // list image of each pannel
-               <div key={index}>
-                  <HomePanaleItem
-                     index={index}
-                     homePanel={item}
-                     handleClickEditHomePanel={handleClickEditHomePanel}
-                  />
+                  {renderBannerPanelList.map((item, index) => (
+                     // list image of each pannel
+                     <div key={index}>
+                        <BannerShopItem
+                           index={index}
+                           homePanel={item}
+                           handleClickEditBannerPanel={handleClickEditBannerPanel}
+                        />
+                     </div>
+                  ))}
                </div>
-            ))}
-         </div>
+            </>
+         ) : (
+            <div className='mt-5 border-t-2'>Slider is empty</div>
+         )}
+
          {/* modal create */}
-         {isShowModalHomePanel && (
+         {isShowModalBannerPanel && (
             <AdminModal
-               className='w-[80%]'
+               className='w-[90%]'
                showFooter={false}
-               cancel={() => setIsShowModalHomePanel(false)}
+               cancel={() => setIsShowModalBannerPanel(false)}
                title='Create new home image'>
-               <HomeAdminModalCreateUpdate
+               <ShopBannerCreateUpdateModal
                   editingHome={editingHome}
-                  cancel={() => setIsShowModalHomePanel(false)}
-                  handleCreateUpdateHome={handleCreateUpdateHome}></HomeAdminModalCreateUpdate>
+                  cancel={() => setIsShowModalBannerPanel(false)}
+                  handleCreateUpdateHome={handleCreateUpdateHome}></ShopBannerCreateUpdateModal>
             </AdminModal>
          )}
 
@@ -170,7 +190,6 @@ export const getServerSideProps: GetServerSideProps<any> = async () => {
       );
    } catch (error) {}
 
-   console.log('homeImageList', homeImageList);
    return {
       props: {
          homePanelList: sortDataByUpdatedTime(homeImageList) || [],

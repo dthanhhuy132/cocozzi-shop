@@ -125,7 +125,7 @@
 
 .progress-bar-dth {
    position: relative;
-   height: 10px;
+   height: 6px;
    width: 100%;
    /* border: 1px solid #f4a261; */
    border-radius: 15px;
@@ -135,7 +135,7 @@
    position: absolute;
    background-color: red;
    width: 0px;
-   height: 6px;
+   height: 4px;
    border-radius: 15px;
    animation: progres 5s infinite linear;
    z-index: 9999999999999999999990999;

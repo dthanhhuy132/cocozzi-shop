@@ -1,16 +1,34 @@
-import {useEffect} from 'react';
+import {useEffect, useState, useMemo} from 'react';
 import {useRouter} from 'next/router';
 import {useDispatch} from 'react-redux';
 import {BagHeader, BagItem} from './index';
-import {updateCart} from '../../store/cart/cartSlice';
+import {updateCartUserState} from '../../store/cart/cartSlice';
 import {toast} from 'react-toastify';
 import Cookies from 'js-cookie';
+import {parseJwt} from '../../helper';
+import {useAppSelector} from '../../store';
+import {getRandomValues} from 'crypto';
+import randomProductIndexForHeader from '../../helper/randomProductIndexForHeader';
 
 export default function Bag({carts}) {
    const router = useRouter();
-   const dispatch = useDispatch();
-   console.log('trong cart co gi', carts);
    const accessToken = Cookies.get('accessToken');
+
+   // productListState
+   const {productListState} = useAppSelector((state) => state.product);
+
+   // renderCartList
+   const cartItems = carts?.cartItems;
+   const [renderCartList, setRenderCartList] = useState(
+      cartItems.length >= 2
+         ? cartItems.sort((productCart1, productCart2) => {
+              if (productCart1?.product?.name < productCart2?.product?.name) return -1;
+              if (productCart1?.product?.name > productCart2?.product?.name) return 1;
+              return 0;
+           })
+         : cartItems || []
+   );
+   const {cartUserState} = useAppSelector((state) => state.cart);
 
    useEffect(() => {
       if (!accessToken) {
@@ -20,8 +38,27 @@ export default function Bag({carts}) {
    }, []);
 
    useEffect(() => {
-      dispatch(updateCart(carts));
-   }, []);
+      if (cartUserState) {
+         setRenderCartList(cartUserState);
+      }
+   }, [cartUserState]);
+
+   const totalPrice = useMemo(
+      () =>
+         renderCartList.reduce(
+            (acc, cur) => (acc += cur?.product?.price * cur?.product?.quantity),
+            0
+         ),
+      [renderCartList]
+   );
+
+   const amountOfRelativeProduct = Math.ceil(renderCartList.length / 4);
+   const differentProductFilter = productListState?.filter(
+      (productItem) =>
+         !renderCartList.includes((productCart) => productCart.product.name !== productItem.name)
+   );
+
+   // const randomProductRelative = getRandomValues()
 
    return (
       <div className='flex flex-col mx-[auto] lg:flex-row w-full px-2 md:px-0 md:w-5/6 lg:w-2/3 my-4 md:my-10 gap-5 '>
@@ -32,12 +69,14 @@ export default function Bag({carts}) {
                   <BagHeader />
                </thead>
                <tbody className='p-2'>
-                  {carts?.cartItems?.length > 0 ? (
-                     carts?.cartItems?.map((productCart, index) => (
-                        <BagItem productCart={productCart} key={index} />
+                  {renderCartList?.length > 0 ? (
+                     renderCartList?.map((productCart, index) => (
+                        <BagItem productCart={productCart} key={productCart?.product?._id} />
                      ))
                   ) : (
-                     <p>Giỏ hàng trống!</p>
+                     <tr>
+                        <td>Giỏ hàng trống!</td>
+                     </tr>
                   )}
                </tbody>
             </table>
@@ -50,7 +89,7 @@ export default function Bag({carts}) {
                      <p>Tổng</p>
                      <p>
                         <span className='pr-1'>₫</span>
-                        {(901231234).toLocaleString('en-US')}
+                        {totalPrice.toLocaleString('en-US')}
                      </p>
                   </div>
 
@@ -60,11 +99,11 @@ export default function Bag({carts}) {
                      </p>
                   </div>
                </div>
-               <div className='grid grid-cols-1 mt-4 justify-between rounded-lg p-4 bg-gray-100'>
-                  {/* {imgArr.map((img, index) => (
+               {/* <div className='grid grid-cols-1 mt-4 justify-between rounded-lg p-4 bg-gray-100'>
+                  {imgArr.map((img, index) => (
                      <ProductItem key={index} img={img} displayPrice={true}></ProductItem>
-                  ))} */}
-               </div>
+                  ))}
+               </div> */}
             </div>
          </div>
          {/* payment */}
